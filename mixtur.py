@@ -53,7 +53,7 @@ def allowed_file(filename):
 
 '''
 
-    The Views!
+    The Homepage Views!
     
 '''
 '''Access to static files'''
@@ -80,8 +80,8 @@ def all_mixes(mix_name=None):
 
 '''Add/Edit/Delete Mix'''
 @app.route("/<mix_name>/<action>/", endpoint="mix_edit", methods=["GET", "POST"])
-@app.route("/<action>/", methods=["POST"])
-def mix_action(action, mix_name=None):
+@app.route("/create/", methods=["POST"])
+def mix_action(action="create", mix_name=None):
     if not session.get("logged_in"):
         abort(401)
   
@@ -100,14 +100,12 @@ def mix_action(action, mix_name=None):
         cursor = g.db.execute("update mix set name=?, description=? where id=?",
                   [request.form["name"], request.form["description"], request.form["id"]])
         flash_msg = "Mix successfully edited."
-    elif action == "create":
+    else:
         # raise Exception(request.form["name"])
         cursor = g.db.execute("insert into mix (name, date, description, user) values (?, ?, ?, ?)",
                           [request.form["name"], str(datetime.datetime.now()),
                           request.form["description"], session.get("user_id")])
         flash_msg = "New mix successfully added."
-    else:
-        return redirect(url_for("all_mixes"))
     g.db.commit()
   
     # handle file stuff
@@ -129,6 +127,82 @@ def mix_action(action, mix_name=None):
     flash(flash_msg)
     return redirect(url_for("all_mixes"))
 
+
+'''
+
+    The Mixtape Views!
+    
+'''
+@app.route('/<mix_name>/song/<int:song_id>/', endpoint="show_mix_edit")
+@app.route('/<mix_name>/')
+def show_mix(mix_name, song_id=None, action='create'):
+    mix, song, votes = None, None, {}
+    if song_id:
+        action = "edit"
+        cur = g.db.execute("select id, title, artist, position from song where id = ?", [song_id])
+        s = cur.fetchone()
+        song = dict(id=s[0], title=s[1], artist=s[2], position=s[3])
+    if unquote_plus(mix_name) == "top voted":
+        mix = dict(id="0", name="Top Voted", description="These are the best of the best here folks the ones voted the MOST.")
+        cur = g.db.execute("select s.id, title, artist, position, count(v.id) as votes from song as s, vote as v where s.id = v.song group by song order by votes desc")
+        fetched_songs = cur.fetchall()
+        songs = [dict(id=row[0], title=row[1], artist=row[2], position=i+1) for i, row in enumerate(fetched_songs)]
+        cur = g.db.execute("select s.id, v.user from song as s, vote as v where v.song = s.id")
+        for row in cur.fetchall():
+            votes.setdefault(row[0], []).append(row[1])
+    else:
+        cur = g.db.execute("select id, name, description, cover, user from mix where lower(name) = ?", [unquote_plus(mix_name)])
+        m = cur.fetchone()
+        mix = dict(id=m[0], name=m[1], description=m[2], cover=m[3], user=m[4])
+        cur = g.db.execute("select id, title, artist, position from song where mix = ? order by position", [mix["id"]])
+        songs = [dict(id=row[0], title=row[1], artist=row[2], position=row[3]) for row in cur.fetchall()]
+        cur = g.db.execute("select s.id, v.user from song as s, vote as v where v.song = s.id and mix = ?", [mix["id"]])
+        for row in cur.fetchall():
+            votes.setdefault(row[0], []).append(row[1])
+    return render_template("show_mix.html", mix=mix, songs=songs, song=song, action=action, votes=votes)
+
+@app.route('/<mix_name>/song/<int:song_id>/<action>', endpoint="song_edit", methods=["GET", "POST"])
+@app.route('/<mix_name>/song/create', methods=["POST"])
+def song_add(mix_name, action="create", song_id=None):
+    if not session.get("logged_in"):
+        abort(401)
+    if action == "delete":
+        cursor = g.db.execute("select title, artist from song where id = ?", [song_id])
+        title, artist = cursor.fetchone()
+        file_name = u"song_{0}_{1}.mp3".format(artist.replace(" ", "_").lower(), title.replace(" ", "_").lower())
+        song_file = os.path.join(app.config['UPLOAD_FOLDER'], file_name)
+        try:
+            os.remove(song_file)
+        except OSError:
+            pass
+        cursor = g.db.execute("delete from song where id=?", [song_id])
+        flash_msg = "Song deleted."
+    elif action == "edit":
+        cursor = g.db.execute("update song set title=?, artist=?, position=? where id=?",
+                  [request.form["title"], request.form["artist"], request.form["position"], request.form["id"]])
+        flash_msg = "Song edited."
+    else:
+        cursor = g.db.execute("insert into song (title, artist, position, mix) values (?, ?, ?, ?)",
+                  [request.form["title"], request.form["artist"],
+                  request.form["position"], request.form["mix"]])
+        flash_msg = "New song added"
+    g.db.commit()
+    if action != "delete":
+        file = request.files['file']
+        title = request.form["title"].replace(" ", "_").lower()
+        artist = request.form["artist"].replace(" ", "_").lower()
+        if file and allowed_file(file.filename):
+            new_file_name = u"song_{0}_{1}.mp3".format(artist, title)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], new_file_name.encode('utf-8')))
+        flash(flash_msg)
+    return redirect(url_for('show_mix', mix_name=mix_name))
+
+
+'''
+
+    The Login/out Views!
+    
+'''
 '''Login'''
 @app.route("/login", methods=["GET", "POST"])
 def login():

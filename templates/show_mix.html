@@ -1,0 +1,281 @@
+{% extends "layout.html" %}
+{% block head_title %}{{mix.name}} @ MIXTUR{% endblock %}
+{% block body %}
+	<div class="mix_title">
+    <div class="cover">
+		{% if mix.cover %}
+		<img src="{{ url_for('uploaded_file', filename=mix.cover) }}" alt="cover image for {{mix.name}}" />
+		{% endif %}
+    </div>
+	    <div class="title">
+			<h1>{{mix.name}}</h1>
+			<p>{{mix.description}}</p>
+	    </div>
+	</div>
+	{% if session.logged_in and session.user_id == mix.user %}
+	<div class="add_song">
+		<a href="#" class="add">+ Add new song...</a>
+		<form action="{% if action == 'edit' %}{{ url_for('song_edit', mix_name=mix.name|e, action='edit', song_id=song.id) }}{% else %}{{ url_for('song_add', mix_name=mix.name|e) }}{% endif %}" method="post" class="new_song" enctype="multipart/form-data">
+			<h3>Title:</h3>
+			<div class="input_cont">
+				<input type="text" name="title" value="{% if song %}{{song.title}}{% endif %}" />
+			</div>
+			<h3>Artist:</h3>
+			<div class="input_cont">
+				<input type="text" name="artist" value="{% if song %}{{song.artist}}{% endif %}" />
+			</div>
+			<h3>Track position:</h3>
+			<div class="input_cont">
+				<input type="text" size="1" name="position" value="{% if song %}{{song.position}}{% endif %}" />
+			</div>
+			{% if action == 'edit' %}
+			<h3>Change song file?</h3>
+			{% else %}
+			<h3>Song file:</h3>
+			{% endif %}
+			<div>
+				<input type="file" class="file" name="file" />
+			</div>
+			<input type="hidden" name="mix" value="{{ mix.id }}" />
+			<input type="hidden" name="id" value="{% if song %}{{song.id}}{% endif %}" />
+			<input type="submit" value="{% if song %}Update{% else %}Upload{% endif %}" />
+			<a href="{{ url_for('show_mix', mix_name=mix.name|e) }}" class="nvrmind">Nvrmind</a>
+		</form>
+	</div>
+	{% endif %}
+	<div class="songs">
+		{% for song in songs %}
+		<div class="song">
+			{% if session.logged_in and session.user_id == mix.user %}
+			<div class="edit"><a href="{{ url_for('show_mix_edit', mix_name=mix.name|e, song_id=song.id) }}">edit</a> | <a href="{{ url_for('song_edit', mix_name=mix.name|e, action='delete', song_id=song.id) }}" class="delete">delete</a></div>
+			{% endif %}
+			<div class="vote">
+				<a data-song_id="{{song.id}}" data-user_id="{{session.user_id}}" class="{% if session.user_id in votes|access(song.id, []) %}voted{% endif %}">{% if votes|access(song.id, [])|length %}{{votes|access(song.id, [])|length}}{% endif %}</a>
+			</div>
+			<a href="{{url_for('uploaded_file', filename='song_%s_%s.mp3'%(song.artist|lower|replace(' ', '_')|e, song.title|lower|replace(' ', '_')|e)) }}" class="song" id="song_{{song.id}}">
+				<div class="progress_load"></div>
+				<div class="progress_play"></div>
+				<h2>{{song.position}}. {{song.artist}} - {{ song.title }}</h2>
+			</a>
+		</div>
+		{% else %}
+		<em>No songs added yet... bummah!</em>
+		{% endfor %}
+	</div>
+{% endblock %}
+
+{% block js %}
+<script src="{{ url_for('static', filename='soundmanager/script/soundmanager2-jsmin.js') }}"></script>
+<script>
+
+  $(document).keyup(function(e) {
+    
+    // Listen for space bar! (to pause)
+    if (e.keyCode == 32 && last_played) {
+      last_played.togglePause();
+    }
+    
+    // Listen for right arrow! (to play the next track)
+    if (e.keyCode == 39 && last_played) {
+      play_next();
+    }
+    
+    // Listen for left arrow! (to play the previous track)
+    if (e.keyCode == 37 && last_played) {
+      play_previous();
+    }
+    
+  });
+  
+  
+  var soundsByObject = [],
+    sounds = [],
+    last_played;
+  this.getSoundByObject = function(o) {
+    return (typeof soundsByObject[o.id] !== 'undefined' ? soundsByObject[o.id] : null);
+  };
+  $(".songs a.song").bind("click", function(e){
+    var o = get_target(e);
+    $(o).children(".progress_play").show()
+    $(o).children(".progress_load").show()
+    this_sound = getSoundByObject(o);
+    if(this_sound){
+      
+      // sound already exists
+      if (this_sound === last_played) {
+        // ..and was playing (or paused) and isn't in an error state
+        if (this_sound.readyState !== 2) {
+          if (this_sound.playState !== 1) {
+            // not yet playing
+            this_sound.play();
+          } else {
+            this_sound.togglePause();
+          }
+        } else {
+          soundManager._writeDebug('Warning: sound failed to load (security restrictions, 404 or bad format)',2);
+        }
+      } else {
+        // ..different sound
+        if (last_played) {
+          last_played.stop();
+        }
+        // this_sound.togglePause(); // start playing current
+        this_sound.play()
+        if (last_played) {
+          // clear last song's progress
+          $("a#"+last_played.id).children(".progress_play").css("width", "0%")
+          $("a#"+last_played.id).children(".progress_load").hide()
+        }
+      }
+      
+    }
+    else {
+      soundManager.stopAll();
+      // create sound
+      this_sound = soundManager.createSound({
+        id: o.id,
+        url: o.href,
+        whileloading: loading,
+        whileplaying: playing,
+        onfinish: play_next
+        // onplay: events.play,
+        // onstop: events.stop,
+        // onpause: events.pause,
+        // onresume: events.resume,
+        // onfinish: events.finish,
+        // whileloading: events.whileloading,
+        // whileplaying: events.whileplaying,
+        // onmetadata: events.metadata,
+        // onload: events.onload
+      });
+      
+      soundsByObject[o.id] = this_sound;
+      sounds.push(this_sound);
+      
+      // if (self.lastSound) {
+      //   self.stopSound(self.lastSound);
+      // }
+      // self.resetGraph.apply(thisSound);
+      this_sound.play();
+      if (last_played) {
+        // clear last song's progress
+        $("a#"+last_played.id).children(".progress_play").css("width", "0%")
+        $("a#"+last_played.id).children(".progress_load").hide()
+      }
+    }
+    last_played = this_sound;
+    
+    return false;
+  });
+  
+  soundManager.setup({
+    url: "{{ url_for('static', filename='soundmanager/swf') }}",
+    flashVersion: 9, // optional: shiny features (default = 8)
+    useFlashBlock: false, // optionally, enable when you're ready to dive in/**
+    debugMode: false,
+  })
+  
+  function loading() {
+    var percent_loaded = parseInt((this.bytesLoaded/this.bytesTotal)*100);
+    // console.log(this, this.bytesLoaded, this.bytesTotal)
+    $("a#"+this.id+" .progress_load").css("width", percent_loaded+"%")
+  }
+  function playing(){
+    var duration = this.durationEstimate ? this.durationEstimate : this.duration;
+    var current_position = parseInt((this.position/duration)*100);
+    $("a#"+this.id+" .progress_play").css("width", current_position+"%")
+  }
+  function play_next(){
+    
+    if(this.id){
+      var el = $("a#"+this.id)
+    }
+    else if(last_played) {
+      var el = $("a#"+last_played.id)
+    }
+    else {
+      return;
+    }
+    
+    el.find(".progress_play").css("width", "0%")
+    el.find(".progress_load").css("width", "0%")
+    
+    var next_el = el.parent().next();
+    if(next_el.length){
+      next_el.find("a.song").trigger("click");
+    }
+  }
+  
+  function play_previous(){
+    
+    if(last_played) {
+      var el = $("a#"+last_played.id)
+    }
+    else {
+      return;
+    }
+    
+    var prev_el = el.parent().prev();
+    if(prev_el){
+      el.find(".progress_play").css("width", "0%")
+      el.find(".progress_load").css("width", "0%")
+      
+      if(prev_el.length){
+        prev_el.find("a.song").trigger("click");
+      }
+    }
+    
+  }
+  
+  
+  function get_target(e) {
+    return e.target.id ? e.target : e.target.parentNode;
+  };
+  
+  $("a.add").toggle(
+    function(){ $(".add_song form").show();},
+    function(){ $(".add_song form").hide();}
+  )
+  
+  if(window.location.pathname.indexOf("song") > 0){
+    $(".add_song form").show();
+    $("a.add").text("Lets update this shit...");
+  }
+  
+  $("a.delete").click(function(){
+    if(confirm("Are you totally, 100%, swear-on-your-life positive you want to wipe this mix clean from the face of this Earth???")){
+      return;
+    }
+    return false;
+  })
+  
+  // handle voting
+  $(".vote a").click(function(){
+    var self = $(this),
+      cur_vote_count = parseInt(self.text()) || 0,
+      new_amt = self.hasClass("voted") ? -1 : 1;
+      user_id = self.data().user_id,
+      song_id = self.data().song_id;
+    if(!user_id){
+      alert("You gotta be signed in to vote!");
+      return false;
+    }
+    $.get("/mixtur/vote", {"song_id": song_id, "user_id": user_id}, function(data){
+      if(data.result){
+        self.toggleClass("voted");
+        var new_total = cur_vote_count+new_amt;
+        if(new_total){
+          self.text(cur_vote_count+new_amt);
+        } else {
+          self.text("");
+        }
+      }
+      else {
+        alert(data.error);
+      }
+      return false;
+    })
+  })
+
+</script>
+{% endblock %}

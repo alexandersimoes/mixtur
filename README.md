@@ -20,7 +20,7 @@ sqlite3 -init mixtur_schema.sql mixtur.db
 > Music listening, performance, and composition engage nearly every area 
 > of the brain that we have so far identified, and involve nearly every neural subsystem.
 
-Daniel J. Levitin from *This is Your Brain on Music*
+~ Daniel J. Levitin from *This is Your Brain on Music*
 
 License
 ----
