@@ -1,0 +1,48 @@
+<!doctype html>
+<head>
+  <title>{% block head_title %}Get yr mix on!{% endblock %}</title>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='normalize.css') }}">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  {% for message in get_flashed_messages() %}
+  <div class="flash">{{ message }}</div>
+  {% endfor %}
+  <header>
+    <h1><a href="/"><img src="{{ url_for('static', filename='img/tape.png') }}" />Mixtur</a></h1>
+    <div class="metanav">
+    {% if not session.logged_in %}
+      <a href="{{ url_for('login') }}">log in</a>
+    {% else %}
+      <a href="{{ url_for('logout') }}">log out</a>
+    {% endif %}
+    </div>
+  </header>
+  <div class="page">
+    {% block body %}{% endblock %}
+  </div>
+  <script type="text/javascript">
+
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-2059022-13']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+
+  </script>
+  <script src="{{ url_for('static', filename='jquery/jquery-1.7.2.min.js') }}"></script>
+  <script>
+  if($(".flash").length){
+    setTimeout(function(){
+     $(".flash").fadeOut(function(){
+       $(".flash").remove();
+     }) 
+    }, 3000);
+  }
+  </script>
+  {% block js %}{% endblock %}
+</body>

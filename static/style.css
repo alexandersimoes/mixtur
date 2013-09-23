@@ -1,0 +1,333 @@
+@import url(http://fonts.googleapis.com/css?family=Lato:300);
+body {
+  background: #343434;
+  font-size: 14px;
+  margin: 0;  
+  font-family: 'Lato', "Lucida Grande", Tahoma, Verdana, sans-serif;
+  font-weight: 300;
+  letter-spacing: 0;
+  line-height: 1.4;
+  color: #999;
+}
+h1, h2 {
+  margin: 0;
+}
+a {
+  color: #bbb;
+  text-decoration: none;
+}
+a:hover {
+  color: white;
+  text-decoration: none;
+}
+ul { padding: 0; }
+li { list-style: none; }
+
+
+header {
+  background: black;
+  color: #bbb;
+  overflow: hidden;
+  padding: 5px 0;
+}
+header h1 {
+  float: left;
+  width: 275px;
+}
+header h1 a {
+  font-size: 24px;
+}
+header h1 a img {
+  margin: 0 10px 0 0;
+  width: 50px;
+  vertical-align: bottom;
+}
+header a {
+  color: #bbb;
+  font-size: 18px;
+  padding: 5px;
+}
+header .metanav {
+  float: right;
+  margin: 10px 0 0 0;
+  text-align: right;
+  width: 100px;
+}
+
+.flash {
+  color: black;
+  background: #88B;
+  border: dashed black 2px;
+  padding: 10px;
+  text-align: center;
+}
+
+div.page {
+  margin: 10px;
+}
+div.page h2.title{
+  border-bottom: solid 2px #666;
+  font-size: 26px;
+  letter-spacing: 1px;
+  margin: 0 0 20px 0;
+  text-transform: uppercase;
+}
+
+/* new summer mix */
+form.new_mix {
+  background: black;
+  border: 2px dashed #88B;
+  display: none;
+  margin: 10px 0;
+  padding: 10px;
+}
+form h3 {
+  margin: 0;
+}
+form img {
+  width: 50px;
+}
+.input_cont {
+  margin: 0 0 10px 0;
+}
+.input_cont input {
+  background: #666;
+  border: solid 2px #88b;
+  -moz-box-shadow:inset 0 0 3px #000000;
+  -webkit-box-shadow:inset 0 0 3px #000000;
+  box-shadow:inset 0 0 3px #000000;
+  color: #bbb;
+  font-size: 20px;
+  font-family: 'Lato', "Lucida Grande", Tahoma, Verdana, sans-serif;
+  font-weight: 300;
+  padding: 0;
+  width: 340px;
+}
+input:focus {
+    outline: none;
+}
+form input[type='submit'] {
+  background: #88b;
+  border: solid 2px #88b;
+  color: #000;
+  font-family: 'Lato', "Lucida Grande", Tahoma, Verdana, sans-serif;
+  margin: 20px 0 0 0;
+  padding: 5px 15px;
+  text-decoration: none;
+  text-align: center;
+}
+form a.nvrmind {
+  background: black;
+  border: solid 2px #88b;
+  color: #88b;
+  margin: 20px 0 0 20px;
+  padding: 5px 15px;
+  text-decoration: none;
+  text-align: center;
+}
+form a.nvrmind:hover {
+  background: #88b;
+  color: #000;
+}
+
+div.mix {
+  float: left;
+  font-size: 15px;
+  height: 275px;
+  margin: 0 38px 20px 0;
+  position: relative;
+  width: 210px;
+}
+div.mix div.edit {
+  background: black;
+  position: absolute;
+  left: 20%;
+  right: 20%;
+  top: 0;
+  padding: 4px;
+  height: 16px;
+  line-height: 16px;
+  overflow: hidden;
+  text-align: center;
+}
+div.mix a.cover {
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -o-border-radius: 5px;
+  border-radius: 5px;
+  -webkit-box-shadow: rgba(0, 0, 0, 0.2) 0 0 0 1px,rgba(0, 0, 0, 0.3) 0 2px 5px;
+  -moz-box-shadow: rgba(0,0,0,0.2) 0 0 0 1px,rgba(0,0,0,0.3) 0 2px 5px;
+  box-shadow: rgba(0, 0, 0, 0.2) 0 0 0 1px,rgba(0, 0, 0, 0.3) 0 2px 5px;
+  display: inline-block;
+  margin: 0 0 10px;
+  height: 210px;
+  text-align: center;
+  width: 210px;
+}
+div.mix a.cover.dynamic,
+div.mix a.cover.add {
+  border: dashed #88b 2px;
+  font-size: 32px;
+}
+div.mix a.cover.dynamic span,
+div.mix a.cover.add span{
+  display: block;
+  margin: 30px 5px;
+  text-align: center;
+}
+div.mix a.cover img {
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -o-border-radius: 5px;
+  border-radius: 5px;
+  max-height: 210px;
+  overflow: hidden;
+  max-width: 210px;
+}
+div.mix h3 {
+  letter-spacing: 0;
+  font-size: 18px;
+  line-height: 1.2;
+  margin: 0;
+  max-height: 45px;
+  overflow: hidden;
+  word-wrap: break-word;
+}
+div.mix p.date {
+  margin: 0;
+}
+
+
+
+
+
+
+
+
+
+div.mix_title {
+  overflow: none;
+}
+div.mix_title:after { 
+   content: "."; 
+   visibility: hidden; 
+   display: block; 
+   height: 0; 
+   clear: both;
+}
+div.mix_title .cover{
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -o-border-radius: 5px;
+  border-radius: 5px;
+  -webkit-box-shadow: rgba(0, 0, 0, 0.2) 0 0 0 1px,rgba(0, 0, 0, 0.3) 0 2px 5px;
+  -moz-box-shadow: rgba(0,0,0,0.2) 0 0 0 1px,rgba(0,0,0,0.3) 0 2px 5px;
+  box-shadow: rgba(0, 0, 0, 0.2) 0 0 0 1px,rgba(0, 0, 0, 0.3) 0 2px 5px;
+  float: left;
+  margin: 0 40px 20px 0;
+  height: 160px;
+  width: 160px;
+}
+div.mix_title .cover img {
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -o-border-radius: 5px;
+  border-radius: 5px;
+  max-height: 160px;
+  overflow: hidden;
+  max-width: 160px;
+}
+div.mix_title .title {
+  float: left;
+/*  width: 400px;*/
+}
+div.add_song {
+  clear: both;
+  background: black;
+  border: 2px dashed #88B;
+  margin: 10px 0;
+  padding: 10px;
+}
+div.add_song > a {
+  display: block;
+  font-size: 18px;
+}
+div.add_song form {
+  display: none;
+  margin: 20px 0 0 0;
+}
+div.songs {
+
+}
+div.songs div.song {
+  position: relative;
+}
+div.songs div.song div.edit {
+  background: black;
+  position: absolute;
+  right: 0;
+  padding: 4px;
+  height: 16px;
+  line-height: 16px;
+  overflow: hidden;
+  z-index: 99;
+}
+div.songs div.song {
+  overflow: hidden;
+  width: 100%;
+} 
+div.songs div.vote {
+  float: left;
+  width: 60px;
+}
+div.songs div.vote a {
+  background: url("/static/img/tape_vote.png");
+  display: inline-block;
+  width: 50px;
+  height: 28px;
+  margin: 2px 0;
+  padding: 2px 0 0 0;
+  text-align: center;
+}
+div.songs div.vote a.voted,
+div.songs div.vote a:hover {
+  background-position: 0 -30px;
+}
+div.songs div.song a.song {
+  border: solid 1px black;
+  display: block;
+  height: 35px;
+  overflow: hidden;
+  position: relative;
+}
+div.songs a.song h2 {
+  font-size: 22px;
+  margin: 0;
+  position: absolute;
+  top: 0;
+  z-index: 2;
+}
+div.songs a.song .progress_play {
+  background: #88b;
+  height: 35px;
+  position: absolute;
+  top: 0;
+  width: 0%;
+  z-index: 1;
+}
+div.songs a.song .progress_load {
+  background: black;
+  height: 35px;
+  position: absolute;
+  top: 0;
+  width: 0%;
+  z-index: 1;
+}
+ul.songs li > a.add {
+  border: dashed 2px #88b;
+  margin: 0 0 20px 0;
+}

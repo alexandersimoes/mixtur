@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+{% block body %}
+  <form action="{{ url_for('pw') }}" method="post">
+    <h3>Create Password:</h3>
+    <div class="input_cont">
+      <input type="password" name="pw" />
+    </div>
+    <input type="submit" value="Generate" />
+  </form>
+  {% if pw %}
+    <h2>Copy and paste the following:</h2>
+    <p>{{pw}}</p>
+  {% endif %}
+{% endblock %}
