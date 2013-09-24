@@ -121,6 +121,7 @@ function handleDrop(e) {
 		dragSrcEl.innerHTML = this.innerHTML;
 		this.innerHTML = e.dataTransfer.getData('text/html');
 		$(this).find("a.song").bind("click", song_click);
+		$(dragSrcEl).find("a.song").bind("click", song_click);
 		$(this).find(".position").text(new_position);
 		$(dragSrcEl).find(".position").text(old_position);
     }
