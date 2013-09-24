@@ -47,7 +47,7 @@
     	{% if session.user_id == entry.user_id %}
 		<div class="edit"><a href="{{ url_for('all_mixes_edit', mix_name=entry.name|e) }}">edit</a> | <a href="{{ url_for('mix_edit', mix_name=entry.name|urlify, action='delete') }}" class="delete">delete</a></div>
 		{% endif %}
-		<a class="cover" href="{{ url_for('show_mix', mix_name=entry.name|e) }}">
+		<a class="cover" href="{{ url_for('show_mix', mix_name=entry.name|urlify) }}">
 			{% if entry.cover %}
 			<img src="{{url_for('uploaded_file', filename=entry.cover) }}" />
 			{% else %}
