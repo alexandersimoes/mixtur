@@ -24,10 +24,6 @@
 			<div class="input_cont">
 				<input type="text" name="artist" value="{% if song %}{{song.artist}}{% endif %}" />
 			</div>
-			<h3>Track position:</h3>
-			<div class="input_cont">
-				<input type="text" size="1" name="position" value="{% if song %}{{song.position}}{% endif %}" />
-			</div>
 			{% if action == 'edit' %}
 			<h3>Change song file?</h3>
 			{% else %}
@@ -45,17 +41,17 @@
 	{% endif %}
 	<div class="songs">
 		{% for song in songs %}
-		<div class="song">
+		<div class="song" data-song_id="{{ song.id }}" {% if session.logged_in and session.user_id == mix.user %}draggable="true"{% endif %}>
 			{% if session.logged_in and session.user_id == mix.user %}
 			<div class="edit"><a href="{{ url_for('show_mix_edit', mix_name=mix.name|e, song_id=song.id) }}">edit</a> | <a href="{{ url_for('song_edit', mix_name=mix.name|e, action='delete', song_id=song.id) }}" class="delete">delete</a></div>
 			{% endif %}
 			<div class="vote">
-				<a data-song_id="{{song.id}}" data-user_id="{{session.user_id}}" class="{% if session.user_id in votes|access(song.id, []) %}voted{% endif %}">{% if votes|access(song.id, [])|length %}{{votes|access(song.id, [])|length}}{% endif %}</a>
+				<a data-song_id="{{ song.id }}" data-user_id="{{session.user_id}}" class="{% if session.user_id in votes|access(song.id, []) %}voted{% endif %}">{% if votes|access(song.id, [])|length %}{{votes|access(song.id, [])|length}}{% endif %}</a>
 			</div>
-			<a href="{{url_for('uploaded_file', filename='song_%s_%s.mp3'%(song.artist|lower|replace(' ', '_')|e, song.title|lower|replace(' ', '_')|e)) }}" class="song" id="song_{{song.id}}">
+			<a href="{{url_for('uploaded_file', filename='song_%s_%s.mp3'%(song.artist|lower|replace(' ', '_'), song.title|lower|replace(' ', '_'))) }}" class="song" id="song_{{song.id}}">
 				<div class="progress_load"></div>
 				<div class="progress_play"></div>
-				<h2>{{song.position}}. {{song.artist}} - {{ song.title }}</h2>
+				<h2><span class="position">{{song.position}}</span>. {{song.artist}} - {{ song.title }}</h2>
 			</a>
 		</div>
 		{% else %}
@@ -67,6 +63,88 @@
 {% block js %}
 <script src="{{ url_for('static', filename='soundmanager/script/soundmanager2-jsmin.js') }}"></script>
 <script>
+
+{% if session.logged_in and session.user_id == mix.user %}
+var dragSrcEl = null;
+var songs = document.querySelectorAll('.songs div.song');
+
+// handle dragging to re-order
+function handleDragStart(e) {
+  this.style.opacity = '0.4';  // this / e.target is the source node.
+  
+  dragSrcEl = this;
+
+  e.dataTransfer.effectAllowed = 'move';
+  e.dataTransfer.setData('text/html', this.innerHTML);
+}
+function handleDragOver(e) {
+	if (e.preventDefault) {
+		e.preventDefault(); // Necessary. Allows us to drop.
+	}
+	e.dataTransfer.dropEffect = 'move';  
+	return false;
+}
+function handleDragEnter(e) {
+	// this / e.target is the current hover target.
+	this.classList.add('over');
+}
+function handleDragLeave(e) {
+	// this / e.target is previous target element.
+	this.classList.remove('over');  
+}
+function handleDrop(e) {
+	// this / e.target is current target element.
+	if (e.stopPropagation) {
+		e.stopPropagation(); // stops the browser from redirecting.
+	}
+    // Don't do anything if dropping the same column we're dragging.
+    if (dragSrcEl != this) {
+		// Set the source column's HTML to the HTML of the column we dropped on.
+		var old_position = $(dragSrcEl).find(".position").text();
+		var new_position = $(this).find(".position").text()
+		
+		// update with new position in the DB
+		var update_url = "{{ url_for('song_edit', mix_name=mix.name|e, action='edit', song_id=999) }}"
+		
+		change_url = update_url.replace("999", $(dragSrcEl).data().song_id)
+		$.post(change_url, { "position": parseInt(new_position) }, function(d){
+			console.log(d)
+		})
+		
+		change_url = update_url.replace("999", $(this).data().song_id)
+		$.post(change_url, { "position": parseInt(old_position) }, function(d){
+			// console.log(d)
+		})
+		
+
+		// console.log(old_position, new_position)
+		dragSrcEl.innerHTML = this.innerHTML;
+		this.innerHTML = e.dataTransfer.getData('text/html');
+		$(this).find("a.song").bind("click", song_click);
+		$(this).find(".position").text(new_position);
+		$(dragSrcEl).find(".position").text(old_position);
+    }
+    [].forEach.call(songs, function (song) {
+		song.classList.remove('over');
+		song.style.opacity = '1.0';
+    });
+	return false;
+}
+function handleDragEnd(e) {
+  // this/e.target is the source node.
+}
+[].forEach.call(songs, function(song) {
+	song.addEventListener('dragstart', handleDragStart, false);
+    song.addEventListener('dragenter', handleDragEnter, false);
+    song.addEventListener('dragover', handleDragOver, false);
+    song.addEventListener('dragleave', handleDragLeave, false);
+    song.addEventListener('ondragend', handleDragEnd, false);
+    song.addEventListener('drop', handleDrop, false);
+});
+{% endif %}
+
+
+
 
   $(document).keyup(function(e) {
     
@@ -94,7 +172,9 @@
   this.getSoundByObject = function(o) {
     return (typeof soundsByObject[o.id] !== 'undefined' ? soundsByObject[o.id] : null);
   };
-  $(".songs a.song").bind("click", function(e){
+  $(".songs a.song").bind("click", song_click);
+  
+  function song_click(e){
     var o = get_target(e);
     $(o).children(".progress_play").show()
     $(o).children(".progress_load").show()
@@ -166,7 +246,7 @@
     last_played = this_sound;
     
     return false;
-  });
+  }
   
   soundManager.setup({
     url: "{{ url_for('static', filename='soundmanager/swf') }}",

@@ -67,7 +67,7 @@ def uploaded_file(filename):
 '''Home'''
 @app.route("/<mix_name>/edit", endpoint="all_mixes_edit")
 @app.route("/")
-def all_mixes(mix_name=None):
+def all_mixes(mix_name=None):    
     mix, action = None, None
     if mix_name:
         action = "edit"
@@ -101,7 +101,6 @@ def mix_action(action="create", mix_name=None):
                   [request.form["name"], request.form["description"], request.form["id"]])
         flash_msg = "Mix successfully edited."
     else:
-        # raise Exception(request.form["name"])
         cursor = g.db.execute("insert into mix (name, date, description, user) values (?, ?, ?, ?)",
                           [request.form["name"], str(datetime.datetime.now()),
                           request.form["description"], session.get("user_id")])
@@ -151,7 +150,7 @@ def show_mix(mix_name, song_id=None, action='create'):
         for row in cur.fetchall():
             votes.setdefault(row[0], []).append(row[1])
     else:
-        cur = g.db.execute("select id, name, description, cover, user from mix where lower(name) = ?", [unquote_plus(mix_name)])
+        cur = g.db.execute("select id, name, description, cover, user from mix where lower(name) = ?", [unquote_plus(mix_name).lower()])
         m = cur.fetchone()
         mix = dict(id=m[0], name=m[1], description=m[2], cover=m[3], user=m[4])
         cur = g.db.execute("select id, title, artist, position from song where mix = ? order by position", [mix["id"]])
@@ -161,7 +160,7 @@ def show_mix(mix_name, song_id=None, action='create'):
             votes.setdefault(row[0], []).append(row[1])
     return render_template("show_mix.html", mix=mix, songs=songs, song=song, action=action, votes=votes)
 
-@app.route('/<mix_name>/song/<int:song_id>/<action>', endpoint="song_edit", methods=["GET", "POST"])
+@app.route('/<mix_name>/song/<int:song_id>/<action>/', endpoint="song_edit", methods=["GET", "POST"])
 @app.route('/<mix_name>/song/create', methods=["POST"])
 def song_add(mix_name, action="create", song_id=None):
     if not session.get("logged_in"):
@@ -178,13 +177,21 @@ def song_add(mix_name, action="create", song_id=None):
         cursor = g.db.execute("delete from song where id=?", [song_id])
         flash_msg = "Song deleted."
     elif action == "edit":
-        cursor = g.db.execute("update song set title=?, artist=?, position=? where id=?",
-                  [request.form["title"], request.form["artist"], request.form["position"], request.form["id"]])
+        if request.is_xhr:
+            cursor = g.db.execute("update song set position=? where id=?",
+                      [request.form["position"], song_id])
+            g.db.commit()
+            return jsonify({"success": True})
+        cursor = g.db.execute("update song set title=?, artist=? where id=?",
+                  [request.form["title"], request.form["artist"], request.form["id"]])
         flash_msg = "Song edited."
     else:
+        cursor = g.db.execute("select count(*) from song, mix where " \
+                                "mix.name=? and mix.id = song.mix;", [mix_name])
+        next_track_position = int(cursor.fetchone()[0]) + 1
         cursor = g.db.execute("insert into song (title, artist, position, mix) values (?, ?, ?, ?)",
                   [request.form["title"], request.form["artist"],
-                  request.form["position"], request.form["mix"]])
+                  next_track_position, request.form["mix"]])
         flash_msg = "New song added"
     g.db.commit()
     if action != "delete":

@@ -35,11 +35,6 @@
 		<a class="cover add" href="#"><span>New mix...</span></a>
 		<div class="preview_info"></div>
 	</div>
-	<!-- <div class="mix">
-	<a class="cover dynamic" href="/mixtur/my+votes"><span>My votes</span><img src="/static/img/tape_my_top.png"></a>
-	<div class="preview_info">
-	</div>
-	</div> -->
 	{% endif %}
 	<div class="mix">
 		<a class="cover dynamic" href="/mixtur/top+voted"><span>Top voted</span><img src="/static/img/tape_top.png"></a>
@@ -53,7 +48,6 @@
 		<div class="edit"><a href="{{ url_for('all_mixes_edit', mix_name=entry.name|e) }}">edit</a> | <a href="{{ url_for('mix_edit', mix_name=entry.name|urlify, action='delete') }}" class="delete">delete</a></div>
 		{% endif %}
 		<a class="cover" href="{{ url_for('show_mix', mix_name=entry.name|e) }}">
-			<!-- <img src="{{url_for('uploaded_file', filename='cover_%s.jpg'%(entry.id))}}" /> -->
 			{% if entry.cover %}
 			<img src="{{url_for('uploaded_file', filename=entry.cover) }}" />
 			{% else %}
@@ -61,8 +55,8 @@
 			{% endif %}
 		</a>
 		<div class="preview_info">
-			<h3><a href="/mixtur/{{entry.name|urlify}}">{{entry.name}}</a></h3>
-			<p class="date">{{entry.date}} by <a href="/u/tanoku">{{entry.user}}</a></p>
+			<h3><a href="/mixtur/{{ entry.name|e }}">{{ entry.name }}</a></h3>
+			<p class="date">{{ entry.date }} by <a href="/u/tanoku">{{ entry.user }}</a></p>
 		</div>
 	</div>
 
