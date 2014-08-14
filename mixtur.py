@@ -198,11 +198,13 @@ def song_add(mix_name, action="create", song_id=None):
         file = request.files['file']
         title = request.form["title"].replace(" ", "_").lower()
         artist = request.form["artist"].replace(" ", "_").lower()
+        # print title, artist
         if file and allowed_file(file.filename):
             new_file_name = u"song_{0}_{1}.mp3".format(artist, title)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], new_file_name.encode('utf-8')))
         flash(flash_msg)
-    return redirect(url_for('show_mix', mix_name=mix_name))
+    return jsonify({"id": cursor.lastrowid, "artist":request.form["artist"], "title":request.form["title"], "filename":new_file_name, "position":next_track_position})
+    # return redirect(url_for('show_mix', mix_name=mix_name))
 
 
 '''

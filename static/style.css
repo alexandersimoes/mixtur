@@ -111,7 +111,7 @@ form img {
   font-family: 'Lato', "Lucida Grande", Tahoma, Verdana, sans-serif;
   font-weight: 300;
   padding: 0;
-  width: 340px;
+  width: 98%;
 }
 input:focus {
     outline: none;
@@ -255,12 +255,31 @@ div.mix_title .title {
   float: left;
 /*  width: 400px;*/
 }
+/*Animation Prefs*/
+@-webkit-keyframes pulse {
+      0% {background-color: #000;}
+      50% {background-color: #343434;}
+     100% {background-color: #000;}
+}
 div.add_song {
   clear: both;
   background: black;
   border: 2px dashed #88B;
   margin: 10px 0;
   padding: 10px;
+  text-align: left;
+  
+  /* Set our transitions up. */
+  -webkit-transition: height 0.8s;
+  -moz-transition: height 0.8s;
+  transition: height 0.8s;
+}
+div.add_song.hover {
+  height: 200px;
+  -webkit-animation: pulse 8s infinite alternate;
+  background-color: #45CEEF;
+  text-align: center;
+  padding-top: 100px;
 }
 div.add_song > a {
   display: block;
@@ -269,6 +288,15 @@ div.add_song > a {
 div.add_song form {
   display: none;
   margin: 20px 0 0 0;
+}
+div.new_song {
+  clear: both;
+  background: black;
+  border: 2px dashed #88B;
+  display: inline-block;
+  margin: 10px 10px 10px 0;
+  padding: 10px;
+  width: 300px;
 }
 div.songs {
 
