@@ -64,12 +64,25 @@ header .metanav {
   width: 100px;
 }
 
-.flash {
+.flash-wrapper {
+  width: 100%;
+  height: 0px;
+  left: 0;
+  top: 0;
+  text-align: center;
+  position: fixed;
+  z-index: 1001;
+}
+.flash {  
   color: black;
   background: #88B;
   border: dashed black 2px;
   padding: 10px;
   text-align: center;
+  margin: 9px;
+  padding: 8px 18px;
+  font-size: 12px;
+  display: inline-block;
 }
 
 div.page {

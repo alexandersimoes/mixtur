@@ -361,7 +361,6 @@ function handleDragEnd(e) {
 
 </script>
 
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <script>
 function add_song(resp){
   var new_song = document.createElement('div')
@@ -379,6 +378,16 @@ function add_song(resp){
     '  <h2><span class="position">' + resp["position"] + '</span>. ' + resp["artist"] + ' - ' + resp["title"] + '</h2>' +
     '</a>'
   document.querySelector('div.songs').appendChild(new_song);
+  
+  var flash_div = document.createElement("div")
+  flash_div.className = "flash-wrapper"
+  flash_div.innerHTML = "<span class='flash'><strong>"+resp["title"]+"</strong> by <strong>" + resp["artist"] + "</strong> added to mix.</span>"
+  document.body.insertBefore(flash_div, document.body.firstChild)
+  setTimeout(function(){
+    flash_div.remove();
+  }, 5000);
+  
+  $(".songs a.song").bind("click", song_click);
 }
 function new_song(file){
   var new_song = document.createElement('div')
@@ -405,14 +414,14 @@ function new_song(file){
     var form_data = new FormData(form_el);
     form_data.append('file', file);
     
-    console.log($(form_el).serialize())
-    
     // now post a new XHR request
     var xhr = new XMLHttpRequest();
     xhr.open('POST', '{{ url_for("song_add", mix_name=mix.name|e) }}');
     xhr.onload = function (a, b, c) {
       if (xhr.status === 200) {
-        add_song(JSON.parse(this.responseText));
+        var resp = JSON.parse(this.responseText);
+        add_song(resp);
+        new_song.remove();
       } else {
         console.log('Something went terribly wrong...');
       }

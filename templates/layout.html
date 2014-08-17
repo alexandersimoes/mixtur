@@ -6,7 +6,9 @@
 </head>
 <body>
   {% for message in get_flashed_messages() %}
-  <div class="flash">{{ message }}</div>
+  <div class="flash-wrapper">
+    <span class="flash">{{ message }}</span>
+  </div>
   {% endfor %}
   <header>
     <h1><a href="/"><img src="{{ url_for('static', filename='img/tape.png') }}" />Mixtur</a></h1>
@@ -40,7 +42,7 @@
     setTimeout(function(){
      $(".flash").fadeOut(function(){
        $(".flash").remove();
-     }) 
+     })
     }, 3000);
   }
   </script>
