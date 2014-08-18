@@ -1,69 +1,65 @@
 {% extends "layout.html" %}
 {% block head_title %}{{mix.name}} @ MIXTUR{% endblock %}
 {% block body %}
-	<h2 class="title">All Mixturs</h2>
+  <h2 class="title">All Mixturs</h2>
   
-	{% if session.logged_in %}
-    <form action="{% if action == 'edit' %}{{ url_for('mix_edit', mix_name=mix.name|e, action='edited') }}{% else %}{{url_for('mix_action', action='create')}}{% endif %}" method="post" class="new_mix" enctype="multipart/form-data">
-		<h3>Title</h3>
-		<div class="input_cont">
-			<input type="text" name="name" value="{% if mix %}{{mix.name}}{% endif %}" />
-		</div>
-		<h3>Tagline</h3>
-		<div class="input_cont">
-			<input type="text" name="description" value="{% if mix %}{{mix.description}}{% endif %}" />
-		</div>
-		{% if mix %}
-		{% if mix.cover %}
-		<img src="{{url_for('uploaded_file', filename=mix.cover) }}" />
-		{% endif %}
-		<h3>Upload an album cover replacement?</h3>
-		{% else %}
-		<h3>Upload an album cover...</h3>
-		{% endif %}
-		<div>
-        	<input type="file" class="file" name="file" accept="image/*" />
-      	</div>
-      	<input type="hidden" name="id" value="{% if mix %}{{mix.id}}{% endif %}" />
-      	<input type="submit" value="{% if mix %}Update{% else %}Create{% endif %}" />
-      	<a href="/" class="nvrmind">Nvrmind</a>
-	</form>
-	{% endif %}
+  {% if session.logged_in %}
+    <form action="{% if action == 'edit' %}{{ url_for('mix_edit', mix_name=mix.name|urlify, action='edited') }}{% else %}{{url_for('mix_action', action='create')}}{% endif %}" method="post" class="new_mix" enctype="multipart/form-data">
+    <h3>Title</h3>
+    <div class="input_cont">
+      <input type="text" name="name" value="{% if mix %}{{mix.name}}{% endif %}" />
+    </div>
+    <h3>Tagline</h3>
+    <div class="input_cont">
+      <input type="text" name="description" value="{% if mix %}{{mix.description}}{% endif %}" />
+    </div>
+    {% if mix %}
+    {% if mix.cover %}
+    <img src="{{url_for('uploaded_file', user=mix.user, mix=mix.name|urlify, filename='cover.jpg') }}" />
+    {% endif %}
+    <h3>Upload an album cover replacement?</h3>
+    {% else %}
+    <h3>Upload an album cover...</h3>
+    {% endif %}
+    <div>
+      <input type="file" class="file" name="file" accept="image/*" />
+    </div>
+    <input type="hidden" name="id" value="{% if mix %}{{mix.id}}{% endif %}" />
+    <input type="submit" value="{% if mix %}Update{% else %}Create{% endif %}" />
+    <a href="/" class="nvrmind">Nvrmind</a>
+  </form>
+  {% endif %}
   
-	{% if session.logged_in %}
-	<div class="mix">
-		<a class="cover add" href="#"><span>New mix...</span></a>
-		<div class="preview_info"></div>
-	</div>
-	{% endif %}
-	<div class="mix">
-		<a class="cover dynamic" href="/mixtur/top+voted"><span>Top voted</span><img src="/static/img/tape_top.png"></a>
-		<div class="preview_info"></div>
-	</div>
+  {% if session.logged_in %}
+  <div class="mix">
+    <a class="cover add" href="#"><span>New mix...</span></a>
+    <div class="preview_info"></div>
+  </div>
+  {% endif %}
+  <div class="mix">
+    <a class="cover dynamic" href="/mixtur/top+voted"><span>Top voted</span><img src="/static/img/tape_top.png"></a>
+    <div class="preview_info"></div>
+  </div>
   
-	{% for entry in entries %}
+  {% for entry in entries %}
     
-	<div class="mix">
-    	{% if session.user_id == entry.user_id %}
-		<div class="edit"><a href="{{ url_for('all_mixes_edit', mix_name=entry.name|e) }}">edit</a> | <a href="{{ url_for('mix_edit', mix_name=entry.name|urlify, action='delete') }}" class="delete">delete</a></div>
-		{% endif %}
-		<a class="cover" href="{{ url_for('show_mix', mix_name=entry.name|urlify) }}">
-			{% if entry.cover %}
-			<img src="{{url_for('uploaded_file', filename=entry.cover) }}" />
-			{% else %}
-			<img src="/static/img/tape.png" style="margin-top: 35px" />
-			{% endif %}
-		</a>
-		<div class="preview_info">
-			<h3><a href="/mixtur/{{ entry.name|e }}">{{ entry.name }}</a></h3>
-			<p class="date">{{ entry.date }} by <a href="/u/tanoku">{{ entry.user }}</a></p>
-		</div>
-	</div>
+  <div class="mix">
+      {% if session.user == entry.user %}
+    <div class="edit"><a href="{{ url_for('all_mixes_edit', mix_name=entry.name|urlify) }}">edit</a> | <a href="{{ url_for('mix_edit', mix_name=entry.name|urlify, action='delete') }}" class="delete">delete</a></div>
+    {% endif %}
+    <a class="cover" href="{{ url_for('show_mix', mix_name=entry.name|urlify) }}">
+      <img src="{{url_for('uploaded_file', user=entry.user, mix=entry.name|urlify, filename='cover.jpg') }}" />
+    </a>
+    <div class="preview_info">
+      <h3><a href="/mixtur/{{ entry.name|e }}">{{ entry.name }}</a></h3>
+      <p class="date">{{ entry.date }} by <a href="/u/tanoku">{{ entry.user }}</a></p>
+    </div>
+  </div>
 
     
-	{% else %}
-	<em>Unbelievable. No mixXxes here yet... bummah!</em>
-	{% endfor %}
+  {% else %}
+  <em>Unbelievable. No mixXxes here yet... bummah!</em>
+  {% endfor %}
   
 {% endblock %}
 
@@ -71,14 +67,14 @@
 
 <script>
 $("a.delete").click(function(){
-	if(confirm("Are you totally, 100%, swear-on-your-life positive you want to wipe this mix clean from the face of this Earth???")){
-		return;
-	}
-	return false;
+  if(confirm("Are you totally, 100%, swear-on-your-life positive you want to wipe this mix clean from the face of this Earth???\n\nWARNING: This will also delete all the songs from this mix.")){
+    return;
+  }
+  return false;
 })
 $("a.add").toggle(
-	function(){ $("form.new_mix").show();},
-	function(){ $("form.new_mix").hide();}
+  function(){ $("form.new_mix").show();},
+  function(){ $("form.new_mix").hide();}
 )
 
 {% if action == 'edit' %}

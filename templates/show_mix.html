@@ -4,19 +4,18 @@
   <div id="container"></div>
   <div class="mix_title">
     <div class="cover">
-    {% if mix.cover %}
-    <img src="{{ url_for('uploaded_file', filename=mix.cover) }}" alt="cover image for {{mix.name}}" />
-    {% endif %}
+    <img src="{{url_for('uploaded_file', user=mix.user, mix=mix.name|urlify, filename='cover.jpg') }}" alt="cover image for {{mix.name}}" />
     </div>
       <div class="title">
       <h1>{{mix.name}}</h1>
       <p>{{mix.description}}</p>
       </div>
   </div>
-  {% if session.logged_in and session.user_id == mix.user %}
+  {% if session.logged_in and session.user == mix.user %}
   <div class="add_song">
     <a href="#" class="add">+ Drag songs here...</a>
-    <form action="{% if action == 'edit' %}{{ url_for('song_edit', mix_name=mix.name|e, action='edit', song_id=song.id) }}{% else %}{{ url_for('song_add', mix_name=mix.name|e) }}{% endif %}" method="post" class="new_song" enctype="multipart/form-data">
+    {% if song %}
+    <form action="{{ url_for('song_edit', mix_name=mix.name|urlify, song_id=song.id) }}" method="post" class="new_song" enctype="multipart/form-data">
       <h3>Title:</h3>
       <div class="input_cont">
         <input type="text" name="title" value="{% if song %}{{song.title}}{% endif %}" />
@@ -25,31 +24,26 @@
       <div class="input_cont">
         <input type="text" name="artist" value="{% if song %}{{song.artist}}{% endif %}" />
       </div>
-      {% if action == 'edit' %}
       <h3>Change song file?</h3>
-      {% else %}
-      <h3>Song file:</h3>
-      {% endif %}
       <div>
         <input type="file" class="file" name="file" />
       </div>
-      <input type="hidden" name="mix" value="{{ mix.id }}" />
-      <input type="hidden" name="id" value="{% if song %}{{song.id}}{% endif %}" />
-      <input type="submit" value="{% if song %}Update{% else %}Upload{% endif %}" />
-      <a href="{{ url_for('show_mix', mix_name=mix.name|e) }}" class="nvrmind">Nvrmind</a>
+      <input type="submit" value="Update" />
+      <a href="{{ url_for('show_mix', mix_name=mix.name|urlify) }}" class="nvrmind">Nvrmind</a>
     </form>
+    {% endif %}
   </div>
   {% endif %}
   <div class="songs">
     {% for song in songs %}
-    <div class="song" data-song_id="{{ song.id }}" {% if session.logged_in and session.user_id == mix.user %}draggable="true"{% endif %}>
-      {% if session.logged_in and session.user_id == mix.user %}
-      <div class="edit"><a href="{{ url_for('show_mix_edit', mix_name=mix.name|e, song_id=song.id) }}">edit</a> | <a href="{{ url_for('song_edit', mix_name=mix.name|e, action='delete', song_id=song.id) }}" class="delete">delete</a></div>
+    <div class="song" data-song_id="{{ song.id }}" {% if session.logged_in and session.user == mix.user %}draggable="true"{% endif %}>
+      {% if session.logged_in and session.user == mix.user %}
+      <div class="edit"><a href="{{ url_for('show_mix_edit', mix_name=mix.name|urlify, song_id=song.id) }}">edit</a> | <a href="{{ url_for('song_delete', mix_name=mix.name|urlify, song_id=song.id) }}" class="delete">delete</a></div>
       {% endif %}
       <div class="vote">
-        <a data-song_id="{{ song.id }}" data-user_id="{{session.user_id}}" class="{% if session.user_id in votes|access(song.id, []) %}voted{% endif %}">{% if votes|access(song.id, [])|length %}{{votes|access(song.id, [])|length}}{% endif %}</a>
+        <a data-song_id="{{ song.id }}" data-user="{{session.user}}" class="{% if session.user in votes|access(song.id, []) %}voted{% endif %}">{% if votes|access(song.id, [])|length %}{{votes|access(song.id, [])|length}}{% endif %}</a>
       </div>
-      <a href="{{url_for('uploaded_file', filename='song_%s_%s.mp3'%(song.artist|lower|replace(' ', '_'), song.title|lower|replace(' ', '_'))) }}" class="song" id="song_{{song.id}}">
+      <a href="{{url_for('uploaded_file', user=mix.user, mix=mix.name|urlify, filename='song_%s_%s.mp3'%(song.artist|lower|replace(' ', '_'), song.title|lower|replace(' ', '_'))) }}" class="song" id="song_{{song.id}}">
         <div class="progress_load"></div>
         <div class="progress_play"></div>
         <h2><span class="position">{{song.position}}</span>. {{song.artist}} - {{ song.title }}</h2>
@@ -64,8 +58,7 @@
 {% block js %}
 <script src="{{ url_for('static', filename='soundmanager/script/soundmanager2-jsmin.js') }}"></script>
 <script>
-
-{% if session.logged_in and session.user_id == mix.user %}
+{% if session.logged_in and session.user == mix.user %}
 var dragSrcEl = null;
 var songs = document.querySelectorAll('.songs div.song');
 
@@ -105,7 +98,7 @@ function handleDrop(e) {
     var new_position = $(this).find(".position").text()
     
     // update with new position in the DB
-    var update_url = "{{ url_for('song_edit', mix_name=mix.name|e, action='edit', song_id=999) }}"
+    var update_url = "{{ url_for('song_edit', mix_name=mix.name|urlify, action='edit', song_id=999) }}"
     
     change_url = update_url.replace("999", $(dragSrcEl).data().song_id)
     $.post(change_url, { "position": parseInt(new_position) }, function(d){
@@ -324,25 +317,27 @@ function handleDragEnd(e) {
     $("a.add").text("Lets update this shit...");
   }
   
-  $("a.delete").click(function(){
-    if(confirm("Are you totally, 100%, swear-on-your-life positive you want to wipe this mix clean from the face of this Earth???")){
-      return;
-    }
-    return false;
-  })
+  // $("a.delete").click(function(e){
+  //   if(confirm("Are you totally, 100%, swear-on-your-life positive you want to wipe this mix clean from the face of this Earth???")){
+  //     // return;
+  //     console.log(this.attr("href"))
+  //
+  //   }
+  //   return false;
+  // })
   
   // handle voting
   $(".vote a").click(function(){
     var self = $(this),
       cur_vote_count = parseInt(self.text()) || 0,
       new_amt = self.hasClass("voted") ? -1 : 1;
-      user_id = self.data().user_id,
+      user = self.data().user,
       song_id = self.data().song_id;
-    if(!user_id){
+    if(!user){
       alert("You gotta be signed in to vote!");
       return false;
     }
-    $.get("/mixtur/vote", {"song_id": song_id, "user_id": user_id}, function(data){
+    $.get("/mixtur/vote", {"song_id": song_id, "user": user}, function(data){
       if(data.result){
         self.toggleClass("voted");
         var new_total = cur_vote_count+new_amt;
@@ -362,31 +357,56 @@ function handleDragEnd(e) {
 </script>
 
 <script>
+var del_links = document.querySelectorAll("a.delete")
+for (var i = 0; i < del_links.length; i++) {
+  del_links[i].addEventListener("click", function(e){
+    if(confirm("Are you totally, 100%, swear-on-your-life positive you want to wipe this mix clean from the face of this Earth???")){
+      // use DELETE method via XHR request
+      var xhr = new XMLHttpRequest();
+      xhr.open('DELETE', e.target.href);
+      xhr.onload = function (a, b, c) {
+        if (xhr.status === 200) {
+          var resp = JSON.parse(this.responseText);
+          var flash_msg = "<strong>"+resp["title"]+"</strong> by <strong>" + resp["artist"] + "</strong> was deleted forever."
+          flash(flash_msg)
+          e.target.parentNode.parentNode.remove()
+        } else {
+          console.log('Something went terribly wrong...');
+        }
+      };
+      xhr.send();
+    }
+    e.preventDefault();
+  })
+
+}
+function flash(msg){
+  var flash_div = document.createElement("div")
+  flash_div.className = "flash-wrapper"
+  flash_div.innerHTML = "<span class='flash'>" + msg + "</span>"
+  document.body.insertBefore(flash_div, document.body.firstChild)
+  setTimeout(function(){
+    flash_div.remove();
+  }, 5000);
+}
 function add_song(resp){
   var new_song = document.createElement('div')
   new_song.className = 'song'
   new_song.innerHTML =  '' +
-    {% if session.logged_in and session.user_id == mix.user %}
+    {% if session.logged_in and session.user == mix.user %}
     '<div class="edit"><a href="">edit</a> | <a href="" class="delete">delete</a></div>' +
     {% endif %}
     '<div class="vote">' +
-    '  <a data-song_id="resp["id"]" data-user_id="{{session.user_id}}" class="{% if session.user_id in votes|access(song.id, []) %}voted{% endif %}">{% if votes|access(song.id, [])|length %}{{votes|access(song.id, [])|length}}{% endif %}</a>' +
+    '  <a data-song_id="resp["id"]" data-user="{{session.user}}" class="{% if session.user in votes|access(song.id, []) %}voted{% endif %}">{% if votes|access(song.id, [])|length %}{{votes|access(song.id, [])|length}}{% endif %}</a>' +
     '</div>' +
-    '<a href="/uploads/' + resp["filename"] + '" class="song" id="song_' + resp["position"] + '">' +
+    '<a href="/uploads/{{ session.user }}/{{ mix.name|urlify }}/' + resp["filename"] + '" class="song" id="song_' + resp["position"] + '">' +
     '  <div class="progress_load"></div>' +
     '  <div class="progress_play"></div>' +
     '  <h2><span class="position">' + resp["position"] + '</span>. ' + resp["artist"] + ' - ' + resp["title"] + '</h2>' +
     '</a>'
   document.querySelector('div.songs').appendChild(new_song);
-  
-  var flash_div = document.createElement("div")
-  flash_div.className = "flash-wrapper"
-  flash_div.innerHTML = "<span class='flash'><strong>"+resp["title"]+"</strong> by <strong>" + resp["artist"] + "</strong> added to mix.</span>"
-  document.body.insertBefore(flash_div, document.body.firstChild)
-  setTimeout(function(){
-    flash_div.remove();
-  }, 5000);
-  
+  var flash_msg = "<strong>"+resp["title"]+"</strong> by <strong>" + resp["artist"] + "</strong> added to mix."
+  flash(flash_msg)
   $(".songs a.song").bind("click", song_click);
 }
 function new_song(file){
@@ -416,7 +436,7 @@ function new_song(file){
     
     // now post a new XHR request
     var xhr = new XMLHttpRequest();
-    xhr.open('POST', '{{ url_for("song_add", mix_name=mix.name|e) }}');
+    xhr.open('POST', '{{ url_for("song_add", mix_name=mix.name|urlify) }}');
     xhr.onload = function (a, b, c) {
       if (xhr.status === 200) {
         var resp = JSON.parse(this.responseText);
@@ -432,22 +452,24 @@ function new_song(file){
   document.querySelector('div.page').appendChild(new_song);
 }
 var add_song_div = document.querySelector(".add_song");
-add_song_div.ondragover = function () { this.classList.add('hover'); return false; };
-add_song_div.ondragend = function () { this.classList.remove('hover'); return false; };
-add_song_div.ondragleave = function () { this.classList.remove('hover'); return false; };
-add_song_div.ondrop = function (event) {
-  event.preventDefault && event.preventDefault();
-  this.classList.remove('hover');
+if(add_song_div){
+  add_song_div.ondragover = function () { this.classList.add('hover'); return false; };
+  add_song_div.ondragend = function () { this.classList.remove('hover'); return false; };
+  add_song_div.ondragleave = function () { this.classList.remove('hover'); return false; };
+  add_song_div.ondrop = function (event) {
+    event.preventDefault && event.preventDefault();
+    this.classList.remove('hover');
 
-  // now do something with:
-  var files = event.dataTransfer.files;
-  for (var i = 0; i < files.length; i++) {
-    
-    new_song(files[i])
-    // formData.append('file', files[i]);
-  }
+    // now do something with:
+    var files = event.dataTransfer.files;
+    for (var i = 0; i < files.length; i++) {
 
-  return false;
-};
+      new_song(files[i])
+      // formData.append('file', files[i]);
+    }
+
+    return false;
+  };
+}
 </script>
 {% endblock %}
