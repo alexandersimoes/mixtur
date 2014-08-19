@@ -1,6 +1,14 @@
 {% extends "layout.html" %}
 {% block head_title %}{{mix.name}} @ MIXTUR{% endblock %}
 {% block body %}
+<div id="modal_bg">
+  <div id="modal">
+    <img src="/static/img/upload.png" />
+    <br />
+    <h3>Incoming!</h3>
+    <p>Drop your files here to upload them to your mixXx.</p>
+  </div>  
+</div>
   <div id="container"></div>
   <div class="mix_title">
     <div class="cover">
@@ -12,8 +20,8 @@
       </div>
   </div>
   {% if session.logged_in and session.user == mix.user %}
-  <div class="add_song">
-    <a href="#" class="add">+ Drag songs here...</a>
+  <div id="add_song">
+    <span class="add">+ Drag songs here to add...</span>
     {% if song %}
     <form action="{{ url_for('song_edit', mix_name=mix.name|urlify, song_id=song.id) }}" method="post" class="new_song" enctype="multipart/form-data">
       <h3>Title:</h3>
@@ -307,15 +315,15 @@ function handleDragEnd(e) {
     return e.target.id ? e.target : e.target.parentNode;
   };
   
-  $("a.add").toggle(
-    function(){ $(".add_song form").show();},
-    function(){ $(".add_song form").hide();}
-  )
+  // $("a.add").toggle(
+  //   function(){ $(".add_song form").show();},
+  //   function(){ $(".add_song form").hide();}
+  // )
   
-  if(window.location.pathname.indexOf("song") > 0){
-    $(".add_song form").show();
-    $("a.add").text("Lets update this shit...");
-  }
+  // if(window.location.pathname.indexOf("song") > 0){
+  //   $(".add_song form").show();
+  //   $("a.add").text("Lets update this shit...");
+  // }
   
   // $("a.delete").click(function(e){
   //   if(confirm("Are you totally, 100%, swear-on-your-life positive you want to wipe this mix clean from the face of this Earth???")){
@@ -451,8 +459,9 @@ function new_song(file){
   }, false);
   document.querySelector('div.page').appendChild(new_song);
 }
-var add_song_div = document.querySelector(".add_song");
+var add_song_div = document.querySelector("#add_song");
 if(add_song_div){
+  var body = document.body
   add_song_div.ondragover = function () { this.classList.add('hover'); return false; };
   add_song_div.ondragend = function () { this.classList.remove('hover'); return false; };
   add_song_div.ondragleave = function () { this.classList.remove('hover'); return false; };
@@ -471,5 +480,7 @@ if(add_song_div){
     return false;
   };
 }
+
+
 </script>
 {% endblock %}

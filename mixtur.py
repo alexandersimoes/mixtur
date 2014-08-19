@@ -253,7 +253,7 @@ def song_add(mix_name):
     
 '''
 '''Login'''
-@app.route("/login", methods=["GET", "POST"])
+@app.route("/login/", methods=["GET", "POST"])
 def login():
     error = None
     if request.method == "POST":
@@ -272,7 +272,7 @@ def login():
     return render_template("login.html", error=error)
 
 '''Logout'''
-@app.route("/logout")
+@app.route("/logout/")
 def logout():
     session.pop("logged_in", None)
     session.pop("user", None)

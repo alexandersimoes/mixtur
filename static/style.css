@@ -84,10 +84,12 @@ header .metanav {
   font-size: 12px;
   display: inline-block;
 }
-
 div.page {
   margin: 10px;
+  min-height: 100%;
 }
+/*html, body { padding: 0px; margin: 0px; height: 100%; text-align: center; }*/
+div.page { height: 100%; text-align: left; }
 div.page h2.title{
   border-bottom: solid 2px #666;
   font-size: 26px;
@@ -266,40 +268,33 @@ div.mix_title .cover img {
 }
 div.mix_title .title {
   float: left;
-/*  width: 400px;*/
+  width: 400px;
 }
 /*Animation Prefs*/
-@-webkit-keyframes pulse {
+/*@-webkit-keyframes pulse {
       0% {background-color: #000;}
       50% {background-color: #343434;}
      100% {background-color: #000;}
-}
-div.add_song {
+}*/
+div#add_song {
   clear: both;
   background: black;
   border: 2px dashed #88B;
   margin: 10px 0;
   padding: 10px;
   text-align: left;
-  
-  /* Set our transitions up. */
-  -webkit-transition: height 0.8s;
-  -moz-transition: height 0.8s;
-  transition: height 0.8s;
 }
-div.add_song.hover {
-  height: 200px;
-  -webkit-animation: pulse 8s infinite alternate;
-  background-color: #45CEEF;
+div#add_song.hover {
+  color: white !important;
+  background: #88B;
+  border: 2px dashed black;
   text-align: center;
-  padding-top: 100px;
 }
-div.add_song > a {
+div#add_song > span {
   display: block;
   font-size: 18px;
 }
-div.add_song form {
-  display: none;
+div#add_song form {
   margin: 20px 0 0 0;
 }
 div.new_song {
@@ -384,4 +379,26 @@ div.songs a.song .progress_load {
 ul.songs li > a.add {
   border: dashed 2px #88b;
   margin: 0 0 20px 0;
+}
+
+#modal_bg {
+  display: none;
+  background:rgba(255,255,255,0.8);
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  margin: auto;
+  position: absolute;
+  top: 0; left: 0; bottom: 0; right: 0;
+  text-align:center;
+}
+#modal {
+  color: black;
+  width: 50%;
+  height: 50%;
+  overflow: auto;
+  margin: auto;
+  position: absolute;
+  top: 0; left: 0; bottom: 0; right: 0;
+  text-align:center;
 }
