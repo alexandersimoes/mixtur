@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+
+<html lang="en" dir="ltr" itemscope itemtype="http://schema.org/Article">
+<head>
+  <meta charset="utf-8">
+  <title>Mixtur</title>
+  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5-els.js"></script>
+  <![endif]-->
+  
+  <style>
+  
+  h1, h2, h3, h4, h5, h6 { font-weight: normal; }
+  html { height: 100%; }
+  
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Open Sans", sans-serif;
+    font-size: 13px;
+    font-weight: 300;
+    
+
+    display: flex;
+    min-height: 100%;
+    flex-direction: column;
+  }
+  .tracks {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  
+  .anthology{
+    display: flex;
+    flex-direction: column;
+    flex: 1 0 auto;
+  }
+  .anthology-title {
+    background: lightgrey;
+/*    color: grey;*/
+    flex: 0 1 auto;
+    padding: 0 10px;
+    text-align: center;
+  }
+  .anthology-title i {
+    cursor: pointer;
+    margin: 0 5px;
+  }
+  .anthology-title h1 {
+    display: inline;
+    font-size: 28px;
+    margin: 0 10px 0 0;
+  }
+  .anthology > div.album {
+    flex: 1 1 auto;
+  }
+  .anthology > h1 {
+/*    flex: 0 0 100%*/
+  }
+  div.album {
+    padding: 10px;
+  }
+  header {
+    margin: 0 0 10px 0;
+  }
+  header .album-title h1 {
+    display: inline;
+    font-size: 28px;
+    margin: 0 10px 0 0;
+  }
+  header .album-title i {
+    cursor: pointer;
+    font-size: 24px;
+    margin: 0 5px;
+    vertical-align: baseline;
+  }
+  header .album-artist {
+    font-size: 20px;
+  }
+  header .album-artist h2 {
+    display: inline;
+    font-size: 20px;
+  }
+
+  @media (min-width: 768px) {
+    .tracks {
+      flex-direction: row;
+      flex: 1;
+    }
+    .tracklisting {
+/*      border: solid 1px red;*/
+      flex: 1;
+    }
+    .tracklisting h3{
+      margin: 0;
+    }
+    .tracklisting div.disc{
+      margin: 0 0 40px 0;
+    }
+    .tracklisting div.disc:last-child{
+      margin: 0 0 0 0;
+    }
+    .tracklisting ol {
+      margin: 0;
+      padding: 0;
+    }
+    .tracklisting ol li {
+      cursor: pointer;
+      display: flex;
+      flex-direction: row;
+    }
+    .tracklisting ol li.active {
+      background: black;
+      color: white;
+    }
+    .tracklisting ol li.active {
+      background: black;
+      color: white;
+    }
+    .tracklisting ol li > p {
+/*      border: solid blue 1px;*/
+      flex: 1;
+      margin: 5px 0;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -khtml-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+    .tracklisting ol li > p:nth-child(1) {
+      margin: 5px 0 5px 5px;
+    } 
+    .tracklisting ol li > p:last-child {
+      margin: 5px 5px 5px 0;
+    }
+    .tracklisting ol li p.track-num{
+      flex: 0 0 30px;
+    }
+    .tracklisting ol li p.track-play{
+      flex: 0 0 40px;
+    }
+    .tracklisting ol li p.track-time{
+      flex: 0 0 40px;
+      text-align: right;
+    }
+    .album-art{
+/*      border: solid 1px red;*/
+      flex: 0 0 400px;
+      margin: 0 0 0 20px;
+    }
+    .album-art img{
+      width: 380px;
+    }
+  }
+  
+  </style>
+</head>
+
+<body>
+  <div class="anthology">
+    <div class="anthology-title">
+      <h1>Anthology: Alex's Summer MixXxes 2006 - 2014</h1><i title="Play entire anthology" class="fa fa-play fa-2x anthology-play"></i><i title="Shuffle anthology" class="fa fa-random fa-2x anthology-shuffle"></i>
+    </div>
+    <div class="album">
+      <header>
+        <div class="album-title">
+          <h1>Coltrane</h1><i title="Play full album" class="fa fa-play fa-lg"></i><i title="Shuffle album" class="fa fa-random fa-lg"></i>
+        </div>
+        <div class="album-artist">
+          <h2>John Coltrane</h2><span class="year"> &bull; 2002</span>
+        </div>
+      </header>
+      <div class="tracks">
+        <main class="tracklisting">
+      
+          <div class="disc">
+            <h3>Disc 1</h3>
+            <ol>
+          
+              <li class="track">
+                <!-- <p class="track-play"><i class="fa fa-play"></i></p> -->
+                <p class="track-num">1</p>
+                <p class="track-title">
+                  <span class="track-name">Out Of This World</span><br />
+                  <span class="track-artist">John Coltrane Quartet</span>
+                  <audio src="/uploads/aaa/mix/a.ogg"></audio>
+                </p>
+                <p class="track-time">14:04</p>
+              </li>
+          
+              <li class="track">
+                <!-- <p class="track-play"><i class="fa fa-play"></i></p> -->
+                <p class="track-num">2</p>
+                <p class="track-title">
+                  <span class="track-name">Soul Eyes</span>
+                  <audio src="/uploads/aaa/mix/b.ogg"></audio>
+                </p>
+                <p class="track-time">5:26</p>
+              </li>
+          
+              <li class="track">
+                <!-- <p class="track-play"><i class="fa fa-play"></i></p> -->
+                <p class="track-num">3</p>
+                <p class="track-title">
+                  <span class="track-name">The Inch Worm</span><br />
+                  <span class="track-artist">John Coltrane Quartet</span>
+                  <audio src="/uploads/aaa/mix/c.ogg"></audio>
+                </p>
+                <p class="track-time">6:15</p>
+              </li>
+          
+              <li class="track">
+                <!-- <p class="track-play"><i class="fa fa-play"></i></p> -->
+                <p class="track-num">4</p>
+                <p class="track-title">
+                  <span class="track-name">Tunji</span><br />
+                  <span class="track-artist">John Coltrane Quartet</span>
+                  <audio src="/uploads/aaa/mix/d.ogg"></audio>
+                </p>
+                <p class="track-time">6:32</p>
+              </li>
+          
+              <li class="track">
+                <!-- <p class="track-play"><i class="fa fa-play"></i></p> -->
+                <p class="track-num">5</p>
+                <p class="track-title">
+                  <span class="track-name">Miles' Mode</span><br />
+                  <span class="track-artist">John Coltrane Quartet</span>
+                  <audio src="/uploads/aaa/mix/e.ogg"></audio>
+                </p>
+                <p class="track-time">7:32</p>
+              </li>
+          
+            </ol>
+          </div>
+      
+          <div class="disc">
+            <h3>Disc 2</h3>
+            <ol>
+          
+              <li class="track">
+                <!-- <p class="track-play"><i class="fa fa-play"></i></p> -->
+                <p class="track-num">1</p>
+                <p class="track-title">
+                  <span class="track-name">Not Yet</span><br />
+                  <span class="track-artist">John Coltrane Quartet</span>
+                  <audio src="/uploads/aaa/mix/f.ogg"></audio>
+                </p>
+                <p class="track-time">6:32</p>
+              </li>
+          
+              <li class="track">
+                <!-- <p class="track-play"><i class="fa fa-play"></i></p> -->
+                <p class="track-num">2</p>
+                <p class="track-title">
+                  <span class="track-name">Miles' Mode</span><br />
+                  <span class="track-artist">John Coltrane Quartet</span>
+                  <audio src="/uploads/aaa/mix/g.ogg"></audio>
+                </p>
+                <p class="track-time">7:09</p>
+              </li>
+        
+            </ol>
+          </div>
+      
+        </main>
+    
+        <nav class="album-art">
+          <img src="/uploads/aaa/mix/cover.jpg" />
+        </nav>
+    
+      </div>
+      <footer></footer>
+    </div>
+    
+    <div class="album">
+      <header>
+        <div class="album-title">
+          <h1>Coltrane</h1><i title="Play full album" class="fa fa-play fa-2x"></i><i title="Shuffle album" class="fa fa-random fa-2x"></i>
+        </div>
+        <div class="album-artist">
+          <h2>John Coltrane</h2><span class="year"> &bull; 2002</span>
+        </div>
+      </header>
+      <div class="tracks">
+        <main class="tracklisting">
+      
+          <div class="disc">
+            <h3>Disc 1</h3>
+            <ol>
+              <li class="track">
+                <!-- <p class="track-play"><i class="fa fa-play"></i></p> -->
+                <p class="track-num">2</p>
+                <p class="track-title">
+                  <span class="track-name">Miles' Mode</span><br />
+                  <span class="track-artist">John Coltrane Quartet</span>
+                  <audio src="/uploads/aaa/mix/g.ogg"></audio>
+                </p>
+                <p class="track-time">7:09</p>
+              </li>
+            </ol>
+          </div>
+        </main>
+      </div>
+      <footer></footer>
+      
+    </div>
+  </div>
+    
+  </div>
+  
+  <script src="/static/js/d3.js" charset="utf-8"></script>
+  <script src="http://www.d3plus.org/js/d3plus.js"></script>
+  <script>
+  var shuffle_songs = [],
+      shuffle_on, anthology_on, hilite_col, hilite_txt_col, bg_col, txt_col, accent_col;
+  
+  d3.selectAll("li.track").on("click", function(){
+    // d3.selectAll("li.track").classed("active", false)
+    // var is_active = d3.select(this).classed("active")
+    // d3.select(this).classed("active", !is_active)
+    shuffle_on = false;
+    anthology_on = true;
+    
+    var song = d3.select(this).select("audio").node();
+    // console.log(is_playing(song))
+    if(is_playing(song)){
+      song.pause();
+    }
+    else {
+      var songs = d3.selectAll("audio");
+      songs.each(function(){
+        this.pause();
+        if(this !== song){
+          this.currentTime = 0;
+        }
+      })  
+      song.play();
+    }
+    // console.log(song)
+  })
+  
+  d3.selectAll("audio").on("play", function(){
+    stop_all(this);
+    d3.selectAll("li.track").classed("active", false);
+    var this_li = d3.select(this.parentNode.parentNode);
+    hilite(this_li, true)
+  })
+
+  d3.selectAll("audio").on("ended", function(){
+    console.log('song done...')
+    var this_li = d3.select(this.parentNode.parentNode);
+    hilite(this_li, false)
+    var next = get_next(this);
+    if (next) {
+      next.play();
+    }
+    else {
+      shuffle_on = false;
+      // d3.selectAll("li.track").classed("active", false);
+      console.log('album done...')
+    }
+  });
+  
+  d3.selectAll("i.fa-play").on("click", function(){
+    d3.select("audio").node().play();
+    if(d3.select(this).classed("anthology-play")){
+      anthology_on = true;
+    }
+    else {
+      anthology_on = false;
+    }
+  })
+  
+  d3.selectAll("i.fa-random").on("click", function(){
+    shuffle_on = true;
+    if(d3.select(this).classed("anthology-shuffle")){
+      var audio_node_list = document.getElementsByTagName("audio");
+    }
+    else{
+      var album = this.parentNode.parentNode.parentNode
+      var audio_node_list = album.getElementsByTagName("audio");
+    }
+    for(var i = 0, ll = audio_node_list.length; i != ll; shuffle_songs.push(audio_node_list[i++]));
+    get_next().play();
+  })
+  
+  function is_playing(audio) {
+      return !audio.paused && !audio.ended && 0 < audio.currentTime;
+  }
+  function get_next(audio_el){
+    if(shuffle_on){
+      var rand_i = Math.floor(Math.random() * shuffle_songs.length)
+      var rand_song = shuffle_songs[rand_i];
+      shuffle_songs.splice(rand_i, 1);
+      return rand_song;
+    }
+    else {
+      var next_li = audio_el.parentNode.parentNode.nextElementSibling;
+      if(!next_li){
+        var next_disc = audio_el.parentNode.parentNode.parentNode.parentNode.nextElementSibling;
+        if(!next_disc && anthology_on){
+          var next_disc = audio_el.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.nextElementSibling;
+          if(!next_disc){
+            return null;
+          }
+        }
+        var next_li = d3.select(next_disc).select("li.track").node();
+      }
+      return d3.select(next_li).select("audio").node();
+    }
+  }
+  function stop_all(exception_el) {
+    d3.selectAll("audio").each(function(){
+      if(this !== exception_el){
+        var this_li = d3.select(this.parentNode.parentNode);
+        hilite(this_li, false)
+        this.pause();
+        this.currentTime = 0;
+      }
+    })
+  }
+  function hilite(li, turn_on){
+    if(turn_on === false){
+      li.classed("active", false);
+      li.style("background", bg_col);
+      li.style("color", txt_col);
+      li.select(".track-num").style("color", accent_col);
+      li.select(".track-time").style("color", accent_col);      
+    }
+    else{
+      li.classed("active", true);
+      li.style("background", hilite_col);
+      li.style("color", hilite_txt_col);
+      li.select(".track-num").style("color", hilite_txt_col);
+      li.select(".track-time").style("color", hilite_txt_col);
+    }
+  }
+  
+  var Colibri=function(){var floor=function(n){return Math.floor(n)};var abs=function(n){return Math.abs(n)};var sqrt=function(n){return Math.sqrt(n)};var pow=function(n){return Math.pow(n,2)};var filters={hex:function(color){var hexComponent=function(n){var value=Math.floor(255*n).toString(16);return value.length===1?"0"+value:value};return"#"+color.map(hexComponent).join("")},css:function(color){return"rgb("+color.map(function(n){return Math.floor(255*n)}).join(",")+")"}};var rgbToYuv=function(rgb){return[rgb[0]*.299+rgb[1]*.587+rgb[2]*.114,rgb[0]*-.147+rgb[1]*.289+rgb[2]*.436,rgb[0]*.615+rgb[1]*.515+rgb[2]*.1]};var colorDistance=function(rgb1,rgb2){var yuv1=rgbToYuv(rgb1),yuv2=rgbToYuv(rgb2);return sqrt(pow(yuv1[0]-yuv2[0])+pow(yuv1[1]-yuv2[1])+pow(yuv1[2]-yuv2[2]))};var colorBrightness=function(rgb){return sqrt(pow(rgb[0])*.241+pow(rgb[1])*.691+pow(rgb[2])*.068)};var gatherSimilarElements=function(list,comparator){var subsets=[];for(var u=0,U=list.length;u<U;++u){var element=list[u];var closest=null;for(var v=0,V=subsets.length;v<V;++v)if(comparator(subsets[v][0],element))break;if(v===V){closest=[];subsets.push(closest)}else{closest=subsets[v]}closest.push(element)}return subsets};var meanColor=function(colorList){var finalColor=[0,0,0];for(var t=0,T=colorList.length;t<T;++t){var color=colorList[t];finalColor[0]+=color[0];finalColor[1]+=color[1];finalColor[2]+=color[2]}finalColor[0]/=colorList.length;finalColor[1]/=colorList.length;finalColor[2]/=colorList.length;return finalColor};var dominantColor=function(colorList,treshold,count){if(typeof treshold==="undefined")treshold=.1;if(typeof count==="undefined")count=null;var buckets=gatherSimilarElements(colorList,function(colorA,colorB){return colorDistance(colorA,colorB)<treshold}).sort(function(bucketA,bucketB){return bucketB.length-bucketA.length});var color=meanColor(buckets.shift());if(count===null)return color;if(count===-1)count=buckets.length;return buckets.slice(0,count).map(function(bucket){return meanColor(bucket)})};var createCanvas=function(){return document.createElement("canvas")};var loadDataFromContext=function(destination,context,x,y,width,height){var data=context.getImageData(x,y,width,height).data;for(var t=0,T=data.length;t<T;t+=4){destination.push([data[t+0]/255,data[t+1]/255,data[t+2]/255])}};var extractImageColors=function(image,filter){var canvas=createCanvas();var context=canvas.getContext("2d");canvas.width=image.width;canvas.height=image.height;context.drawImage(image,0,0,canvas.width,canvas.height);var borderImageData=[];loadDataFromContext(borderImageData,context,0,0,canvas.width-1,1);loadDataFromContext(borderImageData,context,canvas.width-1,0,1,canvas.height-1);loadDataFromContext(borderImageData,context,0,1,1,canvas.height-1);loadDataFromContext(borderImageData,context,1,canvas.height-1,canvas.width-1,1);var fullImageData=[];loadDataFromContext(fullImageData,context,0,0,canvas.width,canvas.height);var backgroundColor=dominantColor(borderImageData,.1);var contentColors=dominantColor(fullImageData,.1,-1).filter(function(color){return abs(colorBrightness(backgroundColor)-colorBrightness(color))>.4}).reduce(function(filteredContentColors,currentColor){var previous=filteredContentColors[filteredContentColors.length-1];if(!previous||colorDistance(previous,currentColor)>.3)filteredContentColors.push(currentColor);return filteredContentColors},[]);if(filter&&typeof filter!=="function")filter=filters[filter];if(filter){backgroundColor=filter(backgroundColor);contentColors=contentColors.map(function(color){return filter(color)})}return{background:backgroundColor,content:contentColors}};return{dominantColor:dominantColor,extractImageColors:extractImageColors}}();
+  var img = new Image();
+  var ctx_cols;
+  img.onload = function ( ) { 
+    ctx_cols = Colibri.extractImageColors( img, 'hex' );
+    bg_col = ctx_cols.background;
+    title_col = ctx_cols.content[0];
+    accent_col = ctx_cols.content[1];
+    if(ctx_cols.background){
+      d3.selectAll(".album").style("background", ctx_cols.background)
+      txt_col = d3plus.color.text(ctx_cols.background);
+      d3.selectAll(".album").style("color", txt_col)
+    }
+    if(ctx_cols.content[0]){
+      console.log(ctx_cols.content[0])
+      d3.selectAll(".track-names").style("color", ctx_cols.content[0])
+      d3.selectAll(".album h1").style("color", ctx_cols.content[0])
+    }
+    if(ctx_cols.content[1]){
+      console.log(ctx_cols.content[1])
+      d3.selectAll(".track-num").style("color", ctx_cols.content[1]);
+      d3.selectAll(".track-time").style("color", ctx_cols.content[1]);
+      hilite_col = ctx_cols.content[1];
+      hilite_txt_col = d3plus.color.text(ctx_cols.content[1]);
+    }
+  };
+  img.src = d3.select(".album-art img").attr("src");
+  </script>
+</body>
+
+</html>

@@ -23,6 +23,8 @@ create table song (
   title string not null,
   artist string not null,
   position integer not null,
+  runtime string,
+  disc integer,
   mix integer not null,
   FOREIGN KEY(mix) REFERENCES mix(id)
 );
@@ -35,3 +37,20 @@ create table vote (
   FOREIGN KEY(user) REFERENCES user(id),
   FOREIGN KEY(song) REFERENCES song(id)
 );
+
+drop table if exists anthology;
+create table anthology (
+    id integer primary key autoincrement,
+    name string
+);
+
+drop table if exists mixanthology;
+CREATE TABLE mixanthology(
+    mix_id INTEGER,
+    anthology_id INTEGER,
+    FOREIGN KEY(mix_id) REFERENCES mix(id) ON DELETE CASCADE,
+    FOREIGN KEY(anthology_id) REFERENCES anthology(id) ON DELETE CASCADE,
+    PRIMARY KEY (mix_id, anthology_id)
+);
+CREATE INDEX mixindex ON mixanthology(mix_id);
+CREATE INDEX anthologyindex ON mixanthology(anthology_id);
