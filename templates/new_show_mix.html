@@ -42,6 +42,8 @@
     flex: 0 1 auto;
     padding: 0 10px;
     text-align: center;
+    font-family: "Helvetica Neue", Helvetica, Arial, "Open Sans", sans-serif;
+    font-size: 16px;
   }
   .anthology-title i {
     cursor: pointer;
@@ -192,7 +194,7 @@
                 </div>
               </main>
               <nav class="album-art">
-                <img src="{{url_for('uploaded_file', user=s.user, mix=mix|urlify, filename='cover.jpg') }}" alt="cover image for {{mix}}" />
+                <img src="{{url_for('uploaded_file', user=s.user, mix=mix_slug, filename=cover) }}" alt="cover image for {{mix}}" />
               </nav>
             </div>
             <footer></footer>
@@ -225,11 +227,13 @@
                 <p class="track-title">
                   <span class="track-name">{{ s.title }}</span><br />
                   <span class="track-artist">{{ s.artist }}</span>
-                  <audio preload="none" src="{{url_for('uploaded_file', user=s.user, mix=s.mix_name|urlify, filename='song_%s_%s.mp3'%(s.artist|lower|replace(' ', '_'), s.title|lower|replace(' ', '_'))) }}"></audio>
+                  <audio preload="none" src="{{url_for('uploaded_file', user=s.user, mix=s.mix_slug, filename=s.song_slug) }}"></audio>
                 </p>
                 <p class="track-time">{{ s.runtime|dateformat('%M:%S') }}</p>
               </li>
           {% set mix = s.mix_name %}
+          {% set mix_slug = s.mix_slug %}
+          {% set cover = s.cover %}
           {% set disc = s.disc %}
           
           {% if loop.last %}
@@ -237,7 +241,7 @@
                 </div>
               </main>
               <nav class="album-art">
-                <img src="{{url_for('uploaded_file', user=s.user, mix=s.mix_name|urlify, filename='cover.jpg') }}" alt="cover image for {{s.mix_name}}" />
+                <img src="{{url_for('uploaded_file', user=s.user, mix=s.mix_slug, filename=s.cover) }}" alt="cover image for {{s.mix_name}}" />
               </nav>
             </div>
             <footer></footer>

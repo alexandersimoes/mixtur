@@ -26,79 +26,43 @@
     flex-direction: column;
   }
   
-  * { box-sizing: border-box; }
-  .got-gridbox { 
-    display: flex; 
-    flex-flow: row wrap; 
-    justify-content: space-between;  
-  }
-  .got-gridbox a {
-    border: 1px solid #333;
-    display: block;
-    position: relative; 
-    font-size: 0; margin: 0; 
-    margin: 2% 0; 
-    flex: 0 0 48%;
-  }
-  .got-gridbox figure {
-
-  }
-  .got-gridbox a:nth-child(even) img { 
-    float: right; 
-  }
-  .got-gridbox figure img { 
-    width: 60%; height: auto;
-  }
-  .got-gridbox figure figcaption { 
-    position: absolute; right: 4%; 
-    top: 5%;
-    font-size: 1.6rem; text-align: right; 
-  }
-  .got-gridbox a:nth-child(even) figcaption { 
-    left: 4%; right: auto; 
-    text-align: left; 
-  }
-
-  @media screen and (max-width: 750px) { 
-  	.got-gridbox figure { 
-      flex: 0 0 100%; margin-bottom: 7%;  
-    }
-  	.got-gridbox figure figcaption { 
-      font-size: 1.6rem; 
-    }
-  }
-
-  @media screen and (max-width: 450px) { 
-  	.got-gridbox figure figcaption { font-size: 1.2rem; width: 50%; }
+  h2.title {
+    font-family: "Helvetica Neue", Helvetica, Arial, "Open Sans", sans-serif;
+    font-size: 18px;
+    text-align: center;
   }
   
+  div.mix {
+    display: inline-block;    
+  }
+  div.mix .cover {
+    background-size: cover; 
+    background-position: 50%;
+    display: block;
+    height: 100px;
+    width: 100px;
+  }
   
   </style>
 </head>
 <body>
   <h2 class="title">All Mixturs</h2>
-  <div class="got-gridbox">  
+  <div class="mixes">
     {% for m in mixes %}
-    <a href="{{ url_for('mix', mix_type='m', mix_name=m.name|urlify) }}">
-      <figure>
-        <img src="{{url_for('uploaded_file', user=m.user, mix=m.name|urlify, filename='cover.jpg') }}" alt="{{ m.name }} album cover">
-        <figcaption>{{ m.name }}</figcaption>
-      </figure>
-    </a>
+    <div class="mix">
+      <a href="{{ url_for('mix', mix_type='m', mix_slug=m.slug) }}" class="cover" style="background-image:url('{{url_for('uploaded_file', user=m.user, mix=m.slug, filename=m.cover) }}');"></a>
+    </div>
     {% else %}
     <em>Unbelievable. No mixXxes here yet... bummah!</em>
     {% endfor %}
   </div>
 
   <h2 class="title">All Anthologies</h2>
-  <div class="got-gridbox">  
+  <div class="mixes">  
     {% for a in anthologies %}
-    <a href="{{ url_for('mix', mix_type='a', mix_name=a.name|urlify) }}">
-      <figure>
-        <img src="{{url_for('uploaded_file', user=a.user, mix=a.mix_name|urlify, filename='cover.jpg') }}" alt="{{ a.name }} album cover">
-        <figcaption>{{ a.name }}</figcaption>
-      </figure>
-    </a>
+    <div class="mix">
+      <a href="{{ url_for('mix', mix_type='a', mix_slug=a.slug) }}" class="cover" style="background-image:url('{{url_for('uploaded_file', user=a.user, mix=a.mix_slug, filename=a.cover) }}');"></a>
+    </div>
     {% else %}
     <em>Unbelievable. No anthologies here yet... bummah!</em>
     {% endfor %}
