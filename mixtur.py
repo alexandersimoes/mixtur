@@ -95,7 +95,7 @@ def home():
         where ma.anthology_id = a.id and m.id = ma.mix_id group by a.id
         order by date desc limit 20
     """)
-    return render_template("home2.html", mixes=mixes, anthologies=anthologies)
+    return render_template("home.html", mixes=mixes, anthologies=anthologies)
 
 @app.route("/<mix_type>/<mix_slug>/")
 def mix(mix_type, mix_slug):

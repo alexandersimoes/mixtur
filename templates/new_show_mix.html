@@ -140,6 +140,15 @@
     .tracklisting ol li p.track-num{
       flex: 0 0 30px;
     }
+    .tracklisting ol li p.track-num i{
+      display: none;
+    }
+    .tracklisting ol li.active p.track-num i{
+      display: inline;
+    }
+    .tracklisting ol li.active p.track-num span{
+      display: none;
+    }
     .tracklisting ol li p.track-play{
       flex: 0 0 40px;
     }
@@ -149,6 +158,16 @@
     .tracklisting ol li p.track-time{
       flex: 0 0 40px;
       text-align: right;
+    }
+/*    .tracklisting ol li div.track-progress{
+      display: block;
+      clear: both;
+    }*/
+    .tracklisting ol span.track-progress{
+      background: yellow;
+      display: block;
+      height: 5px;
+      width: 0px;
     }
     .album-art{
 /*      border: solid 1px red;*/
@@ -223,10 +242,11 @@
             <ol>
           {% endif %}
               <li class="track">
-                <p class="track-num">{{ s.position }}</p>
+                <p class="track-num"><span>{{ s.position }}</span><i class="fa fa-volume-up"></i></p>
                 <p class="track-title">
                   <span class="track-name">{{ s.title }}</span><br />
-                  <span class="track-artist">{{ s.artist }}</span>
+                  <span class="track-artist">{{ s.artist }}</span><br />
+                  <span class="track-progress"></span>
                   <audio preload="none" src="{{url_for('uploaded_file', user=s.user, mix=s.mix_slug, filename=s.song_slug) }}"></audio>
                 </p>
                 <p class="track-time">{{ s.runtime|dateformat('%M:%S') }}</p>
@@ -256,7 +276,23 @@
   <script src="/static/js/d3plus.min.js"></script>
   <script>
   var shuffle_songs = [],
-      shuffle_on, anthology_on, hilite_col, hilite_txt_col, bg_col, txt_col, accent_col;
+      current_song, shuffle_on, anthology_on, hilite_col, hilite_txt_col, bg_col, txt_col, accent_col;
+  
+  d3.select("body")
+      .on("keydown", function() {
+        // spacebar
+        if(d3.event.keyCode == 32){
+          if(current_song){
+            if(is_playing(current_song)){
+              current_song.pause();
+            }
+            else {
+              current_song.play();
+            }
+          }
+          d3.event.preventDefault();
+        }
+      })
   
   d3.selectAll("li.track").on("click", function(){
     // d3.selectAll("li.track").classed("active", false)
@@ -283,10 +319,20 @@
     // console.log(song)
   })
   
+  d3.selectAll("audio").on("timeupdate", function(){
+    var progress = (this.currentTime / this.duration) * 100
+    // console.log(this, this.currentTime, this.duration, progress)
+    var this_li = d3.select(this.parentNode.parentNode);
+    this_li.select("span.track-progress").style("width", progress+"%");
+  })
+  
   d3.selectAll("audio").on("play", function(){
+    current_song = this;
     stop_all(this);
     d3.selectAll("li.track").classed("active", false);
+    d3.selectAll("li.track .track-progress").style("width", "0px");
     var this_li = d3.select(this.parentNode.parentNode);
+    // this_li.select("p.track-num i").style("display", "inline")
     hilite(this_li, true)
   })
 
@@ -377,6 +423,7 @@
       li.style("color", function(){ return d3.select(this).attr("data-hilite-txt-col") });
       li.select(".track-num").style("color", function() { return d3.select(this.parentNode).attr("data-hilite-txt-col") });
       li.select(".track-time").style("color", function() { return d3.select(this.parentNode).attr("data-hilite-txt-col") });
+      li.select("span.track-progress").style("background", function() { return d3.select(this.parentNode.parentNode).attr("data-hilite-txt-col") });
     }
   }
   
