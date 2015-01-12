@@ -45,12 +45,6 @@ def get_db():
         db = g._database = connect_db()
     return db
 
-@app.teardown_appcontext
-def close_connection(exception):
-    db = getattr(g, '_database', None)
-    if db is not None:
-        db.close()
-
 def query_db(query, args=(), one=False, update=False):
     cur = get_db().execute(query, args)
     if update:

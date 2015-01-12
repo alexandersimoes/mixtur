@@ -1,50 +1,11 @@
-drop table if exists user;
-create table user (
+CREATE TABLE "user" (name text,email text, password text);
+CREATE TABLE "vote" (
   id integer primary key autoincrement,
-  name string not null,
-  email string not null,
-  password string not null
-);
-
-drop table if exists mix;
-create table mix (
-  id integer primary key autoincrement,
-  name string not null,
-  date string not null,
-  description string null,
-  cover string null,
-  user integer not null,
-  FOREIGN KEY(user) REFERENCES user(id)
-);
-
-drop table if exists song;
-create table song (
-  id integer primary key autoincrement,
-  title string not null,
-  artist string not null,
-  position integer not null,
-  runtime string,
-  disc integer,
-  mix integer not null,
-  FOREIGN KEY(mix) REFERENCES mix(id)
-);
-
-drop table if exists vote;
-create table vote (
-  id integer primary key autoincrement,
-  user integer not null,
+  user string not null,
   song integer not null,
-  FOREIGN KEY(user) REFERENCES user(id),
+  FOREIGN KEY(user) REFERENCES user(name),
   FOREIGN KEY(song) REFERENCES song(id)
 );
-
-drop table if exists anthology;
-create table anthology (
-    id integer primary key autoincrement,
-    name string
-);
-
-drop table if exists mixanthology;
 CREATE TABLE mixanthology(
     mix_id INTEGER,
     anthology_id INTEGER,
@@ -54,3 +15,28 @@ CREATE TABLE mixanthology(
 );
 CREATE INDEX mixindex ON mixanthology(mix_id);
 CREATE INDEX anthologyindex ON mixanthology(anthology_id);
+CREATE TABLE "song" (
+	`id`	integer PRIMARY KEY AUTOINCREMENT,
+	`title`	string NOT NULL,
+	`artist`	string NOT NULL,
+	`position`	integer NOT NULL,
+	`runtime`	TEXT,
+	`disc`	INTEGER,
+	`slug`	string,
+	`mix`	integer NOT NULL
+);
+CREATE TABLE "anthology" (
+	`id`	integer PRIMARY KEY AUTOINCREMENT,
+	`name`	string,
+	`slug`	string
+);
+CREATE TABLE "mix" (
+	`id`	integer PRIMARY KEY AUTOINCREMENT,
+	`name`	string,
+	`date`	string NOT NULL,
+	`desc`	string,
+	`cover`	string,
+	`user`	string NOT NULL,
+	`slug`	string,
+	`palette`	string
+);
