@@ -183,7 +183,6 @@ def uploadr_file(file_type):
         if mix_desc:
             query_db("UPDATE mix SET desc=? WHERE id=?", [mix_desc, mix_id], update=True)
         
-        # user = session["user"]
         for f, artist, title, track_num in zip(files, artists, titles, track_nums):
             # raise Exception(f, artist, title, track_num)
             if f and allowed_file(f.filename):
@@ -191,9 +190,7 @@ def uploadr_file(file_type):
                 user_mix_dir = os.path.join(app.config['UPLOAD_FOLDER'], user, mix_slug)
                 if not os.path.exists(user_mix_dir): os.makedirs(user_mix_dir)
                 f.save(os.path.join(user_mix_dir, filename))
-                print f.mimetype
                 if "image" in f.mimetype:
-                    print 'made it!!!!', filename, mix_id
                     # add cover img file_name to db
                     query_db("UPDATE mix SET cover=?, palette=? WHERE id=?", [filename, mix_palette, mix_id], update=True)
                 if "audio" in f.mimetype:
@@ -201,14 +198,6 @@ def uploadr_file(file_type):
                     audio = MP3(os.path.join(user_mix_dir, filename))
                     runtime = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(audio.info.length))
                     insert_db("song", fields=('title','artist','position','runtime','slug','mix'), args=(title, artist, track_num, runtime, filename, mix_id))
-            
-            
-                # return jsonify(name=filename)
-                # file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-                # return redirect(url_for('uploaded_file',
-                #                                 filename=filename))
-        
-        # return jsonify(files=str(files))
         
         return jsonify(mix_id=mix_id, mix_slug=mix_slug)
         
