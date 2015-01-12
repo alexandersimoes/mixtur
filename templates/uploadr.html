@@ -4,6 +4,7 @@
 <head>
   <meta charset="utf-8">
   <title>Mixtur</title>
+  <link href='http://fonts.googleapis.com/css?family=Just+Another+Hand' rel='stylesheet' type='text/css'>
   <!--[if lt IE 9]>
   <script src="http://html5shim.googlecode.com/svn/trunk/html5-els.js"></script>
   <![endif]-->
@@ -19,11 +20,19 @@
     font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Open Sans", sans-serif;
     font-size: 13px;
     font-weight: 300;
-    
+    color: gray;
 
     display: flex;
     min-height: 100%;
     flex-direction: column;
+  }
+  
+  a {
+    color: skyBlue;
+    text-decoration: underline;
+  }
+  a:hover {
+    color: #3cb0fd;
   }
   
   /* The MIT License */
@@ -36,10 +45,11 @@
     box-sizing: border-box;
   }
   .dropzone {
-    position: relative;
+    padding: 10px;
+/*    position: relative;
     border: 1px solid rgba(0,0,0,0.08);
     background: rgba(0,0,0,0.02);
-    padding: 10px;
+    padding: 10px;*/
   }
   .dropzone.dz-clickable {
     cursor: pointer;
@@ -65,24 +75,24 @@
   }
   .dropzone .dz-preview,
   .dropzone-previews .dz-preview {
-    background: rgba(255,255,255,0.8);
+/*    background: rgba(255,255,255,0.8);
     position: relative;
-/*    display: inline-block;*/
+    display: inline-block;
     vertical-align: top;
     border: 1px solid #acacac;
-    padding: 6px 6px 6px 6px;
+    padding: 6px 6px 6px 6px;*/
   }
   .dropzone .dz-preview.over {
     border: 2px dashed #000 !important;
   }
   #songs-dropzone .dz-preview {
-    background: rgba(255,255,255,0.8);
+/*    background: rgba(255,255,255,0.8);
     position: relative;
-/*    display: block;*/
+    display: block;
     margin: 0 0 10px 0;
     vertical-align: top;
     border: 1px solid #acacac;
-    padding: 6px 6px 6px 6px;
+    padding: 6px 6px 6px 6px;*/
   }
   .dropzone .dz-preview.dz-file-preview [data-dz-thumbnail],
   .dropzone-previews .dz-preview.dz-file-preview [data-dz-thumbnail] {
@@ -198,35 +208,6 @@
 /*      height: 90%;*/
   }
   
-  .drop_container {
-    display: flex;
-/*    flex-direction: row;*/
-  }
-  .drop_container .dropzone {
-/*    display: flex;
-    flex: 1 0 0;*/
-    background-color: DeepSkyBlue;
-    margin: 5px;
-    flex: 3;
-  }
-  .drop_container .dropzone#cover-dropzone {
-    height: 25%;
-    flex: 1;
-  }
-  #mix-title {
-    background-color: SkyBlue;
-    border: none;
-    height: 50px;
-    display: block;
-    margin: 5px;
-/*    width: 100%;*/
-    font-family: sans-serif;
-    font-size: 48px;
-    appearance: none;
-    box-shadow: none;
-    border-radius: none;
-  }
-  
   .delete {
     color: #ee162d;
     cursor: pointer;
@@ -263,7 +244,7 @@
   }
   .dz-details > p input {
     margin: 0em;
-    border: none;
+    border: solid 1px skyblue;
     display: inline-block;
     padding: 5px;
     text-align: start;
@@ -282,7 +263,7 @@
     display: flex;
   }
   .dz-preview > div.dz-num{
-    flex: 1%;
+    flex: 2%;
     font-size: 20px;
     font-weight: bold;
   }
@@ -307,27 +288,198 @@
     align-items: center;
   }
   
+  .container {
+    margin: 20px auto;
+    width: 800px;
+  }
+  
+  header {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    min-height: 200px;
+    width: 100%;
+  }
+  header .album-art{
+    flex: 1;
+    margin: 0 10px 0 0;
+  }
+  header .album-art img {
+    width: 100%;
+  }
+  header .album-art p {
+    border: solid skyblue 3px;
+    font-size: 18px;
+    background: lightgray;
+    margin: 0;
+    min-height: 200px;
+    min-width: 200px;
+    padding: 20px;
+  }
+  header .album-meta{
+    flex: 200px;
+    margin: 0 0 0 10px;
+  }
+  header .album-meta #mix-title {
+    background-color: white;
+    border: none;
+    border-bottom: solid 3px skyblue;
+    font-family: 'Just Another Hand', cursive;
+    height: 50px;
+    display: block;
+/*    margin: 5px;*/
+    width: 100%;
+    font-size: 48px;
+    appearance: none;
+    box-shadow: none;
+    border-radius: none;
+  }
+  header .album-meta textarea {
+    border: 0;
+    display: inline-block;
+    font-family: "Helvetica Neue", Helvetica, Arial, "Open Sans", sans-serif;
+    font-size: 16px;
+    line-height: 20px;
+    margin: 10px 0 0 0;
+    min-height: 178px;
+    padding: 2px 7px;
+    border: 1px solid skyblue;
+    
+    width: 100%;
+    -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+        -moz-box-sizing: border-box;    /* Firefox, other Gecko */
+        box-sizing: border-box;         /* Opera/IE 8+ */
+  }
+  
+  .songs {
+    margin: 20px 0 0 0;
+    border: solid 3px skyBlue;
+  }
+  
+  div.actions {
+    display: flex;
+    justify-content: flex-end;
+    margin: 20px 0 0 0;
+  }
+  #clear {
+    border: 0;
+    color: skyBlue;
+    font-size: 14px;
+    padding: 10px 20px 10px 20px;
+    text-decoration: underline;
+  }
+  #clear:hover {
+    color: #3cb0fd;
+  }
+  button {
+    background: skyBlue;
+    border: 0;
+    color: #ffffff;
+    font-size: 14px;
+    padding: 10px 20px 10px 20px;
+    text-decoration: none;
+  }
+  button:hover {
+    background: #3cb0fd;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  
+  div#success {
+    background: rgb(230, 248, 255);
+    border-bottom: solid 3px skyblue;
+/*    color: skyblue;*/
+    display: none;
+    text-align: center;
+    padding: 10px;
+  }
+  
+    .uploaded_songs ol {
+      margin: 0;
+      padding: 0;
+    }
+    .uploaded_songs ol li {
+      border-bottom: solid 1px skyblue;
+      cursor: pointer;
+      display: block;
+      position: relative;
+    }
+    .uploaded_songs ol li div.track-info {
+      display: flex;
+      flex-direction: row;
+    }
+    .uploaded_songs ol li div.track-info > p {
+/*      border: solid blue 1px;*/
+      flex: 1;
+      margin: 5px 0;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -khtml-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+    .uploaded_songs ol li div.track-info > p:nth-child(1) {
+      margin: 5px 0 5px 5px;
+    } 
+    .uploaded_songs ol li div.track-info > p:last-child {
+      margin: 5px 5px 5px 0;
+    }
+    .uploaded_songs ol li div.track-info p.track-num{
+      flex: 0 0 20px;
+    }
+    .uploaded_songs ol li div.track-info p.track-play{
+      flex: 0 0 40px;
+    }
+    .uploaded_songs ol li div.track-info p.track-title .track-name{
+      font-size:18px;
+    }
+    .uploaded_songs ol li div.track-info p.track-time{
+      flex: 0 0 40px;
+      text-align: right;
+    }
   </style>
 </head>
 
 <body>
-  <div id="drop_here">
+  <div id="drop_here" class="overlay">
     <span>Drop items here!</span>
   </div>
-  <input id="mix-title" name="mix-title" type="text" value="Untitled Mix"></input>
-  <input id="mix-id" name="mix-id" type="hidden"></input>
-  <div class="drop_container">
-    <form action="/uploadr/song/" class="dropzone" id="songs-dropzone"></form>
-    <!-- <form action="/uploadr/song/" class="dropzone dz-started" id="songs-dropzone"><div class="dz-default dz-message"><span>Drop songs here to upload...</span></div><div class="dz-preview dz-file-preview" draggable="true">   <div class="dz-num">1.</div>   <div class="dz-details">     <p class="song-title">       <label for="song-title">Title</label>       <input type="text" name="song-title" id="song-title" value="Wolf Like Me">     </p>     <p class="song-artist">       <label for="song-title">Artist</label>       <input type="text" name="song-title" id="song-title" value="Anna Calvi">     </p>     <p class="song-file"><span class="file">&nbsp;</span><span class="file-info" data-dz-name="">song_anna_calvi_wolf_like_me copy.mp3</span><span class="dz-size" data-dz-size=""><strong>5.2</strong> MiB</span></p>     <img data-dz-thumbnail="">   </div>   <div class="dz-success-mark"><span>✔</span></div>   <div class="delete" data-dz-remove=""><span>✘</span></div> </div><div class="dz-preview dz-file-preview" draggable="true">   <div class="dz-num">1.</div>   <div class="dz-details">     <p class="song-title">       <label for="song-title">Title</label>       <input type="text" name="song-title" id="song-title" value="Je Suis Orphelin">     </p>     <p class="song-artist">       <label for="song-title">Artist</label>       <input type="text" name="song-title" id="song-title" value="The Balfa Brothers">     </p>     <p class="song-file"><span class="file">&nbsp;</span><span class="file-info" data-dz-name="">song_balfa_brothers_je_suis_orphelin_(the_orphan_waltz).mp3</span><span class="dz-size" data-dz-size=""><strong>6.1</strong> MiB</span></p>     <img data-dz-thumbnail="">   </div>   <div class="dz-success-mark"><span>✔</span></div>   <div class="delete" data-dz-remove=""><span>✘</span></div> </div></form> -->
-    <form action="/uploadr/cover/" class="dropzone" id="cover-dropzone"></form>
-  </div>
-  <a href="#" id="upload">Upload</a>
   
+  <div id="success">
+    Congrats! Your mixXx has been uploaded <a href="#">view it here</a>.
+  </div>
+  
+  <div class="container">
+    <header>
+      <div class="album-art">
+        <p>Drag album art here to upload.</p>
+      </div>
+      <div class="album-meta">
+        <input id="mix-title" name="mix-title" type="text" placeholder="My New MixXx" value=""></input>
+        <input id="mix-id" name="mix-id" type="hidden"></input>
+        <textarea class="" id="" rows="3" placeholder="Describe your mixXx..." style="resize: vertical;"></textarea>
+      </div>
+    </header>
+  
+    <div class="songs drop_container">
+      <form action="/uploadr/song/" class="dropzone" id="songs-dropzone"><span>Drop songs here!</span></form>
+      <div class="uploaded_songs"><ol></ol></div>
+      <!-- <form action="/uploadr/song/" class="dropzone dz-started" id="songs-dropzone"><div class="dz-default dz-message"><span>Drop songs here to upload...</span></div><div class="dz-preview dz-file-preview" draggable="true">   <div class="dz-num">1.</div>   <div class="dz-details">     <p class="song-title">       <label for="song-title">Title</label>       <input type="text" name="song-title" id="song-title" value="Wolf Like Me">     </p>     <p class="song-artist">       <label for="song-title">Artist</label>       <input type="text" name="song-title" id="song-title" value="Anna Calvi">     </p>     <p class="song-file"><span class="file">&nbsp;</span><span class="file-info" data-dz-name="">song_anna_calvi_wolf_like_me copy.mp3</span><span class="dz-size" data-dz-size=""><strong>5.2</strong> MiB</span></p>     <img data-dz-thumbnail="">   </div>   <div class="dz-success-mark"><span>✔</span></div>   <div class="delete" data-dz-remove=""><span>✘</span></div> </div><div class="dz-preview dz-file-preview" draggable="true">   <div class="dz-num">1.</div>   <div class="dz-details">     <p class="song-title">       <label for="song-title">Title</label>       <input type="text" name="song-title" id="song-title" value="Je Suis Orphelin">     </p>     <p class="song-artist">       <label for="song-title">Artist</label>       <input type="text" name="song-title" id="song-title" value="The Balfa Brothers">     </p>     <p class="song-file"><span class="file">&nbsp;</span><span class="file-info" data-dz-name="">song_balfa_brothers_je_suis_orphelin_(the_orphan_waltz).mp3</span><span class="dz-size" data-dz-size=""><strong>6.1</strong> MiB</span></p>     <img data-dz-thumbnail="">   </div>   <div class="dz-success-mark"><span>✔</span></div>   <div class="delete" data-dz-remove=""><span>✘</span></div> </div></form> -->
+      <!-- <div id="cover-dropzone" class="dropzone">
+      </div> -->
+    </div>
+    
+    <div class="actions">
+      <a href="#" id="clear">Clear</a>
+      <button id="upload">Upload</button>
+    </div>
+  </div>  
   <script src="/static/js/d3.js" charset="utf-8"></script>
   <script src="/static/js/dropzone.min.js"></script>
   <script src="/static/js/id3.min.js" type="text/javascript"></script>
   <script>
-  
+  var Colibri=function(){var floor=function(n){return Math.floor(n)};var abs=function(n){return Math.abs(n)};var sqrt=function(n){return Math.sqrt(n)};var pow=function(n){return Math.pow(n,2)};var filters={hex:function(color){var hexComponent=function(n){var value=Math.floor(255*n).toString(16);return value.length===1?"0"+value:value};return"#"+color.map(hexComponent).join("")},css:function(color){return"rgb("+color.map(function(n){return Math.floor(255*n)}).join(",")+")"}};var rgbToYuv=function(rgb){return[rgb[0]*.299+rgb[1]*.587+rgb[2]*.114,rgb[0]*-.147+rgb[1]*.289+rgb[2]*.436,rgb[0]*.615+rgb[1]*.515+rgb[2]*.1]};var colorDistance=function(rgb1,rgb2){var yuv1=rgbToYuv(rgb1),yuv2=rgbToYuv(rgb2);return sqrt(pow(yuv1[0]-yuv2[0])+pow(yuv1[1]-yuv2[1])+pow(yuv1[2]-yuv2[2]))};var colorBrightness=function(rgb){return sqrt(pow(rgb[0])*.241+pow(rgb[1])*.691+pow(rgb[2])*.068)};var gatherSimilarElements=function(list,comparator){var subsets=[];for(var u=0,U=list.length;u<U;++u){var element=list[u];var closest=null;for(var v=0,V=subsets.length;v<V;++v)if(comparator(subsets[v][0],element))break;if(v===V){closest=[];subsets.push(closest)}else{closest=subsets[v]}closest.push(element)}return subsets};var meanColor=function(colorList){var finalColor=[0,0,0];for(var t=0,T=colorList.length;t<T;++t){var color=colorList[t];finalColor[0]+=color[0];finalColor[1]+=color[1];finalColor[2]+=color[2]}finalColor[0]/=colorList.length;finalColor[1]/=colorList.length;finalColor[2]/=colorList.length;return finalColor};var dominantColor=function(colorList,treshold,count){if(typeof treshold==="undefined")treshold=.1;if(typeof count==="undefined")count=null;var buckets=gatherSimilarElements(colorList,function(colorA,colorB){return colorDistance(colorA,colorB)<treshold}).sort(function(bucketA,bucketB){return bucketB.length-bucketA.length});var color=meanColor(buckets.shift());if(count===null)return color;if(count===-1)count=buckets.length;return buckets.slice(0,count).map(function(bucket){return meanColor(bucket)})};var createCanvas=function(){return document.createElement("canvas")};var loadDataFromContext=function(destination,context,x,y,width,height){var data=context.getImageData(x,y,width,height).data;for(var t=0,T=data.length;t<T;t+=4){destination.push([data[t+0]/255,data[t+1]/255,data[t+2]/255])}};var extractImageColors=function(image,filter){var canvas=createCanvas();var context=canvas.getContext("2d");canvas.width=image.width;canvas.height=image.height;context.drawImage(image,0,0,canvas.width,canvas.height);var borderImageData=[];loadDataFromContext(borderImageData,context,0,0,canvas.width-1,1);loadDataFromContext(borderImageData,context,canvas.width-1,0,1,canvas.height-1);loadDataFromContext(borderImageData,context,0,1,1,canvas.height-1);loadDataFromContext(borderImageData,context,1,canvas.height-1,canvas.width-1,1);var fullImageData=[];loadDataFromContext(fullImageData,context,0,0,canvas.width,canvas.height);var backgroundColor=dominantColor(borderImageData,.1);var contentColors=dominantColor(fullImageData,.1,-1).filter(function(color){return abs(colorBrightness(backgroundColor)-colorBrightness(color))>.4}).reduce(function(filteredContentColors,currentColor){var previous=filteredContentColors[filteredContentColors.length-1];if(!previous||colorDistance(previous,currentColor)>.3)filteredContentColors.push(currentColor);return filteredContentColors},[]);if(filter&&typeof filter!=="function")filter=filters[filter];if(filter){backgroundColor=filter(backgroundColor);contentColors=contentColors.map(function(color){return filter(color)})}return{background:backgroundColor,content:contentColors}};return{dominantColor:dominantColor,extractImageColors:extractImageColors}}();
   var x = '<div class="dz-preview dz-file-preview" draggable="true"> \
   <div class="dz-num">1.</div> \
   <div class="dz-details"> \
@@ -339,15 +491,18 @@
       <label for="song-artist">Artist</label> \
       <input type="text" name="song-artist"></input> \
     </p> \
-    <p class="song-file"><span class="file">&nbsp;</span><span class="file-info" data-dz-name></span><span class="dz-size" data-dz-size></span></p> \
+    <p class="song-file"> \
+      <span class="file">&nbsp;</span> \
+      <span class="file-info" data-dz-name></span> \
+      <a href="#" class="dz-remove" data-dz-remove>remove</a> \
+    </p> \
     <img data-dz-thumbnail /> \
   </div> \
-  <div class="dz-success-mark"><span>✔</span></div> \
-  <div class="delete" data-dz-remove><span>✘</span></div> \
 </div>'
   var is_file = true;
   var leave_called = false;
   var overlay_timer = null;
+  var palette;
   Dropzone.autoDiscover = false;
   var songs_drop = new Dropzone(document.body, {
       method: "POST", // can be changed to "put" if necessary
@@ -405,9 +560,13 @@
         if(file.type.indexOf('image') > -1){
           d3.select(file.previewElement).remove();
           d3.select("#drop_here").style("display", "none")
-          d3.select("#cover-dropzone").node().innerHTML = '<div class="dz-preview dz-file-preview"><div class="dz-details"><img src="" data-dz-thumbnail /></div></div>'
+          d3.select(".album-art").html('<img src="" data-dz-thumbnail />')
+          // node().innerHTML = '<div class="dz-preview dz-file-preview"><div class="dz-details"><img src="" data-dz-thumbnail /></div></div>'
           // console.log(file)
           // return;
+        }
+        else {
+          d3.select(".dropzone span").style("display", "none")
         }
         file.previewElement.addEventListener('dragstart', handleDragStart, false);
         file.previewElement.addEventListener('dragenter', handleDragEnter, false)
@@ -417,35 +576,65 @@
         file.previewElement.addEventListener('dragend', handleDragEnd, false);
         d3.select("#drop_here").style("display", "none")
         // console.log("accept", file, done);
+        console.log(d3.select(file.previewElement).select("input").node())
+        d3.select(file.previewElement).selectAll("input")
+          .on('focus', function(e) {
+            d3.select(file.previewElement).attr("draggable", false);
+          })
+          .on('blur', function(e) {
+            d3.select(file.previewElement).attr("draggable", true);
+          })
+        
         done();
       },
       thumbnail: function(a, b) {
-        d3.select("#cover-dropzone img").attr("src", b)
+        d3.select(".album-art img").attr("src", b)
         // console.log(b)
+        var img = new Image( );
+        img.onload = function ( ) { 
+          var cols = Colibri.extractImageColors(img, 'hex');
+          palette = [cols.background].concat(cols.content)
+          console.log(palette)
+        };
+        img.src = b;
       },
       fallback: function() {
         // console.log("fallback");
       },
       success: function(file, resp) {
-        console.log('success', resp)
+        // console.log('success', resp, file.previewElement)
+        if(file.type.indexOf('image') < 0){
+          var artist = d3.select(file.previewElement).select("p.song-artist input").property("value")
+          var title = d3.select(file.previewElement).select("p.song-title input").property("value")
+          var track_num = d3.select(file.previewElement).select(".dz-num").text()
+          d3.select(file.previewElement).remove()
+          var track_info = d3.select(".uploaded_songs ol")
+                              .append("li").attr("class", "track")
+                              .append("div").attr("class", "track-info");
+          track_info.append("p").attr("class", "track-num").append("span").text(track_num);
+          var track_title = track_info.append("p").attr("class", "track-title");
+          track_title.append("span").attr("class", "track-name").text(title)
+          track_title.append("br")
+          track_title.append("span").attr("class", "track-artist").text(artist)
+        }
       },
-      // sending: function(file, xhr, formData) {
-      //   console.log(xhr, formData)
-      //   // console.log(formData)
-      //   formData.append("mix_id", d3.select("input[name='mix-id']").node().value);
-      //   formData.append("mix_title", d3.select("input[name='mix-title']").node().value);
-      //   formData.append("THIS_artist", d3.select(file.previewElement).select("p.song-artist input").attr("value"));
-      //   formData.append("filesize", file.size);
-      // }
+      successmultiple: function(file, resp) {
+        console.log(file, resp)
+        d3.select("#success a").attr("href", "/m/"+resp["mix_slug"]+"/");
+      },
       sendingmultiple: function(files, xhr, formData) {
-        console.log(files, xhr, formData)
+        // console.log(files, xhr, formData)
         // console.log(formData)
-        formData.append("mix_id", d3.select("input[name='mix-id']").node().value);
-        formData.append("mix_title", d3.select("input[name='mix-title']").node().value);
+        formData.append("mix_id", d3.select("input[name='mix-id']").property("value"));
+        formData.append("mix_title", d3.select("input[name='mix-title']").property("value"));
+        formData.append("mix_desc", d3.select("textarea").property("value"));
+        if(palette){
+          formData.append("mix_palette", JSON.stringify(palette));
+        }
         files.forEach(function(f){
           formData.append("song_filesize", f.size);
-          formData.append("song_artist", d3.select(f.previewElement).select("p.song-artist input").node().value);
-          formData.append("song_title", d3.select(f.previewElement).select("p.song-title input").node().value);
+          formData.append("song_artist", d3.select(f.previewElement).select("p.song-artist input").property("value"));
+          formData.append("song_title", d3.select(f.previewElement).select("p.song-title input").property("value"));
           formData.append("song_num", d3.select(f.previewElement).select(".dz-num").text());
         })
       }
@@ -453,49 +642,23 @@
       //   this.options.autoProcessQueue = true;
       // }
     });
-
-    var cover_drop = new Dropzone("#cover-dropzone", {
-        method: "POST", // can be changed to "put" if necessary
-        maxFilesize: 10, // in MB
-        dictDefaultMessage: "Drop album cover here to upload...",
-        paramName: "cover", // The name that will be used to transfer the file
-        previewTemplate: '<div class="dz-preview dz-file-preview"><div class="dz-details"><img data-dz-thumbnail /></div></div>',
-        thumbnailWidth: null,
-        thumbnailHeight: null
-      });
+  
+  d3.select("#clear").on("click", function(){
+    songs_drop.removeAllFiles();
+    d3.event.preventDefault();
+  })
+  
+  d3.select("#upload").on("click", function(){
+    // console.log(songs_drop)
+    songs_drop.processQueue(); //processes the queue
+    d3.event.preventDefault();
+  });
   
   
-  
-    d3.select("#upload").on("click", function(){
-      // console.log(songs_drop)
-      songs_drop.processQueue(); //processes the queue
-      d3.event.preventDefault();
-    });
-  
-  
-  
-  
-  
-  
-  // Dropzone.autoDiscover = false;
-  //
-  // var songs_drop = new Dropzone("#songs-dropzone");
-  // songs_drop.options.paramName = "song"
-  // songs_drop.options.maxFilesize = 10
-  // var cover_drop = new Dropzone("#cover-dropzone");
-  // cover_drop.options.paramName = "cover"
-
-  //  = Dropzone.options.songsDropzone = {
-  //   paramName: "songs", // The name that will be used to transfer the file
-  //   maxFilesize: 10, // MB
-  //   accept: function(file, done) {
-  //     if (file.name == "justinbieber.jpg") {
-  //       done("Naha, you don't.");
-  //     }
-  //     else { done(); }
-  //   }
-  // };
-  
+  songs_drop.on("queuecomplete", function() {
+    d3.select("#success").style("display", "block");
+    d3.selectAll(".dropzone").remove();
+  })
   songs_drop.on("addedfile", function(file) {
 
     // var tags = ID3.getAllTags(file.name);
@@ -528,6 +691,11 @@
     // this.style.opacity = '0.4';
 
     dragSrcEl = this;
+    
+    d3.select(dragSrcEl).select(".song-artist input").attr("value", function(){ return this.value; })
+    d3.select(dragSrcEl).select(".song-title input").attr("value", function(){ return this.value; })
+    d3.select(this).select(".song-artist input").attr("value", function(){ return this.value; })
+    d3.select(this).select(".song-title input").attr("value", function(){ return this.value; })
 
     e.dataTransfer.effectAllowed = 'move';
     e.dataTransfer.setData('text/html', this.innerHTML);
@@ -558,6 +726,7 @@
     // Don't do anything if dropping the same column we're dragging.
     if (dragSrcEl != this) {
       // Set the source column's HTML to the HTML of the column we dropped on.
+
       dragSrcEl.innerHTML = this.innerHTML;
       this.innerHTML = e.dataTransfer.getData('text/html');
       

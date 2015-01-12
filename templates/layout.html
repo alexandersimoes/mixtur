@@ -3,22 +3,24 @@
   <title>{% block head_title %}Get yr mix on!{% endblock %}</title>
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='normalize.css') }}">
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
 </head>
 <body>
   {% for message in get_flashed_messages() %}
-  <div class="flash-wrapper">
-    <span class="flash">{{ message }}</span>
+  <div class="notify success">
+    {{ message }}
   </div>
   {% endfor %}
   <header>
-    <h1><a href="/"><img src="{{ url_for('static', filename='img/tape.png') }}" />Mixtur</a></h1>
-    <div class="metanav">
+    <h1><a href="{{ url_for('home') }}"><i title="Go home" class="fa fa-music"></i> mixtur</a></h1>
+    <nav>
     {% if not session.logged_in %}
-      <a href="{{ url_for('login') }}">log in</a>
+      <a href="{{ url_for('login') }}">Sign in</a>
     {% else %}
-      <a href="{{ url_for('logout') }}">log out</a>
+      <a href="{{ url_for('uploadr') }}">Upload</a>
+      <a href="{{ url_for('logout') }}">{{ g.user }}</a>
     {% endif %}
-    </div>
+    </nav>
   </header>
   <div class="page">
     {% block body %}{% endblock %}
@@ -35,16 +37,6 @@
       var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
     })();
 
-  </script>
-  <script src="{{ url_for('static', filename='jquery/jquery-1.7.2.min.js') }}"></script>
-  <script>
-  if($(".flash").length){
-    setTimeout(function(){
-     $(".flash").fadeOut(function(){
-       $(".flash").remove();
-     })
-    }, 3000);
-  }
   </script>
   {% block js %}{% endblock %}
 </body>

@@ -1,23 +1,24 @@
 /*@import url(http://fonts.googleapis.com/css?family=Lato:300);*/
 body {
-  background: #343434;
-  font-size: 14px;
-  margin: 0;  
-  font-family: 'Lato', "Lucida Grande", Tahoma, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Open Sans", sans-serif;
+  font-size: 13px;
   font-weight: 300;
   letter-spacing: 0;
   line-height: 1.4;
-  color: #999;
+/*  color: #999;*/
 }
-h1, h2 {
+h1, h2, h3 {
   margin: 0;
+  font-weight: normal;
 }
 a {
   color: #bbb;
-  text-decoration: none;
+/*  text-decoration: none;*/
 }
 a:hover {
-  color: white;
+  color: #666;
   text-decoration: none;
 }
 ul { padding: 0; }
@@ -33,35 +34,32 @@ li { list-style: none; }
   -webkit-user-drag: element;
 }
 
-
-header {
-  background: black;
-  color: #bbb;
+body > header {
   overflow: hidden;
-  padding: 5px 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
 }
-header h1 {
+body > header a {
+  color: black;
+  font-size: 14px;
+  padding: 10px;
+  text-decoration: none;
+}
+
+body > header h1 {
   float: left;
-  width: 275px;
 }
-header h1 a {
+body > header h1 a {
   font-size: 24px;
 }
-header h1 a img {
+body > header h1 a img {
   margin: 0 10px 0 0;
-  width: 50px;
   vertical-align: bottom;
 }
-header a {
-  color: #bbb;
-  font-size: 18px;
-  padding: 5px;
-}
-header .metanav {
+body > header nav {
+  padding: 10px;
   float: right;
-  margin: 10px 0 0 0;
-  text-align: right;
-  width: 100px;
 }
 
 .flash-wrapper {
@@ -85,17 +83,16 @@ header .metanav {
   display: inline-block;
 }
 div.page {
-  margin: 10px;
+  margin: 40px 10px 10px 10px;
   min-height: 100%;
 }
+
 /*html, body { padding: 0px; margin: 0px; height: 100%; text-align: center; }*/
 div.page { height: 100%; text-align: left; }
 div.page h2.title{
-  border-bottom: solid 2px #666;
-  font-size: 26px;
-  letter-spacing: 1px;
+  font-size: 20px;
   margin: 0 0 20px 0;
-  text-transform: uppercase;
+  text-align: center;
 }
 
 /* new summer mix */
@@ -116,27 +113,30 @@ form img {
   margin: 0 0 10px 0;
 }
 .input_cont input {
-  background: #666;
-  border: solid 2px #88b;
-  -moz-box-shadow:inset 0 0 3px #000000;
-  -webkit-box-shadow:inset 0 0 3px #000000;
-  box-shadow:inset 0 0 3px #000000;
-  color: #bbb;
+  border: solid 2px skyblue;
   font-size: 20px;
-  font-family: 'Lato', "Lucida Grande", Tahoma, Verdana, sans-serif;
+  font-family: "Helvetica Neue", Helvetica, Arial, "Open Sans", sans-serif;
   font-weight: 300;
-  padding: 0;
+  padding: 5px;
   width: 98%;
 }
 input:focus {
     outline: none;
 }
-form input[type='submit'] {
-  background: #88b;
-  border: solid 2px #88b;
-  color: #000;
-  font-family: 'Lato', "Lucida Grande", Tahoma, Verdana, sans-serif;
+form.login {
+  margin: auto;
+  width: 400px;
+}
+form .actions {
+  display: flex;
+  justify-content: flex-end;
   margin: 20px 0 0 0;
+}
+form input[type='submit'] {
+  background: skyblue;
+  border: solid 2px skyblue;
+  color: white;
+  font-family: "Helvetica Neue", Helvetica, Arial, "Open Sans", sans-serif;
   padding: 5px 15px;
   text-decoration: none;
   text-align: center;
@@ -155,13 +155,16 @@ form a.nvrmind:hover {
   color: #000;
 }
 
+div.mixes {
+  overflow: auto;
+}
 div.mix {
   float: left;
   font-size: 15px;
-  height: 275px;
-  margin: 0 38px 20px 0;
+  height: 150px;
+  margin: 0 20px 20px 0;
   position: relative;
-  width: 210px;
+  width: 150px;
 }
 div.mix div.edit {
   background: black;
@@ -186,9 +189,9 @@ div.mix a.cover {
   box-shadow: rgba(0, 0, 0, 0.2) 0 0 0 1px,rgba(0, 0, 0, 0.3) 0 2px 5px;
   display: inline-block;
   margin: 0 0 10px;
-  height: 210px;
+  height: 150px;
   text-align: center;
-  width: 210px;
+  width: 150px;
 }
 div.mix a.cover.dynamic,
 div.mix a.cover.add {
@@ -401,4 +404,29 @@ ul.songs li > a.add {
   position: absolute;
   top: 0; left: 0; bottom: 0; right: 0;
   text-align:center;
+}
+
+.notify {
+    padding: 8px 18px;
+    font-size: 12px;
+    text-align: center;
+}
+.notify.error {
+  background-color: #fef1f1;
+  border: 1px solid #e2a8a8;
+  color: #D46D6D
+}
+.notify.warning {
+  background-color:#FFFAE4;
+  border:1px solid #F4CD33;
+  color:#C39D02
+}
+.notify.success {
+  background-color:#e8f7ed;
+  border:1px solid #30b661;
+  color:#1BA84E
+}
+.notify.info {
+  border:1px solid #bdc4c9;
+  color:#aaa
 }

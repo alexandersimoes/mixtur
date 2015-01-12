@@ -5,6 +5,7 @@
   <meta charset="utf-8">
   <title>Mixtur</title>
   <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href='http://fonts.googleapis.com/css?family=Just+Another+Hand' rel='stylesheet' type='text/css'>
   <!--[if lt IE 9]>
   <script src="http://html5shim.googlecode.com/svn/trunk/html5-els.js"></script>
   <![endif]-->
@@ -20,41 +21,103 @@
     font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Open Sans", sans-serif;
     font-size: 13px;
     font-weight: 300;
-    
 
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
     display: flex;
+    
     min-height: 100%;
+
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
     flex-direction: column;
   }
+  body > header {
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+    width: 100%;
+  }
+  body > header a {
+    color: black;
+    font-size: 14px;
+    padding: 10px;
+    text-decoration: none;
+  }
+  body > header h1 {
+    float: left;
+    margin: 0;
+    padding: 5px;
+  }
+  body > header h1 a {
+    font-size: 24px;
+  }
+  body > header h1 a img {
+    vertical-align: bottom;
+  }
+  body > header nav {
+    padding: 10px;
+    float: right;
+  }
+  body > header nav a {
+    color: inherit;
+  }
+
   .tracks {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
     display: flex;
+
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
     flex-direction: column;
   }
   
   .anthology{
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
     display: flex;
+
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
     flex-direction: column;
+
+    -webkit-box-flex: 1 0 auto;
+    -moz-box-flex: 1 0 auto;
+    -webkit-flex: 1 0 auto;
+    -ms-flex: 1 0 auto;
     flex: 1 0 auto;
   }
   .anthology-title {
     background: lightgrey;
 /*    color: grey;*/
-    flex: 0 1 auto;
+    -webkit-box-flex: 1 0 auto;
+    -moz-box-flex: 1 0 auto;
+    -webkit-flex: 1 0 auto;
+    -ms-flex: 1 0 auto;
+    flex: 1 0 auto;
     padding: 0 10px;
     text-align: center;
-    font-family: "Helvetica Neue", Helvetica, Arial, "Open Sans", sans-serif;
-    font-size: 16px;
   }
   .anthology-title i {
     cursor: pointer;
     margin: 0 5px;
   }
   .anthology-title h1 {
-    display: inline;
     font-size: 28px;
     margin: 0 10px 0 0;
   }
   .anthology > div.album {
+    -webkit-box-flex: 1 1 auto;
+    -moz-box-flex: 1 1 auto;
+    -webkit-flex: 1 1 auto;
+    -ms-flex: 1 1 auto;
     flex: 1 1 auto;
   }
   .anthology > h1 {
@@ -63,36 +126,73 @@
   div.album {
     padding: 10px;
   }
-  header {
+  .album header {
     margin: 0 0 10px 0;
   }
-  header .album-title h1 {
-    display: inline;
-    font-size: 28px;
-    margin: 0 10px 0 0;
+  .album header .album-title {
+    margin: 0 0 10px 0;
   }
-  header .album-title i {
+  .album header .album-title h1 {
+    font-size: 28px;
+    margin: 0;
+    text-align: center;
+  }
+  .album header .album-title span {
+    display: block;
+    font-size: 15px;
+    text-align: center;
+  }
+  .album header .album-title i {
     cursor: pointer;
     font-size: 24px;
     margin: 0 5px;
     vertical-align: baseline;
   }
-  header .album-artist {
+  .album header .album-controls {
+    height: 35px;
+    text-align: center;
+    margin: 0 0 10px 0;
+  }
+  .album header .album-controls i{
+    cursor: pointer;
+    font-size: 20px;
+    margin: 0 20px;
+    padding: 5px;
+  }
+  .album header .album-controls i.fa-play,
+  .album header .album-controls i.fa-pause{
+    font-size: 40px;
+  }
+  .album header .album-controls i.fa-pause{
+    display: none;
+  }
+  .album header .album-artist {
     font-size: 20px;
   }
-  header .album-artist h2 {
+  .album header .album-artist h2 {
     display: inline;
     font-size: 20px;
   }
 
-  @media (min-width: 768px) {
+/*  @media (min-width: 768px) {*/
     .tracks {
+      -webkit-flex-direction: row;
+      -ms-flex-direction: row;
       flex-direction: row;
+      
+      -webkit-box-flex: 1;
+      -moz-box-flex: 1;
+      -webkit-flex: 1;
+      -ms-flex: 1;
       flex: 1;
     }
     .tracklisting {
 /*      border: solid 1px red;*/
-      flex: 1;
+      -webkit-box-flex: 2;
+      -moz-box-flex: 2;
+      -webkit-flex: 2;
+      -ms-flex: 2;
+      flex: 2;
     }
     .tracklisting h3{
       margin: 0;
@@ -109,19 +209,31 @@
     }
     .tracklisting ol li {
       cursor: pointer;
+      display: block;
+      position: relative;
+    }
+    .tracklisting ol li.active {
+      background: black;
+      color: white;
+    }
+    .tracklisting ol li div.track-info {
+      cursor: pointer;
+      display: -webkit-box;
+      display: -moz-box;
+      display: -ms-flexbox;
+      display: -webkit-flex;
       display: flex;
+      
+      -webkit-flex-direction: row;
+      -ms-flex-direction: row;
       flex-direction: row;
     }
-    .tracklisting ol li.active {
-      background: black;
-      color: white;
-    }
-    .tracklisting ol li.active {
-      background: black;
-      color: white;
-    }
-    .tracklisting ol li > p {
+    .tracklisting ol li div.track-info > p {
 /*      border: solid blue 1px;*/
+      -webkit-box-flex: 1;
+      -moz-box-flex: 1;
+      -webkit-flex: 1;
+      -ms-flex: 1;
       flex: 1;
       margin: 5px 0;
       -webkit-touch-callout: none;
@@ -131,62 +243,129 @@
       -ms-user-select: none;
       user-select: none;
     }
-    .tracklisting ol li > p:nth-child(1) {
+    .tracklisting ol li div.track-info > p:nth-child(1) {
       margin: 5px 0 5px 5px;
     } 
-    .tracklisting ol li > p:last-child {
+    .tracklisting ol li div.track-info > p:last-child {
       margin: 5px 5px 5px 0;
     }
-    .tracklisting ol li p.track-num{
-      flex: 0 0 30px;
+    .tracklisting ol li div.track-info p.track-num{
+      -webkit-box-flex: 0 0 20px;
+      -moz-box-flex: 0 0 20px;
+      -webkit-flex: 0 0 20px;
+      -ms-flex: 0 0 20px;
+      flex: 0 0 20px;
     }
-    .tracklisting ol li p.track-num i{
+    .tracklisting ol li div.track-info p.track-num i{
       display: none;
     }
-    .tracklisting ol li.active p.track-num i{
+    .tracklisting ol li.active div.track-info p.track-num i{
       display: inline;
     }
-    .tracklisting ol li.active p.track-num span{
+    .tracklisting ol li.active div.track-info p.track-num span{
       display: none;
     }
-    .tracklisting ol li p.track-play{
+    .tracklisting ol li div.track-info p.track-play{
+      -webkit-box-flex: 0 0 40px;
+      -moz-box-flex: 0 0 40px;
+      -webkit-flex: 0 0 40px;
+      -ms-flex: 0 0 40px;
       flex: 0 0 40px;
     }
-    .tracklisting ol li p.track-title .track-name{
+    .tracklisting ol li div.track-info p.track-title .track-name{
       font-size:18px;
     }
-    .tracklisting ol li p.track-time{
+    .tracklisting ol li div.track-info p.track-time{
+      -webkit-box-flex: 0 0 40px;
+      -moz-box-flex: 0 0 40px;
+      -webkit-flex: 0 0 40px;
+      -ms-flex: 0 0 40px;
       flex: 0 0 40px;
+      
       text-align: right;
     }
 /*    .tracklisting ol li div.track-progress{
       display: block;
       clear: both;
     }*/
-    .tracklisting ol span.track-progress{
-      background: yellow;
+    div.progress{
+      position: relative;
+      padding: 0 0 20px 0;
+    }
+    div.track-progress-bg{
+      border: solid black 1px;
+      background: black;
       display: block;
-      height: 5px;
-      width: 0px;
+      height: 10px;
+      position: absolute;
+      width: 0%;
+      z-index: 0;
+    }
+    div.track-progress{
+      background: white;
+      display: block;
+      height: 10px;
+      left: 1px;
+      position: absolute;
+      top: 1px;
+      width: 0%;
+      z-index: 99;
+    }
+    div.track-cursor{
+      background: orange;
+      display: none;
+      height: 10px;
+      left: 38%;
+      position: absolute;
+      width: 2px;
+      z-index: 999;
     }
     .album-art{
 /*      border: solid 1px red;*/
-      flex: 0 0 400px;
-      margin: 0 0 0 20px;
+      -webkit-box-flex: 1;
+      -moz-box-flex: 1;
+      -webkit-flex: 1;
+      -ms-flex: 1;
+      flex: 1;
+      margin: 5px 20px 0 0;
     }
     .album-art img{
-      width: 380px;
+      width: 100%;
     }
-  }
+/*  }*/
   
   </style>
 </head>
 
 <body>
+  <header>
+    <h1><a {% if songs[0].palette[1] %}style="color:{{songs[0].palette[1]}}"{% endif %} href="{{ url_for('home') }}"><i title="Go home" class="fa fa-music"></i> mixtur</a></h1>
+    <nav {% if songs[0].palette[1] %}style="color:{{songs[0].palette[1]}}"{% endif %}>
+    {% if not session.logged_in %}
+      <a href="{{ url_for('login') }}">Sign in</a>
+    {% else %}
+      <a href="{{ url_for('uploadr') }}">Upload</a>
+      <a href="{{ url_for('logout') }}">{{ g.user }}</a>
+    {% endif %}
+    </nav>
+  </header>
   <div class="anthology">
     {% if mix_type == "a" %}
     <div class="anthology-title">
-      <h1>Anthology: Alex's Summer MixXxes 2006 - 2014</h1><i title="Play entire anthology" class="fa fa-play fa-2x anthology-play"></i><i title="Shuffle anthology" class="fa fa-random fa-2x anthology-shuffle"></i>
+      <header>
+        <div class="album-title">
+          <h1>{{ songs[0].anthology_name }}</h1>
+          <span>{{ num_albums }} album{% if num_albums > 1%}s{% endif %}, {{ songs|length }} songs &bull; {% if total_runtime.hours %}{{ total_runtime.hours }} hours{% endif %} {% if total_runtime.minutes %}{{ total_runtime.minutes }} minutes{% endif %}</span>
+        </div>
+        <div class="album-controls">
+          <i title="Play previous song" class="fa fa-step-backward fa-lg"></i><i title="Play" class="fa fa-play fa-lg"></i><i title="Pause" class="fa fa-pause fa-lg"></i><i title="Play next song" class="fa fa-step-forward fa-lg"></i>
+        </div>
+        <div class="progress">
+          <div class="track-progress-bg"></div>
+          <div class="track-progress"></div>
+          <div class="track-cursor"></div>
+        </div>
+      </header>
     </div>
     {% endif %}
     
@@ -197,37 +376,51 @@
     {% for s in songs %}
     
     {% if s.mix != mix and loop.first %}
-    <div class="album">
+    <div class="album" style="background:{{s.palette[0]}}" {% if s.palette[0] %}data-bg-col="{{s.palette[0]}}"{% endif %} {% if s.palette[1] %}data-hilite-col="{{s.palette[1]}}"{% endif %} {% if s.palette[2] %}data-hilite-col2="{{s.palette[2]}}"{% endif %}>
+      {% if mix_type == "m" %}
       <header>
         <div class="album-title">
-          <h1>{{ s.mix_name }}</h1><i title="Play full album" class="fa fa-play fa-lg"></i><i title="Shuffle album" class="fa fa-random fa-lg"></i>
+          <h1 style="color:{{s.palette[1]}}">{{ s.mix_name }}</h1>
+          <span {% if s.palette[2] %}style="color:{{s.palette[2]}}"{% else %}class="no-col"{% endif %}>{{ num_albums }} album{% if num_albums > 1%}s{% endif %}, {{ songs|length }} songs &bull; {% if total_runtime.hours %}{{ total_runtime.hours }} hours{% endif %} {% if total_runtime.minutes %}{{ total_runtime.minutes }} minutes{% endif %} {% if not total_runtime.hours and not total_runtime.minutes %}{{ total_runtime.seconds }} seconds{% endif %}</span>
         </div>
-        <div class="album-artist">
+        <div class="album-controls" style="color:{{s.palette[1]}}">
+          <i title="Play previous song" class="fa fa-step-backward fa-lg"></i><i title="Play" class="fa fa-play fa-lg"></i><i title="Pause" class="fa fa-pause fa-lg"></i><i title="Play next song" class="fa fa-step-forward fa-lg"></i>
+        </div>
+        <div class="progress">
+          <div class="track-progress-bg" style="background:{{s.palette[1]}}; border-color: {{s.palette[1]}};"></div>
+          <div {% if s.palette[2] %}class="track-progress" style="background:{{s.palette[2]}}"{% else %}class="track-progress no-col"{% endif %}></div>
+          <div class="track-cursor"></div>
+        </div>
+        <!-- <div class="album-artist">
           <h2>{{ artist }}</h2><span class="year"> &bull; {{ s.date|dateformat('%Y') }}</span>
-        </div>
+        </div> -->
       </header>
+      {% endif %}
       <div class="tracks">
+        <nav class="album-art">
+          {% if s.cover %}
+          <img src="{{url_for('uploaded_file', user=s.user, mix=s.mix_slug, filename=s.cover) }}" alt="cover image for {{s.mix_name}}" />
+          {% else %}
+          <img src='/static/img/no_cover.jpg' />
+          {% endif %}
+        </nav>
         <main class="tracklisting">
     {% elif s.mix_name != mix %}
                   </ol>
                 </div>
               </main>
-              <nav class="album-art">
-                <img src="{{url_for('uploaded_file', user=s.user, mix=mix_slug, filename=cover) }}" alt="cover image for {{mix}}" />
-              </nav>
             </div>
             <footer></footer>
           </div>
-    <div class="album">
-      <header>
-        <div class="album-title">
-          <h1>{{ s.mix_name }}</h1><i title="Play full album" class="fa fa-play fa-lg"></i><i title="Shuffle album" class="fa fa-random fa-lg"></i>
-        </div>
-        <div class="album-artist">
-          <h2>{{ artist }}</h2><span class="year"> &bull; {{ s.date|dateformat('%Y') }}</span>
-        </div>
-      </header>
+    <div class="album" style="background:{{s.palette[0]}}" {% if s.palette[0] %}data-bg-col="{{s.palette[0]}}"{% endif %} {% if s.palette[1] %}data-hilite-col="{{s.palette[1]}}"{% endif %} {% if s.palette[2] %}data-hilite-col2="{{s.palette[2]}}"{% endif %}>
       <div class="tracks">
+        <nav class="album-art">
+          {% if s.cover %}
+          <img src="{{url_for('uploaded_file', user=s.user, mix=s.mix_slug, filename=s.cover) }}" alt="cover image for {{s.mix_name}}" />
+          {% else %}
+          <img src='/static/img/no_cover.jpg' />
+          {% endif %}
+        </nav>
         <main class="tracklisting">
     {% endif %}
           {% if (s.disc != disc and loop.first) or (s.disc != disc and s.mix_name != mix) %}
@@ -242,14 +435,15 @@
             <ol>
           {% endif %}
               <li class="track">
-                <p class="track-num"><span>{{ s.position }}</span><i class="fa fa-volume-up"></i></p>
-                <p class="track-title">
-                  <span class="track-name">{{ s.title }}</span><br />
-                  <span class="track-artist">{{ s.artist }}</span><br />
-                  <span class="track-progress"></span>
-                  <audio preload="none" src="{{url_for('uploaded_file', user=s.user, mix=s.mix_slug, filename=s.song_slug) }}"></audio>
-                </p>
-                <p class="track-time">{{ s.runtime|dateformat('%M:%S') }}</p>
+                <div class="track-info">
+                  <p {% if s.palette[2] %}class="track-num" style="color:{{s.palette[2]}}"{% else %}class="track-num no-col"{% endif %}><span>{{ s.position }}</span><i class="fa fa-volume-up"></i></p>
+                  <p class="track-title">
+                    <span class="track-name" style="color:{{s.palette[1]}}">{{ s.title }}</span><br />
+                    <span {% if s.palette[2] %}class="track-artist" style="color:{{s.palette[2]}}"{% else %}class="track-artist no-col"{% endif %}>{{ s.artist }}</span><br />
+                    <audio preload="none" src="{{url_for('uploaded_file', user=s.user, mix=s.mix_slug, filename=s.song_slug) }}"></audio>
+                  </p>
+                  <p {% if s.palette[2] %}class="track-time" style="color:{{s.palette[2]}}"{% else %}class="track-time no-col"{% endif %}>{{ s.runtime|dateformat('%-M:%S') }}</p>
+                </div>
               </li>
           {% set mix = s.mix_name %}
           {% set mix_slug = s.mix_slug %}
@@ -260,9 +454,6 @@
                   </ol>
                 </div>
               </main>
-              <nav class="album-art">
-                <img src="{{url_for('uploaded_file', user=s.user, mix=s.mix_slug, filename=s.cover) }}" alt="cover image for {{s.mix_name}}" />
-              </nav>
             </div>
             <footer></footer>
           </div>
@@ -276,7 +467,8 @@
   <script src="/static/js/d3plus.min.js"></script>
   <script>
   var shuffle_songs = [],
-      current_song, shuffle_on, anthology_on, hilite_col, hilite_txt_col, bg_col, txt_col, accent_col;
+      current_song, shuffle_on, anthology_on, hilite_col, hilite_txt_col, 
+      dragging, bg_col, txt_col, accent_col;
   
   d3.select("body")
       .on("keydown", function() {
@@ -320,25 +512,37 @@
   })
   
   d3.selectAll("audio").on("timeupdate", function(){
-    var progress = (this.currentTime / this.duration) * 100
-    // console.log(this, this.currentTime, this.duration, progress)
-    var this_li = d3.select(this.parentNode.parentNode);
-    this_li.select("span.track-progress").style("width", progress+"%");
+    d3.select("i.fa-play").style("display", "none");
+    d3.select("i.fa-pause").style("display", "inline");
+    if(!dragging){
+      var progress = (this.currentTime / this.duration) * 100;
+      var this_li = d3.select(this.parentNode.parentNode.parentNode);
+      // console.log(this, this.currentTime, this.duration, progress, this_li);
+      d3.select(".track-progress").style("width", progress+"%");
+    }
   })
   
   d3.selectAll("audio").on("play", function(){
     current_song = this;
     stop_all(this);
     d3.selectAll("li.track").classed("active", false);
-    d3.selectAll("li.track .track-progress").style("width", "0px");
-    var this_li = d3.select(this.parentNode.parentNode);
+    d3.select("i.fa-play").style("display", "none");
+    d3.select("i.fa-pause").style("display", "inline");
+    var this_li = d3.select(this.parentNode.parentNode.parentNode);
+    d3.select(".track-progress-bg").style("width", "100%");
     // this_li.select("p.track-num i").style("display", "inline")
     hilite(this_li, true)
+  })
+  
+  d3.selectAll("audio").on("pause", function(){
+    // console.log('pause called!')
+    d3.select("i.fa-play").style("display", "inline");
+    d3.select("i.fa-pause").style("display", "none");
   })
 
   d3.selectAll("audio").on("ended", function(){
     console.log('song done...')
-    var this_li = d3.select(this.parentNode.parentNode);
+    var this_li = d3.select(this.parentNode.parentNode.parentNode);
     hilite(this_li, false)
     var next = get_next(this);
     if (next) {
@@ -346,18 +550,46 @@
     }
     else {
       shuffle_on = false;
+      current_song = null;
       // d3.selectAll("li.track").classed("active", false);
       console.log('album done...')
     }
   });
   
   d3.selectAll("i.fa-play").on("click", function(){
-    d3.select("audio").node().play();
+    if(current_song) {
+      current_song.play();
+    }
+    else {
+      d3.select("audio").node().play();
+    }
     if(d3.select(this).classed("anthology-play")){
       anthology_on = true;
     }
     else {
       anthology_on = false;
+    }
+  })
+  
+  d3.selectAll("i.fa-pause").on("click", function(){
+    current_song.pause();
+  })
+  
+  d3.selectAll("i.fa-step-backward").on("click", function(){
+    if(current_song){
+      var prev = get_prev(current_song);
+      if (prev) {
+        prev.play();
+      }
+    }
+  })
+  
+  d3.selectAll("i.fa-step-forward").on("click", function(){
+    if(current_song){
+      var next = get_next(current_song);
+      if (next) {
+        next.play();
+      }
     }
   })
   
@@ -385,11 +617,11 @@
       return rand_song;
     }
     else {
-      var next_li = audio_el.parentNode.parentNode.nextElementSibling;
+      var next_li = audio_el.parentNode.parentNode.parentNode.nextElementSibling;
       if(!next_li){
-        var next_disc = audio_el.parentNode.parentNode.parentNode.parentNode.nextElementSibling;
+        var next_disc = audio_el.parentNode.parentNode.parentNode.parentNode.parentNode.nextElementSibling;
         if(!next_disc && anthology_on){
-          var next_disc = audio_el.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.nextElementSibling;
+          var next_disc = audio_el.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.nextElementSibling;
           if(!next_disc){
             return null;
           }
@@ -399,10 +631,24 @@
       return d3.select(next_li).select("audio").node();
     }
   }
+  function get_prev(audio_el){
+    var prev_li = audio_el.parentNode.parentNode.parentNode.previousElementSibling;
+    if(!prev_li){
+      var prev_disc = audio_el.parentNode.parentNode.parentNode.parentNode.parentNode.previousElementSibling;
+      if(!prev_disc && anthology_on){
+        var prev_disc = audio_el.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.previousElementSibling;
+        if(!prev_disc){
+          return null;
+        }
+      }
+      var prev_li = d3.select(prev_disc).select("li.track").node();
+    }
+    return d3.select(prev_li).select("audio").node();
+  }
   function stop_all(exception_el) {
     d3.selectAll("audio").each(function(){
       if(this !== exception_el){
-        var this_li = d3.select(this.parentNode.parentNode);
+        var this_li = d3.select(this.parentNode.parentNode.parentNode);
         hilite(this_li, false)
         this.pause();
         this.currentTime = 0;
@@ -410,67 +656,140 @@
     })
   }
   function hilite(li, turn_on){
+    var album_el = d3.select(getParents(li.node(), ".album")[0]);
+    var bg_col = album_el.attr("data-bg-col");
+    var hilite_col = album_el.attr("data-hilite-col");
+    if(!hilite_col){
+      hilite_col = d3plus.color.text(bg_col);
+    }
+    var hilite_col_2 = album_el.attr("data-hilite-col2");
+    if(!hilite_col_2){
+      hilite_col_2 = d3plus.color.text(bg_col);
+    }
+    
     if(turn_on === false){
       li.classed("active", false);
-      li.style("background", function(){ return d3.select(this).attr("data-bg-col") });
-      li.style("color", function(){ return d3.select(this).attr("data-txt-col") });
-      li.select(".track-num").style("color", function() { return d3.select(this.parentNode).attr("data-hilite-col") });
-      li.select(".track-time").style("color", function() { return d3.select(this.parentNode).attr("data-hilite-col") });
+      li.style("background", bg_col);
+      li.select(".track-num").style("color", hilite_col_2);
+      li.select(".track-time").style("color", hilite_col_2);
+      li.select(".track-name").style("color", hilite_col);
+      li.select(".track-artist").style("color", hilite_col_2);
     }
     else{
       li.classed("active", true);
-      li.style("background", function(){ return d3.select(this).attr("data-hilite-col") });
-      li.style("color", function(){ return d3.select(this).attr("data-hilite-txt-col") });
-      li.select(".track-num").style("color", function() { return d3.select(this.parentNode).attr("data-hilite-txt-col") });
-      li.select(".track-time").style("color", function() { return d3.select(this.parentNode).attr("data-hilite-txt-col") });
-      li.select("span.track-progress").style("background", function() { return d3.select(this.parentNode.parentNode).attr("data-hilite-txt-col") });
+      li.style("background", hilite_col);
+      li.select(".track-num").style("color", bg_col);
+      li.select(".track-time").style("color", bg_col);
+      li.select(".track-name").style("color", bg_col);
+      li.select(".track-artist").style("color", bg_col);
     }
   }
   
-  var Colibri=function(){var floor=function(n){return Math.floor(n)};var abs=function(n){return Math.abs(n)};var sqrt=function(n){return Math.sqrt(n)};var pow=function(n){return Math.pow(n,2)};var filters={hex:function(color){var hexComponent=function(n){var value=Math.floor(255*n).toString(16);return value.length===1?"0"+value:value};return"#"+color.map(hexComponent).join("")},css:function(color){return"rgb("+color.map(function(n){return Math.floor(255*n)}).join(",")+")"}};var rgbToYuv=function(rgb){return[rgb[0]*.299+rgb[1]*.587+rgb[2]*.114,rgb[0]*-.147+rgb[1]*.289+rgb[2]*.436,rgb[0]*.615+rgb[1]*.515+rgb[2]*.1]};var colorDistance=function(rgb1,rgb2){var yuv1=rgbToYuv(rgb1),yuv2=rgbToYuv(rgb2);return sqrt(pow(yuv1[0]-yuv2[0])+pow(yuv1[1]-yuv2[1])+pow(yuv1[2]-yuv2[2]))};var colorBrightness=function(rgb){return sqrt(pow(rgb[0])*.241+pow(rgb[1])*.691+pow(rgb[2])*.068)};var gatherSimilarElements=function(list,comparator){var subsets=[];for(var u=0,U=list.length;u<U;++u){var element=list[u];var closest=null;for(var v=0,V=subsets.length;v<V;++v)if(comparator(subsets[v][0],element))break;if(v===V){closest=[];subsets.push(closest)}else{closest=subsets[v]}closest.push(element)}return subsets};var meanColor=function(colorList){var finalColor=[0,0,0];for(var t=0,T=colorList.length;t<T;++t){var color=colorList[t];finalColor[0]+=color[0];finalColor[1]+=color[1];finalColor[2]+=color[2]}finalColor[0]/=colorList.length;finalColor[1]/=colorList.length;finalColor[2]/=colorList.length;return finalColor};var dominantColor=function(colorList,treshold,count){if(typeof treshold==="undefined")treshold=.1;if(typeof count==="undefined")count=null;var buckets=gatherSimilarElements(colorList,function(colorA,colorB){return colorDistance(colorA,colorB)<treshold}).sort(function(bucketA,bucketB){return bucketB.length-bucketA.length});var color=meanColor(buckets.shift());if(count===null)return color;if(count===-1)count=buckets.length;return buckets.slice(0,count).map(function(bucket){return meanColor(bucket)})};var createCanvas=function(){return document.createElement("canvas")};var loadDataFromContext=function(destination,context,x,y,width,height){var data=context.getImageData(x,y,width,height).data;for(var t=0,T=data.length;t<T;t+=4){destination.push([data[t+0]/255,data[t+1]/255,data[t+2]/255])}};var extractImageColors=function(image,filter){var canvas=createCanvas();var context=canvas.getContext("2d");canvas.width=image.width;canvas.height=image.height;context.drawImage(image,0,0,canvas.width,canvas.height);var borderImageData=[];loadDataFromContext(borderImageData,context,0,0,canvas.width-1,1);loadDataFromContext(borderImageData,context,canvas.width-1,0,1,canvas.height-1);loadDataFromContext(borderImageData,context,0,1,1,canvas.height-1);loadDataFromContext(borderImageData,context,1,canvas.height-1,canvas.width-1,1);var fullImageData=[];loadDataFromContext(fullImageData,context,0,0,canvas.width,canvas.height);var backgroundColor=dominantColor(borderImageData,.1);var contentColors=dominantColor(fullImageData,.1,-1).filter(function(color){return abs(colorBrightness(backgroundColor)-colorBrightness(color))>.4}).reduce(function(filteredContentColors,currentColor){var previous=filteredContentColors[filteredContentColors.length-1];if(!previous||colorDistance(previous,currentColor)>.3)filteredContentColors.push(currentColor);return filteredContentColors},[]);if(filter&&typeof filter!=="function")filter=filters[filter];if(filter){backgroundColor=filter(backgroundColor);contentColors=contentColors.map(function(color){return filter(color)})}return{background:backgroundColor,content:contentColors}};return{dominantColor:dominantColor,extractImageColors:extractImageColors}}();
-  function set_colors(img_el, i) {
-    
-    return (function(value){
-      return function(){
-        var container = img_el.parentNode.parentNode.parentNode;
-        var album = d3.select(container);
-        var ctx_cols = Colibri.extractImageColors( this, 'hex' );
-        var bg_col = ctx_cols.background;
-        var title_col = ctx_cols.content[0];
-        var accent_col = ctx_cols.content[1];
+  /**
+   * Get all DOM element up the tree that contain a class, ID, or data attribute
+   * @param  {Node} elem The base element
+   * @param  {String} selector The class, id, data attribute, or tag to look for
+   * @return {Array} Null if no match
+   */
+  var getParents = function (elem, selector) {
 
-        if(bg_col){
-          album.style("background", bg_col);
-          var txt_col = d3plus.color.text(bg_col);
-          album.style("color", txt_col)
-          album.selectAll("li.track").attr("data-txt-col", txt_col)
-        }
-        
-        if(title_col){
-          album.selectAll(".track-names").style("color", title_col)
-          album.selectAll(".album h1").style("color", title_col)
-        }
-        
-        if(accent_col){
-          album.selectAll(".track-num").style("color", accent_col);
-          album.selectAll(".track-time").style("color", accent_col);
-          album.selectAll("li.track").attr("data-bg-col", bg_col)
-          album.selectAll("li.track").attr("data-hilite-col", accent_col)
-          hilite_txt_col = d3plus.color.text(accent_col);
-          album.selectAll("li.track").attr("data-hilite-txt-col", hilite_txt_col)
-        }
-        
-       }
-    })(i);
-  };
+      var parents = [];
+      if ( selector ) {
+          var firstChar = selector.charAt(0);
+      }
 
-  var album_covers = [].slice.call(document.querySelectorAll(".album-art img"));
-  album_covers.forEach(function(ac, i){
-    console.log(ac.src);
-    var img = new Image();
-    img.onload = set_colors(ac, i)
-    img.src = ac.src;
+      // Get matches
+      for ( ; elem && elem !== document; elem = elem.parentNode ) {
+          if ( selector ) {
+
+              // If selector is a class
+              if ( firstChar === '.' ) {
+                  if ( elem.classList.contains( selector.substr(1) ) ) {
+                      parents.push( elem );
+                  }
+              }
+
+              // If selector is an ID
+              if ( firstChar === '#' ) {
+                  if ( elem.id === selector.substr(1) ) {
+                      parents.push( elem );
+                  }
+              }
+
+              // If selector is a data attribute
+              if ( firstChar === '[' ) {
+                  if ( elem.hasAttribute( selector.substr(1, selector.length - 1) ) ) {
+                      parents.push( elem );
+                  }
+              }
+
+              // If selector is a tag
+              if ( elem.tagName.toLowerCase() === selector ) {
+                  parents.push( elem );
+              }
+
+          } else {
+              parents.push( elem );
+          }
+      }
+
+      // Return parents if any exist
+      if ( parents.length === 0 ) {
+          return null;
+      } else {
+          return parents;
+      }
+
+  }
+  d3.selectAll(".no-col").style("color", function(){
+    var bg = d3.rgb(d3.select(getParents(this, ".album")[0]).style("background"));
+    return d3plus.color.text(bg)
   })
+  
+  d3.select(".progress").on("mousemove", function(){
+    var left = d3.event.pageX - parseInt(d3.selectAll("div.album").style("padding-left"));
+    var left_pct = (left / this.offsetWidth) * 100;
+    var progress_w = d3.select(".track-progress").style("width")
+    // if(left > parseInt(progress_w)){
+    //   this_li.select(".track-cursor").style("background", function(){ return this_li.attr("data-hilite-txt-col"); })
+    // }
+    // else {
+    //   this_li.select(".track-cursor").style("background", function(){ return this_li.attr("data-hilite-col"); })
+    // }
+    if(parseInt(d3.select(".track-progress-bg").style("width")) > 0){
+      d3.select(".track-cursor").style("display", "block")
+      d3.select(".track-cursor").style("left", left_pct+"%")
+    }
+  })
+  d3.select(".progress").on("mouseout", function(){
+    d3.select(".track-cursor").style("display", "none")
+  })
+  
+  
+  
+  var drag = d3.behavior.drag()
+    .on("dragstart", function(){
+      dragging = true;
+    })
+    .on("drag", function(){
+      var left = Math.min(Math.max(0, d3.event.x), this.offsetWidth);
+      var left_pct = (left / this.offsetWidth) * 100;
+      d3.select(".track-progress").style("width", left_pct+"%");
+      // console.log(this, left, left_pct)
+    })
+    .on("dragend", function(){
+      dragging = false;
+    });
+  d3.select(".progress")
+    .on("mouseup", function(){
+      var left = Math.max(0, d3.event.x);
+      var left_pct = (left / this.offsetWidth);
+      var seek_time = current_song.duration * left_pct;
+      // console.log(seek_time, current_song.currentTime, current_song.duration)
+      current_song.currentTime = seek_time;
+    })
+    .call(drag);
+
   </script>
 </body>
 

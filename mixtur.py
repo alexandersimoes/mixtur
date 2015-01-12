@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
 '''All the imports'''
-import sqlite3, os, time, re
+import sqlite3, os, time, re, operator, time
 from werkzeug import secure_filename
-from flask import Flask, g, render_template, send_from_directory, abort, jsonify, request
-from urllib import quote_plus, unquote_plus
+from flask import Flask, g, render_template, send_from_directory, abort, \
+    jsonify, request, json, session, flash, redirect, url_for
+from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 from mutagen.mp3 import MP3
 
@@ -14,9 +15,11 @@ app = Flask(__name__)
 # Load default config and override config from an environment variable
 app.config.from_pyfile(os.path.join(os.path.dirname(__file__), 'mixtur.cfg'))
 
+@app.before_request
+def before_request():
+  g.user = session.get('user')
+
 '''Additional Jinja filters'''
-def urlify(s):
-  return quote_plus(s.encode('utf8').lower())
 def dateformat(value, format='%H:%M / %d-%m-%Y'):
     try:
         date_object = datetime.strptime(value, '%Y-%m-%d %H:%M:%S')
@@ -24,7 +27,6 @@ def dateformat(value, format='%H:%M / %d-%m-%Y'):
         return 
     return date_object.strftime(format)
 
-app.jinja_env.filters['urlify'] = urlify
 app.jinja_env.filters['dateformat'] = dateformat
 
 def connect_db():
@@ -88,7 +90,7 @@ def uploaded_file(user, mix, filename):
 
 @app.route("/")
 def home():
-    mixes = query_db('select id, name, description, cover, user, slug from mix order by date desc limit 20')
+    mixes = query_db('select id, name, desc, cover, user, slug from mix order by date desc limit 20')
     anthologies = query_db("""
         select a.name, m.name as mix_name, cover, user, a.slug, m.slug as mix_slug
         from anthology as a, mixanthology as ma, mix as m 
@@ -100,22 +102,48 @@ def home():
 @app.route("/<mix_type>/<mix_slug>/")
 def mix(mix_type, mix_slug):
     mix_votes = {}
+    num_albums = 1
+    total_time = 3
+    base_date = datetime(1970, 1, 1)
     if mix_type == "m":
-        songs = query_db("""select m.name as mix_name, cover, m.slug as mix_slug, s.title, s.artist, s.slug as song_slug, disc, position, runtime, date, user from
+        songs = query_db("""select m.name as mix_name, cover, m.slug as mix_slug, s.title, s.artist, s.slug as song_slug, disc, position, runtime, date, palette, user from
                                 song as s, mix as m
                                 where m.slug = ? and s.mix = m.id
                                 order by m.id, s.position;""", (mix_slug,))
     elif mix_type == "a":
-        songs = query_db("""select a.name as anthology, m.name as mix_name, cover, m.slug as mix_slug, s.title, s.artist, s.slug as song_slug, disc, position, runtime, date, user from
+        songs = query_db("""select a.name as anthology_name, m.name as mix_name, cover, m.slug as mix_slug, s.title, s.artist, s.slug as song_slug, disc, palette, position, runtime, date, user from
                                 song as s, anthology as a, mixanthology as ma, mix as m
                                 where a.slug = ? and ma.anthology_id = a.id and m.id = ma.mix_id and s.mix = m.id
                                 order by m.id, s.disc, s.position;""", (mix_slug,))
+        num_albums = len({s["mix_name"] for s in songs})
     else:
         abort(404)
-    return render_template("new_show_mix.html", mix_type=mix_type, mix=None, artist="Various Artists", songs=songs, votes={})
+    # format palettes
+    def fix_palette(s):
+        if "palette" in s and s["palette"]:
+            s["palette"] = json.loads(s["palette"])
+        else:
+            s["palette"] = ["#712a28", "#e69f9f"]
+        return s
+    songs = map(dict, songs)
+    songs = map(fix_palette, songs)
+    # get runtimes
+    runtimes = [datetime.strptime(s["runtime"], '%Y-%m-%d %H:%M:%S') for s in songs]
+    runtimes = [r - base_date for r in runtimes]
+    total_runtime = reduce(operator.add, runtimes)
+    hours, remainder = divmod(total_runtime.seconds, 3600)
+    minutes, seconds = divmod(remainder, 60)
+
+    return render_template("new_show_mix.html", 
+                                mix_type=mix_type,
+                                num_albums=num_albums,
+                                total_runtime={"hours":hours, "minutes":minutes, "seconds":seconds},
+                                songs=songs, 
+                                votes={})
 
 @app.route("/uploadr/")
 def uploadr():
+    if not session.get("logged_in"): abort(401)
     return render_template("uploadr.html")
 
 def allowed_file(filename):
@@ -130,11 +158,14 @@ def parse_files(file_dict):
 
 @app.route("/uploadr/<file_type>/", methods=["GET", "POST"])
 def uploadr_file(file_type):
+    if not session.get("logged_in"): abort(401)
     # return jsonify(name="filename", size="file_size", file_type=file_type)
     if request.method == 'POST':
         mix_title = request.form.get('mix_title')
         mix_id = request.form.get('mix_id')
-        user = "aljaffe"
+        mix_desc = request.form.get('mix_desc')
+        mix_palette = request.form.get('mix_palette')
+        user = session.get("user")
         files = parse_files(request.files)
         artists = request.form.getlist('song_artist')
         titles = request.form.getlist('song_title')
@@ -146,6 +177,11 @@ def uploadr_file(file_type):
         if mix_title:
             mix_slug = secure_filename(mix_title)
             query_db("UPDATE mix SET name=?, slug=? WHERE id=?", [mix_title, mix_slug, mix_id], update=True)
+        else:
+            mix_slug = query_db("SELECT slug FROM mix WHERE id=?", [mix_id], one=True)["slug"]
+        
+        if mix_desc:
+            query_db("UPDATE mix SET desc=? WHERE id=?", [mix_desc, mix_id], update=True)
         
         # user = session["user"]
         for f, artist, title, track_num in zip(files, artists, titles, track_nums):
@@ -159,7 +195,7 @@ def uploadr_file(file_type):
                 if "image" in f.mimetype:
                     print 'made it!!!!', filename, mix_id
                     # add cover img file_name to db
-                    query_db("UPDATE mix SET cover=? WHERE id=?", [filename, mix_id], update=True)
+                    query_db("UPDATE mix SET cover=?, palette=? WHERE id=?", [filename, mix_palette, mix_id], update=True)
                 if "audio" in f.mimetype:
                     # add song file_name to db
                     audio = MP3(os.path.join(user_mix_dir, filename))
@@ -174,7 +210,7 @@ def uploadr_file(file_type):
         
         # return jsonify(files=str(files))
         
-        return jsonify(mix_id=mix_id)
+        return jsonify(mix_id=mix_id, mix_slug=mix_slug)
         
         files = request.files.getlist('song')
         return jsonify(name="filename", size="file_size", file_type=file_type, files=str(files), test=str(request.form))
@@ -188,6 +224,37 @@ def uploadr_file(file_type):
                 app.logger.info('ext name error')
                 return jsonify(error='ext name error')
         return jsonify(name=filename, size=file_size)
+
+'''
+
+    The Login/out Views!
+    
+'''
+'''Login'''
+@app.route("/login/", methods=["GET", "POST"])
+def login():
+    error = None
+    if request.method == "POST":
+        '''try to find user'''
+        user = query_db("SELECT name, password FROM user WHERE email=?", [request.form["username"].lower()], one=True)
+        if not user:
+            error = "Invalid username"
+        elif not check_password_hash(user["password"], request.form["password"]):
+            error = "Invalid password"
+        else:
+            session["logged_in"] = True
+            session["user"] = user[0]
+            flash("You were logged in")
+            return redirect(url_for("home"))
+    return render_template("login.html", error=error)
+
+'''Logout'''
+@app.route("/logout/")
+def logout():
+    session.pop("logged_in", None)
+    session.pop("user", None)
+    flash("Logged out")
+    return redirect(url_for("home"))
 '''
 
     Run the file!

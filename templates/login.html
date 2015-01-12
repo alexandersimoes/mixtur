@@ -1,17 +1,18 @@
 {% extends "layout.html" %}
 {% block body %}
-  <h2 class="title">Login</h2>
-  {% if error %}<p class="error"><strong>Error:</strong> {{ error }}{% endif %}
-  <form action="{{ url_for('login') }}" method="post">
-    <h3>Login (email):</h3>
+  <form action="{{ url_for('login') }}" method="post" class="login">
+    {% if error %}<div class="notify error"><strong>Error:</strong> {{ error }}</div>{% endif %}
     <div class="input_cont">
-      <input type="text" name="username" autofocus />
+      <label for="username">Login (email)</label>
+      <input type="text" name="username" autofocus placeholder="user@gmail.com" />
     </div>
-    <h3>Password:</h3>
     <div class="input_cont">
+      <label for="password">Password</label>
       <input type="password" name="password" />
     </div>
-    <input type="submit" value="Login" />
+    <div class="actions">
+      <input type="submit" value="Login" />
+    </div>
     <!-- <button>Login</button> -->
   </form>
 {% endblock %}
