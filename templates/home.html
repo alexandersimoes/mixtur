@@ -6,7 +6,7 @@
     <div class="mix">
       {% if m.cover %}
       <a href="{{ url_for('mix', mix_type='m', mix_slug=m.slug) }}" class="cover" style="background-image:url('{{url_for('uploaded_file', user=m.user, mix=m.slug, filename=m.cover) }}');"></a>
-      {% else %}
+      {% elif m.slug %}
       <a href="{{ url_for('mix', mix_type='m', mix_slug=m.slug) }}" class="cover" style="background-image:url('/static/img/no_cover.jpg');"></a>
       {% endif %}
     </div>

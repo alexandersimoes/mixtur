@@ -183,12 +183,24 @@ def parse_files(file_dict):
     files.sort()
     return [f[1] for f in files]
 
+def make_slug(title):
+    slug = secure_filename(title)
+    if query_db("SELECT * FROM mix WHERE slug=?", (slug,), one=True) is None:
+        return slug
+    version = 2
+    while True:
+        new_slug = slug + str(version)
+        if query_db("SELECT * FROM mix WHERE slug=?", (new_slug,), one=True) is None:
+            break
+        version += 1
+    return new_slug
+
 @app.route("/uploadr/<file_type>/", methods=["GET", "POST"])
 def uploadr_file(file_type):
     if not session.get("logged_in"): abort(401)
     # return jsonify(name="filename", size="file_size", file_type=file_type)
     if request.method == 'POST':
-        mix_title = request.form.get('mix_title')
+        mix_title = request.form.get('mix_title') or 'Untitled Mix'
         mix_id = request.form.get('mix_id')
         mix_desc = request.form.get('mix_desc')
         mix_palette = request.form.get('mix_palette')
@@ -202,7 +214,7 @@ def uploadr_file(file_type):
             mix_id = insert_db("mix", fields=('date', 'user'), args=(str(datetime.now().strftime('%Y-%m-%d %H:%M:%S')), user))
 
         if mix_title:
-            mix_slug = secure_filename(mix_title)
+            mix_slug = make_slug(mix_title)
             query_db("UPDATE mix SET name=?, slug=? WHERE id=?", [mix_title, mix_slug, mix_id], update=True)
         else:
             mix_slug = query_db("SELECT slug FROM mix WHERE id=?", [mix_id], one=True)["slug"]

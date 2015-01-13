@@ -4,6 +4,7 @@
 <head>
   <meta charset="utf-8">
   <title>Mixtur</title>
+  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
   <link href='http://fonts.googleapis.com/css?family=Just+Another+Hand' rel='stylesheet' type='text/css'>
   <!--[if lt IE 9]>
   <script src="http://html5shim.googlecode.com/svn/trunk/html5-els.js"></script>
@@ -29,7 +30,7 @@
   
   a {
     color: skyBlue;
-    text-decoration: underline;
+    text-decoration: none;
   }
   a:hover {
     color: #3cb0fd;
@@ -209,15 +210,13 @@
   }
   
   .delete {
-    color: #ee162d;
+    bottom: 0;
+    color: black;
     cursor: pointer;
+    padding: 5px;
     position: absolute;
-    width: 40px;
-    height: 40px;
-    font-size: 30px;
     text-align: center;
-    right: -10px;
-    top: -10px;
+    width: 100%;
   }
   label {
 /*    font-weight: bold;*/
@@ -303,6 +302,7 @@
   header .album-art{
     flex: 1;
     margin: 0 10px 0 0;
+    position: relative;
   }
   header .album-art img {
     width: 100%;
@@ -494,7 +494,7 @@
     <p class="song-file"> \
       <span class="file">&nbsp;</span> \
       <span class="file-info" data-dz-name></span> \
-      <a href="#" class="dz-remove" data-dz-remove>remove</a> \
+      <a href="#" class="dz-remove" data-dz-remove><i title="Delete mix" class="fa fa-trash-o"></i> remove</a> \
     </p> \
     <img data-dz-thumbnail /> \
   </div> \
@@ -557,13 +557,18 @@
         console.log('canceled!!!')
       },
       accept: function(file, done) {
+        // Capture the Dropzone instance as closure.
+        var _this = this;
         if(file.type.indexOf('image') > -1){
           d3.select(file.previewElement).remove();
           d3.select("#drop_here").style("display", "none")
           d3.select(".album-art").html('<img src="" data-dz-thumbnail />')
-          // node().innerHTML = '<div class="dz-preview dz-file-preview"><div class="dz-details"><img src="" data-dz-thumbnail /></div></div>'
-          // console.log(file)
-          // return;
+          var remove_link = d3.select(".album-art").append("a").attr("class", "delete dz-remove").attr("data-dz-remove", "true").html('<i title="Delete mix" class="fa fa-trash-o"></i> remove')
+          remove_link.on("click", function(){
+            d3.select(".album-art").html('<p>Drag album art here to upload.</p>')
+            _this.removeFile(file);
+            d3.event.preventDefault();
+          })
         }
         else {
           d3.select(".dropzone span").style("display", "none")
@@ -746,16 +751,7 @@
     });
     is_file = true;
   }
-  // drag n drop
-  
-  // [].forEach.call(cols, function(col) {
-  //   col.addEventListener('dragstart', handleDragStart, false);
-  //   col.addEventListener('dragenter', handleDragEnter, false)
-  //   col.addEventListener('dragover', handleDragOver, false);
-  //   col.addEventListener('dragleave', handleDragLeave, false);
-  //   col.addEventListener('drop', handleDrop, false);
-  //   col.addEventListener('dragend', handleDragEnd, false);
-  // });
+
   
   var delay = (function(){
     var timer = 0;
