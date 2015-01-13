@@ -6,8 +6,8 @@
   <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
 </head>
 <body>
-  {% for message in get_flashed_messages() %}
-  <div class="notify success">
+  {% for category, message in get_flashed_messages(with_categories=true) %}
+  <div class="notify {{ category }}">
     {{ message }}
   </div>
   {% endfor %}

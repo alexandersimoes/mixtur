@@ -332,12 +332,55 @@
     .album-art img{
       width: 100%;
     }
-/*  }*/
-  
+    .album-art .edit {
+      font-size: 16px;
+      margin: 5px 0;
+      text-align: center;
+    }
+    .album-art .edit a {
+      color: inherit;
+      opacity: .6;
+      padding: 5px;
+    }
+    .album-art .edit a:hover {
+      opacity: 1;
+    }
+    .album-art .edit i:first-child{
+      margin: 0 15px 0 0;
+    }
+    .notify {
+        padding: 8px 18px;
+        font-size: 12px;
+        text-align: center;
+    }
+    .notify.error {
+      background-color: #fef1f1;
+      border: 1px solid #e2a8a8;
+      color: #D46D6D
+    }
+    .notify.warning {
+      background-color:#FFFAE4;
+      border:1px solid #F4CD33;
+      color:#C39D02
+    }
+    .notify.success {
+      background-color:#e8f7ed;
+      border:1px solid #30b661;
+      color:#1BA84E
+    }
+    .notify.info {
+      border:1px solid #bdc4c9;
+      color:#aaa
+    }
   </style>
 </head>
 
 <body>
+  {% for message in get_flashed_messages() %}
+  <div class="notify success">
+    {{ message }}
+  </div>
+  {% endfor %}
   <header>
     <h1><a {% if songs[0].palette[1] %}style="color:{{songs[0].palette[1]}}"{% endif %} href="{{ url_for('home') }}"><i title="Go home" class="fa fa-music"></i> mixtur</a></h1>
     <nav {% if songs[0].palette[1] %}style="color:{{songs[0].palette[1]}}"{% endif %}>
@@ -403,6 +446,12 @@
           {% else %}
           <img src='/static/img/no_cover.jpg' />
           {% endif %}
+          {% if s.user == g.user %}
+          <div class="edit" {% if s.palette[1] %}style="color:{{s.palette[1]}}"{% endif %}>
+            <a href="update/" class="update"><i title="Edit mix" class="fa fa-pencil fa-lg"></i></a>
+            <a href="delete/" class="delete"><i title="Delete mix" class="fa fa-trash-o fa-lg"></i></a>
+          </div>
+          {% endif %}
         </nav>
         <main class="tracklisting">
     {% elif s.mix_name != mix %}
@@ -419,6 +468,12 @@
           <img src="{{url_for('uploaded_file', user=s.user, mix=s.mix_slug, filename=s.cover) }}" alt="cover image for {{s.mix_name}}" />
           {% else %}
           <img src='/static/img/no_cover.jpg' />
+          {% endif %}
+          {% if s.user == g.user %}
+          <div class="edit" {% if s.palette[1] %}style="color:{{s.palette[1]}}"{% endif %}>
+            <a href="update/" class="update"><i title="Edit mix" class="fa fa-pencil fa-lg"></i></a>
+            <a href="delete/" class="delete"><i title="Delete mix" class="fa fa-trash-o fa-lg"></i></a>
+          </div>
           {% endif %}
         </nav>
         <main class="tracklisting">
@@ -789,6 +844,14 @@
       current_song.currentTime = seek_time;
     })
     .call(drag);
+
+  d3.selectAll(".delete").on("click", function(){
+    // d3.event.preventDefault();
+    return confirm('Are you sure want to continue? This will delete the entire mix and all songs associated with it.');
+  })
+  d3.selectAll(".update").on("click", function(){
+    d3.event.preventDefault();
+  })
 
   </script>
 </body>

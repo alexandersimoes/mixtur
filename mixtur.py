@@ -135,6 +135,39 @@ def mix(mix_type, mix_slug):
                                 songs=songs, 
                                 votes={})
 
+@app.route("/<mix_type>/<mix_slug>/delete/")
+def mix_del(mix_type, mix_slug):
+    if not session.get("logged_in"): abort(401)
+    
+    # step 1 - make sure mix exists
+    mix = query_db('select * from mix where slug=?', (mix_slug, ), one=True)
+    if not mix:
+        flash("Could not delete, mix does not exist.", "error")
+        return redirect(url_for("home"))
+    
+    # step 2 - make sure mix user is the same as logged in user
+    if mix["user"] != g.user:
+        flash("Could not delete, this mix isn't yours to delete.", "error")
+        return redirect(url_for("home"))
+    
+    # step 3 - delete all files associated with this mix (songs and album art)
+    #           including the directory itself
+    user_mix_dir = os.path.join(app.config['UPLOAD_FOLDER'], mix["user"], mix["slug"])
+    if os.path.exists(user_mix_dir):
+        file_list = os.listdir(user_mix_dir)
+        for file_name in file_list:
+            os.remove(os.path.join(user_mix_dir, file_name))
+        os.rmdir(user_mix_dir)
+
+    # step 4 - delete all songs from DB
+    query_db('delete from song where mix=?', (mix["id"], ), update=True)
+    
+    # step 5 - delete all songs from DB
+    query_db('delete from mix where id=?', (mix["id"], ), update=True)
+    
+    flash("Mix successfully deleted.", "success")
+    return redirect(url_for("home"))
+
 @app.route("/uploadr/")
 def uploadr():
     if not session.get("logged_in"): abort(401)
@@ -227,7 +260,7 @@ def login():
         else:
             session["logged_in"] = True
             session["user"] = user[0]
-            flash("You were logged in")
+            flash("You were logged in", "success")
             return redirect(url_for("home"))
     return render_template("login.html", error=error)
 
@@ -236,7 +269,7 @@ def login():
 def logout():
     session.pop("logged_in", None)
     session.pop("user", None)
-    flash("Logged out")
+    flash("Logged out", "success")
     return redirect(url_for("home"))
 '''
 
