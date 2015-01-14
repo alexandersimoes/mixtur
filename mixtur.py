@@ -8,6 +8,7 @@ from flask import Flask, g, render_template, send_from_directory, abort, \
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 from mutagen.mp3 import MP3
+from tint import image_tint
 
 '''Create the application'''
 app = Flask(__name__)
@@ -112,12 +113,13 @@ def mix(mix_type, mix_slug):
         num_albums = len({s["mix_name"] for s in songs})
     else:
         abort(404)
+    
     # format palettes
     def fix_palette(s):
         if "palette" in s and s["palette"]:
             s["palette"] = json.loads(s["palette"])
         else:
-            s["palette"] = ["#712a28", "#e69f9f"]
+            s["palette"] = ["#eee", "#222"]
         return s
     songs = map(dict, songs)
     songs = map(fix_palette, songs)
@@ -178,6 +180,7 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1] in app.config['ALLOWED_EXTENSIONS']
 
 def parse_files(file_dict):
+    if not file_dict: return None
     files = dict(file_dict).items()
     files = [(int(re.findall(r'\d+', f_tuple[0])[0]), f_tuple[1][0]) for f_tuple in files]
     files.sort()
@@ -200,10 +203,11 @@ def uploadr_file(file_type):
     if not session.get("logged_in"): abort(401)
     # return jsonify(name="filename", size="file_size", file_type=file_type)
     if request.method == 'POST':
-        mix_title = request.form.get('mix_title') or 'Untitled Mix'
+        mix_title = request.form.get('mix_title')
         mix_id = request.form.get('mix_id')
         mix_desc = request.form.get('mix_desc')
         mix_palette = request.form.get('mix_palette')
+        no_img = request.form.get('no_img')
         user = session.get("user")
         files = parse_files(request.files)
         artists = request.form.getlist('song_artist')
@@ -211,47 +215,47 @@ def uploadr_file(file_type):
         track_nums = request.form.getlist('song_num')
         
         if not mix_id:
-            mix_id = insert_db("mix", fields=('date', 'user'), args=(str(datetime.now().strftime('%Y-%m-%d %H:%M:%S')), user))
+            new_mix_title = mix_title or 'Untitled Mix'
+            mix_slug = make_slug(new_mix_title)
+            mix_id = insert_db("mix", fields=('date', 'user', 'name', 'slug'), args=(str(datetime.now().strftime('%Y-%m-%d %H:%M:%S')), user, new_mix_title, mix_slug))
 
         if mix_title:
             mix_slug = make_slug(mix_title)
-            query_db("UPDATE mix SET name=?, slug=? WHERE id=?", [mix_title, mix_slug, mix_id], update=True)
+            query_db("UPDATE mix SET name=?, slug=? WHERE id=?", (mix_title, mix_slug, mix_id), update=True)
         else:
-            mix_slug = query_db("SELECT slug FROM mix WHERE id=?", [mix_id], one=True)["slug"]
+            mix_slug = query_db("SELECT slug FROM mix WHERE id=?", (mix_id,), one=True)["slug"]
+        
+        user_mix_dir = os.path.join(app.config['UPLOAD_FOLDER'], user, mix_slug)
+        if not os.path.exists(user_mix_dir): os.makedirs(user_mix_dir)
         
         if mix_desc:
             query_db("UPDATE mix SET desc=? WHERE id=?", [mix_desc, mix_id], update=True)
         
-        for f, artist, title, track_num in zip(files, artists, titles, track_nums):
-            # raise Exception(f, artist, title, track_num)
-            if f and allowed_file(f.filename):
-                filename = secure_filename(f.filename)
-                user_mix_dir = os.path.join(app.config['UPLOAD_FOLDER'], user, mix_slug)
-                if not os.path.exists(user_mix_dir): os.makedirs(user_mix_dir)
-                f.save(os.path.join(user_mix_dir, filename))
-                if "image" in f.mimetype:
-                    # add cover img file_name to db
-                    query_db("UPDATE mix SET cover=?, palette=? WHERE id=?", [filename, mix_palette, mix_id], update=True)
-                if "audio" in f.mimetype:
-                    # add song file_name to db
-                    audio = MP3(os.path.join(user_mix_dir, filename))
-                    runtime = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(audio.info.length))
-                    insert_db("song", fields=('title','artist','position','runtime','slug','mix'), args=(title, artist, track_num, runtime, filename, mix_id))
+        if no_img:
+            input_image_path = os.path.join(app.root_path, 'static/img/no_cover.jpg')
+            new_img = image_tint(input_image_path)
+            new_img.save(os.path.join(user_mix_dir, "default_cover.jpg"))
+            query_db("UPDATE mix SET cover=? WHERE id=?", ["default_cover.jpg", mix_id], update=True)
+        
+        if mix_palette:
+            query_db("UPDATE mix SET palette=? WHERE id=?", [mix_palette, mix_id], update=True)
+        
+        if files:
+            for f, artist, title, track_num in zip(files, artists, titles, track_nums):
+                # raise Exception(f, artist, title, track_num)
+                if f and allowed_file(f.filename):
+                    filename = secure_filename(f.filename)
+                    f.save(os.path.join(user_mix_dir, filename))
+                    if "image" in f.mimetype:
+                        # add cover img file_name to db
+                        query_db("UPDATE mix SET cover=?, palette=? WHERE id=?", [filename, mix_palette, mix_id], update=True)
+                    if "audio" in f.mimetype:
+                        # add song file_name to db
+                        audio = MP3(os.path.join(user_mix_dir, filename))
+                        runtime = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(audio.info.length))
+                        insert_db("song", fields=('title','artist','position','runtime','slug','mix'), args=(title, artist, track_num, runtime, filename, mix_id))
         
         return jsonify(mix_id=mix_id, mix_slug=mix_slug)
-        
-        files = request.files.getlist('song')
-        return jsonify(name="filename", size="file_size", file_type=file_type, files=str(files), test=str(request.form))
-        for f in files:
-            if f and allowed_file(f.filename):
-                filename = secure_filename(f.filename)
-                updir = os.path.join(basedir, 'upload/')
-                f.save(os.path.join(updir, filename))
-                file_size = os.path.getsize(os.path.join(updir, filename))
-            else:
-                app.logger.info('ext name error')
-                return jsonify(error='ext name error')
-        return jsonify(name=filename, size=file_size)
 
 '''
 

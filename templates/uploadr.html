@@ -269,13 +269,14 @@
   .dz-preview > div.dz-details{
     flex: 96%;
   }
-  
-  #drop_here {
+
+  .overlay {
     display:none;
     /*set the div in the top-left corner of the screen*/
     position: fixed;
     top:0;
     left:0;
+    font-size: 20px;
     background-color: rgba(0, 0, 0, 0.4);
     /*set the width and height to 100% of the screen*/
     width:100%;
@@ -446,6 +447,10 @@
     <span>Drop items here!</span>
   </div>
   
+  <div id="uploading" class="overlay">
+    <span><i class="fa fa-refresh fa-spin"></i> Uploading... sit tight!</span>
+  </div>
+  
   <div id="success">
     Congrats! Your mixXx has been uploaded <a href="#">view it here</a>.
   </div>
@@ -607,6 +612,7 @@
         // console.log("fallback");
       },
       success: function(file, resp) {
+        d3.select("#uploading").style("display", "none")
         // console.log('success', resp, file.previewElement)
         if(file.type.indexOf('image') < 0){
           var artist = d3.select(file.previewElement).select("p.song-artist input").property("value")
@@ -622,17 +628,38 @@
           track_title.append("br")
           track_title.append("span").attr("class", "track-artist").text(artist)
         }
+        if(!d3.select(".album-art p").empty()){
+          var default_src = "/uploads/{{g.user}}/"+ resp.mix_slug +"/default_cover.jpg";
+          d3.select(".album-art").html('<img src="'+default_src+'" data-dz-thumbnail />')
+          var img = new Image( );
+          img.onload = function ( ) { 
+            var cols = Colibri.extractImageColors(img, 'hex');
+            palette = [cols.background].concat(cols.content)
+            palette = JSON.stringify(palette)
+            
+            // update DB with palette for randomly tinted default img
+            d3.xhr("/uploadr/song/",function(error, data) {
+                console.log(JSON.parse(data.response))
+              })
+              .header("Content-type", "application/x-www-form-urlencoded")
+              .send("POST", "mix_id="+resp.mix_id+"&mix_palette="+palette);
+
+          };
+          img.src = default_src;
+        }
       },
       successmultiple: function(file, resp) {
         console.log(file, resp)
         d3.select("#success a").attr("href", "/m/"+resp["mix_slug"]+"/");
       },
       sendingmultiple: function(files, xhr, formData) {
-        // console.log(files, xhr, formData)
-        // console.log(formData)
+        d3.select("#uploading").style("display", "flex")
         formData.append("mix_id", d3.select("input[name='mix-id']").property("value"));
         formData.append("mix_title", d3.select("input[name='mix-title']").property("value"));
         formData.append("mix_desc", d3.select("textarea").property("value"));
+        if(!d3.select(".album-art p").empty()){
+          formData.append("no_img", "true");
+        }
         if(palette){
           formData.append("mix_palette", JSON.stringify(palette));
         }
