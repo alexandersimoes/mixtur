@@ -219,7 +219,7 @@ def uploadr_file(file_type):
             mix_slug = make_slug(new_mix_title)
             mix_id = insert_db("mix", fields=('date', 'user', 'name', 'slug'), args=(str(datetime.now().strftime('%Y-%m-%d %H:%M:%S')), user, new_mix_title, mix_slug))
 
-        if mix_title:
+        if mix_title and not mix_slug:
             mix_slug = make_slug(mix_title)
             query_db("UPDATE mix SET name=?, slug=? WHERE id=?", (mix_title, mix_slug, mix_id), update=True)
         else:
