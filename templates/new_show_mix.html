@@ -390,11 +390,11 @@
   </header>
   <div class="anthology">
     {% if mix_type == "a" %}
-    <div class="anthology-title">
+    <div class="anthology-title" style="background:{{songs[0].palette[0]}}">
       <header>
         <div class="album-title">
-          <h1>{{ songs[0].anthology_name }}</h1>
-          <span>{{ num_albums }} album{% if num_albums > 1%}s{% endif %}, {{ songs|length }} songs &bull; {% if total_runtime.hours %}{{ total_runtime.hours }} hours{% endif %} {% if total_runtime.minutes %}{{ total_runtime.minutes }} minutes{% endif %}</span>
+          <h1 style="color:{{songs[0].palette[1]}}">{{ songs[0].anthology_name }}</h1>
+          <span {% if songs[0].palette[2] %}style="color:{{songs[0].palette[2]}}"{% else %}class="no-col"{% endif %}>{{ num_albums }} album{% if num_albums > 1%}s{% endif %}, {{ songs|length }} songs &bull; {% if total_runtime.hours %}{{ total_runtime.hours }} hours{% endif %} {% if total_runtime.minutes %}{{ total_runtime.minutes }} minutes{% endif %}</span>
         </div>
         <div class="album-controls">
           <i title="Play previous song" class="fa fa-step-backward fa-lg"></i><i title="Play" class="fa fa-play fa-lg"></i><i title="Pause" class="fa fa-pause fa-lg"></i><i title="Play next song" class="fa fa-step-forward fa-lg"></i>
@@ -414,7 +414,7 @@
     
     {% for s in songs %}
     
-    {% if s.mix != mix and loop.first %}
+    {% if s.mix_slug != mix_slug and loop.first %}
     <div class="album" style="background:{{s.palette[0]}}" {% if s.palette[0] %}data-bg-col="{{s.palette[0]}}"{% endif %} {% if s.palette[1] %}data-hilite-col="{{s.palette[1]}}"{% endif %} {% if s.palette[2] %}data-hilite-col2="{{s.palette[2]}}"{% endif %}>
       {% if mix_type == "m" %}
       <header>
@@ -450,7 +450,7 @@
           {% endif %}
         </nav>
         <main class="tracklisting">
-    {% elif s.mix_name != mix %}
+    {% elif s.mix_slug != mix_slug %}
                   </ol>
                 </div>
               </main>
@@ -474,7 +474,7 @@
         </nav>
         <main class="tracklisting">
     {% endif %}
-          {% if (s.disc != disc and loop.first) or (s.disc != disc and s.mix_name != mix) %}
+          {% if (s.disc != disc and loop.first) or (s.disc != disc or s.mix_slug != mix_slug) %}
           <div class="disc">
             {% if s.disc %}<h3>Disc {{ s.disc }}</h3>{% endif %}
             <ol>

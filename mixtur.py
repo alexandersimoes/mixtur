@@ -110,7 +110,7 @@ def mix(mix_type, mix_slug):
                                 song as s, anthology as a, mixanthology as ma, mix as m
                                 where a.slug = ? and ma.anthology_id = a.id and m.id = ma.mix_id and s.mix = m.id
                                 order by m.id, s.disc, s.position;""", (mix_slug,))
-        num_albums = len({s["mix_name"] for s in songs})
+        num_albums = len({s["mix_slug"] for s in songs})
     else:
         abort(404)
     
