@@ -83,15 +83,94 @@ def uploaded_file(user, mix, filename):
         headers are set and HTML audio API can work properly'''
     return send_from_directory(mix_dir, filename)
 
+def format_runtime(runtime):
+    hours, remainder = divmod(runtime.seconds, 3600)
+    minutes, seconds = divmod(remainder, 60)
+    if hours:
+        runtime_str = "{} hour".format(hours)
+        if hours > 1:
+            runtime_str = "{} hours".format(hours)
+        if minutes:
+            if minutes > 1:
+                return "{}, {} minutes".format(runtime_str, minutes)
+            else:
+                return "{}, {} minute".format(runtime_str, minutes)
+        return runtime_str
+    elif minutes:
+        if minutes > 1:
+            return "{} minutes".format(minutes)
+        else:
+            return "{} minute".format(minutes)
+    elif seconds:
+        return "{} seconds".format(seconds)
+    return ""
+
 @app.route("/")
 def home():
-    mixes = query_db('select id, name, desc, cover, user, slug from mix order by date desc limit 20')
-    anthologies = query_db("""
-        select a.name, m.name as mix_name, cover, user, a.slug, m.slug as mix_slug
-        from anthology as a, mixanthology as ma, mix as m 
-        where ma.anthology_id = a.id and m.id = ma.mix_id group by a.id
-        order by date desc limit 20
+    base_date = datetime(1970, 1, 1)
+    # ----------------------------------------------------
+    # Mixes
+    songs = query_db("""select m.name as mix_name, cover, m.slug as mix_slug, runtime, user from
+                            song as s, mix as m
+                            where s.mix = m.id
+                            order by m.id;""")
+    mixes = []
+    current_mix = {"slug": None}
+    for s in songs:
+        runtime = datetime.strptime(s["runtime"], '%Y-%m-%d %H:%M:%S')
+        if s["mix_slug"] != current_mix["slug"]:
+            if current_mix["slug"]: 
+                current_mix["runtime"] = format_runtime(current_mix["runtime"])
+                mixes.append(current_mix)
+            current_mix = {
+                "slug": s["mix_slug"],
+                "title": s["mix_name"],
+                "author": s["user"],
+                "cover": s["cover"],
+                "songs": 0,
+                "runtime": base_date - base_date
+            }
+        current_mix["songs"] += 1
+        current_mix["runtime"] += runtime - base_date
+    current_mix["runtime"] = format_runtime(current_mix["runtime"])
+    mixes.append(current_mix)
+    
+    # ----------------------------------------------------
+    # Anthologies
+    songs = query_db("""
+        select a.name as anthology_name, a.slug as anthology_slug, m.name as mix_name, cover, m.slug as mix_slug, runtime, user from
+        song as s, anthology as a, mixanthology as ma, mix as m
+        where ma.anthology_id = a.id and m.id = ma.mix_id and s.mix = m.id
+        order by a.id, m.id;
     """)
+    anthologies = []
+    current_anthology = {"slug": None}
+    for i, s in enumerate(songs):
+        runtime = datetime.strptime(s["runtime"], '%Y-%m-%d %H:%M:%S')
+        if s["anthology_slug"] != current_anthology["slug"]:
+            if current_anthology["slug"]:
+                current_anthology["cover"] = list(current_anthology["cover"])
+                current_anthology["albums"] = len(current_anthology["albums"])
+                current_anthology["runtime"] = format_runtime(current_anthology["runtime"])
+                anthologies.append(current_anthology)
+            current_anthology = {
+                "slug": s["anthology_slug"],
+                "title": s["anthology_name"],
+                "author": s["user"],
+                "cover": set([]),
+                "albums": set([]),
+                "songs": 0,
+                "runtime": base_date - base_date
+            }
+        current_anthology["cover"].add(url_for('uploaded_file', user=s["user"], mix=s["mix_slug"], filename=s["cover"]))
+        current_anthology["albums"].add(s["mix_slug"])
+        current_anthology["songs"] += 1
+        current_anthology["runtime"] += runtime - base_date
+    current_anthology["cover"] = list(current_anthology["cover"])
+    current_anthology["albums"] = len(current_anthology["albums"])
+    current_anthology["runtime"] = format_runtime(current_anthology["runtime"])
+    anthologies.append(current_anthology)
+
     return render_template("home.html", mixes=mixes, anthologies=anthologies)
 
 @app.route("/<mix_type>/<mix_slug>/")
@@ -130,7 +209,7 @@ def mix(mix_type, mix_slug):
     hours, remainder = divmod(total_runtime.seconds, 3600)
     minutes, seconds = divmod(remainder, 60)
 
-    return render_template("new_show_mix.html", 
+    return render_template("mix.html", 
                                 mix_type=mix_type,
                                 num_albums=num_albums,
                                 total_runtime={"hours":hours, "minutes":minutes, "seconds":seconds},

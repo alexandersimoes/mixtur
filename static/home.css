@@ -1,0 +1,126 @@
+a {
+  color: white;
+  text-decoration: none;
+}
+ul {
+/*  display: flex;*/
+  margin: 50px 0;
+  width: 100%;
+  float: left;
+}
+ul li {
+/*  height: 100px;  */
+  cursor: pointer;
+  background: #1d1d1d;
+  background-size: cover !important;
+  background-position: center center;
+  float: left;
+  padding-bottom: 25%;
+  width: 25%;
+  box-sizing: border-box;
+  border: solid 0px #fff;
+  border-top: none;
+  border-right: none;
+  position: relative;
+}
+ul li.bigger {
+  width: 50%;
+  padding-bottom: 50%;
+  float: left;
+}
+ul li.bigger.right {
+  float: right;
+}
+
+a.link-cover {
+  color: #fff;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 555;
+  border: none !important;
+  background: rgba(0,0,0,0);
+  -webkit-transition: all 100ms cubic-bezier(0.42, 0, 0.58, 1);
+  -moz-transition: all 100ms cubic-bezier(0.42, 0, 0.58, 1);
+  -ms-transition: all 100ms cubic-bezier(0.42, 0, 0.58, 1);
+  -o-transition: all 100ms cubic-bezier(0.42, 0, 0.58, 1);
+  transition: all 100ms cubic-bezier(0.42, 0, 0.58, 1);
+  z-index: 1;
+}
+a.link-cover:hover {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.content {
+  position: absolute;
+  top: initial;
+  bottom: 0;
+  height: auto;
+  width: 100%;
+  padding: 50% 0 5% 0;
+  color: #fff;
+  text-align: center;
+  background: -moz-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(0,0,0,0) 1%, rgba(0,0,0,0.07) 26%, rgba(0,0,0,0.6) 71%, rgba(0,0,0,0.7) 100%);
+  background: -webkit-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(0,0,0,0) 1%, rgba(0,0,0,0.05) 26%, rgba(0,0,0,0.6) 71%, rgba(0,0,0,0.7) 100%);
+}
+.content .post-meta {
+  margin: 0px auto;
+  position: relative;
+  width: 90%;
+  z-index: 999;
+}
+.content h1 {
+  text-transform: uppercase;
+  font-family: "Helvetica Neue", Helvetica, Arial, "Open Sans", sans-serif;
+  font-weight: normal;
+  letter-spacing: 1px;
+  margin: 0;
+  font-size: 16px;
+  line-height: normal;
+  color: #fff;
+}
+.content h2 {
+  font-family: 'Garamond', 'Georgia', serif;
+  font-style: italic;
+  font-weight: normal;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 75%;
+  display: inline-block;
+  margin: 0 0 5px 0;
+  font-size: 14px;
+  text-transform: none;
+  letter-spacing: 0;
+  line-height: normal;
+  color: #fff;
+}
+.author-meta {
+  font-size: 12px;
+  margin: 3px 0 0 0;
+}
+.author-meta b {
+  font-size: 14px;
+  font-family: 'Garamond', 'Georgia', serif;
+  font-style: italic;
+  font-weight: normal;
+  padding-right: 3px;
+}
+ a.author-name {
+  letter-spacing: 1px;
+}
+
+section {
+  overflow: auto;
+}
+.anthology {
+  position: relative;
+  overflow: auto;
+}
+.anthology ul {
+  float: none;
+  margin: 0;
+  overflow: auto;
+}

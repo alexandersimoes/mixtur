@@ -1,28 +1,56 @@
 {% extends "layout.html" %}
-{% block body %}
-  <h2 class="title">All Mixturs</h2>
-  <div class="mixes">
-    {% for m in mixes %}
-    <div class="mix">
-      {% if m.cover %}
-      <a href="{{ url_for('mix', mix_type='m', mix_slug=m.slug) }}" class="cover" style="background-image:url('{{url_for('uploaded_file', user=m.user, mix=m.slug, filename=m.cover) }}');"></a>
-      {% elif m.slug %}
-      <a href="{{ url_for('mix', mix_type='m', mix_slug=m.slug) }}" class="cover" style="background-image:url('/static/img/no_cover.jpg');"></a>
-      {% endif %}
-    </div>
-    {% else %}
-    <em>Unbelievable. No mixXxes here yet... bummah!</em>
-    {% endfor %}
-  </div>
 
-  <h2 class="title">All Anthologies</h2>
-  <div class="mixes">  
-    {% for a in anthologies %}
-    <div class="mix">
-      <a href="{{ url_for('mix', mix_type='a', mix_slug=a.slug) }}" class="cover" style="background-image:url('{{url_for('uploaded_file', user=a.user, mix=a.mix_slug, filename=a.cover) }}');"></a>
+{% block head %}
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='home.css') }}">
+{% endblock %}
+
+{% block body %}
+<section id="mixes">
+  <ul>
+  {% for m in mixes %}
+    <li {% if m.cover %}style="background: url('{{ url_for('uploaded_file', user=m.author, mix=m.slug, filename=m.cover) }}')"{% endif %}>
+      <a class="link-cover" href="{{ url_for('mix', mix_type='m', mix_slug=m.slug) }}"></a>
+      <div class="content">
+        <div class="post-meta">
+          <h1>{{ m.title }}</h1>
+          <h2 style="z-index: 1;">{{ m.songs }} songs, {{ m.runtime }}</h2>
+          <div class="author-meta">
+            <b>By</b> <a class="author-name" href="#">{{ m.author }}</a>
+          </div>
+        </div>
+      </div>
+    </li>
+  {% endfor %}
+  </ul>
+</section>
+
+<section id="anthologies">
+
+  {% for a in anthologies %}
+  <div class="anthology">
+    <ul>
+      {% if a.albums > 4 %}
+      {% for n in range(5) %}
+      <li {% if n == 0 %}class="bigger"{% endif %} style="background: url('{{ a.cover[n] }}')"></li>
+      {% endfor %}
+      {% else %}
+      {% for n in range(2) %}
+      <li class="bigger" style="background: url('{{ a.cover[n] }}')"></li>
+      {% endfor %}
+      {% endif %}
+    </ul>
+    <a class="link-cover" href="{{ url_for('mix', mix_type='a', mix_slug=a.slug) }}"></a>
+    <div class="content">
+      <div class="post-meta">
+        <h1>{{ a.title }}</h1>
+        <h2 style="z-index: 1;">{{ a.albums }} albums, {{ a.songs }} songs, {{ a.runtime }}</h2>
+        <div class="author-meta">
+          <b>By</b> <a class="author-name" href="#">aljaffe</a>
+        </div>
+      </div>
     </div>
-    {% else %}
-    <em>Unbelievable. No anthologies here yet... bummah!</em>
-    {% endfor %}
   </div>
+  {% endfor %}
+
+</section>
 {% endblock %}
