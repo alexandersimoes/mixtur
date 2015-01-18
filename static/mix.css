@@ -1,0 +1,331 @@
+h1, h2, h3, h4, h5, h6 { font-weight: normal; }
+html { height: 100%; }
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Open Sans", sans-serif;
+  font-size: 13px;
+  font-weight: 300;
+
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  
+  min-height: 100%;
+
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+}
+body > header {
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+body > header a {
+  color: black;
+  font-size: 14px;
+  padding: 10px;
+  text-decoration: none;
+}
+body > header h1 {
+  float: left;
+  margin: 0;
+  padding: 5px;
+}
+body > header h1 a {
+  font-size: 24px;
+}
+body > header h1 a img {
+  vertical-align: bottom;
+}
+body > header nav {
+  padding: 10px;
+  float: right;
+}
+body > header nav a {
+  color: inherit;
+}
+
+.tracks {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+}
+
+.anthology{
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+
+  -webkit-box-flex: 1 0 auto;
+  -moz-box-flex: 1 0 auto;
+  -webkit-flex: 1 0 auto;
+  -ms-flex: 1 0 auto;
+  flex: 1 0 auto;
+}
+.anthology-title {
+  background: lightgrey;
+/*    color: grey;*/
+  -webkit-box-flex: 1 0 auto;
+  -moz-box-flex: 1 0 auto;
+  -webkit-flex: 1 0 auto;
+  -ms-flex: 1 0 auto;
+  flex: 1 0 auto;
+  padding: 10px;
+  text-align: center;
+}
+.anthology-title i {
+  cursor: pointer;
+  margin: 0 5px;
+}
+.anthology > div.album {
+  -webkit-box-flex: 1 1 auto;
+  -moz-box-flex: 1 1 auto;
+  -webkit-flex: 1 1 auto;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+}
+.anthology > h1 {
+/*    flex: 0 0 100%*/
+}
+div.album {
+  padding: 10px;
+}
+.album header {
+  margin: 0 0 10px 0;
+}
+.album-title {
+  margin: 0 0 10px 0;
+}
+.album-title h1 {
+  font-size: 28px;
+  margin: 0;
+  text-align: center;
+}
+.album-title span {
+  display: block;
+  font-size: 15px;
+  text-align: center;
+}
+.album-title i {
+  cursor: pointer;
+  font-size: 24px;
+  margin: 0 5px;
+  vertical-align: baseline;
+}
+.album-controls {
+  height: 35px;
+  text-align: center;
+  margin: 0 0 10px 0;
+}
+.album-controls i{
+  cursor: pointer;
+  font-size: 20px;
+  margin: 0 20px;
+  padding: 5px;
+}
+.album-controls i.fa-play,
+.album-controls i.fa-pause{
+  font-size: 40px;
+}
+header .album-controls i.fa-pause{
+  display: none;
+}
+header .album-artist {
+  font-size: 20px;
+}
+.album header .album-artist h2 {
+  display: inline;
+  font-size: 20px;
+}
+
+/*  @media (min-width: 768px) {*/
+  .tracks {
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    
+    -webkit-box-flex: 1;
+    -moz-box-flex: 1;
+    -webkit-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+  }
+  .tracklisting {
+/*      border: solid 1px red;*/
+    -webkit-box-flex: 2;
+    -moz-box-flex: 2;
+    -webkit-flex: 2;
+    -ms-flex: 2;
+    flex: 2;
+  }
+  .tracklisting h3{
+    margin: 0;
+  }
+  .tracklisting div.disc{
+    margin: 0 0 40px 0;
+  }
+  .tracklisting div.disc:last-child{
+    margin: 0 0 0 0;
+  }
+  .tracklisting ol {
+    margin: 0;
+    padding: 0;
+  }
+  .tracklisting ol li {
+    cursor: pointer;
+    display: block;
+    position: relative;
+  }
+  .tracklisting ol li.active {
+    background: black;
+    color: white;
+  }
+  .tracklisting ol li div.track-info {
+    cursor: pointer;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
+  }
+  .tracklisting ol li div.track-info > p {
+/*      border: solid blue 1px;*/
+    -webkit-box-flex: 1;
+    -moz-box-flex: 1;
+    -webkit-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    margin: 5px 0;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+  .tracklisting ol li div.track-info > p:nth-child(1) {
+    margin: 5px 0 5px 5px;
+  } 
+  .tracklisting ol li div.track-info > p:last-child {
+    margin: 5px 5px 5px 0;
+  }
+  .tracklisting ol li div.track-info p.track-num{
+    -webkit-box-flex: 0 0 20px;
+    -moz-box-flex: 0 0 20px;
+    -webkit-flex: 0 0 20px;
+    -ms-flex: 0 0 20px;
+    flex: 0 0 20px;
+  }
+  .tracklisting ol li div.track-info p.track-num i{
+    display: none;
+  }
+  .tracklisting ol li.active div.track-info p.track-num i{
+    display: inline;
+  }
+  .tracklisting ol li.active div.track-info p.track-num span{
+    display: none;
+  }
+  .tracklisting ol li div.track-info p.track-play{
+    -webkit-box-flex: 0 0 40px;
+    -moz-box-flex: 0 0 40px;
+    -webkit-flex: 0 0 40px;
+    -ms-flex: 0 0 40px;
+    flex: 0 0 40px;
+  }
+  .tracklisting ol li div.track-info p.track-title .track-name{
+    font-size:18px;
+  }
+  .tracklisting ol li div.track-info p.track-time{
+    -webkit-box-flex: 0 0 40px;
+    -moz-box-flex: 0 0 40px;
+    -webkit-flex: 0 0 40px;
+    -ms-flex: 0 0 40px;
+    flex: 0 0 40px;
+    
+    text-align: right;
+  }
+/*    .tracklisting ol li div.track-progress{
+    display: block;
+    clear: both;
+  }*/
+  div.progress{
+    position: relative;
+    padding: 0 0 20px 0;
+  }
+  div.track-progress-bg{
+    border: solid black 1px;
+    background: black;
+    display: block;
+    height: 10px;
+    position: absolute;
+    width: 0%;
+    z-index: 0;
+  }
+  div.track-progress{
+    background: white;
+    display: block;
+    height: 10px;
+    left: 1px;
+    position: absolute;
+    top: 1px;
+    width: 0%;
+    z-index: 99;
+  }
+  div.track-cursor{
+    background: orange;
+    display: none;
+    height: 10px;
+    left: 38%;
+    position: absolute;
+    width: 2px;
+    z-index: 999;
+  }
+  .album-art{
+    -webkit-box-flex: 1;
+    -moz-box-flex: 1;
+    -webkit-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    margin: 5px 20px 0 0;
+  }
+  .album-art img{
+    width: 100%;
+  }
+  .album-art .edit {
+    font-size: 16px;
+    margin: 5px 0;
+    text-align: center;
+  }
+  .album-art .edit a {
+    color: inherit;
+    opacity: .6;
+    padding: 5px;
+  }
+  .album-art .edit a:hover {
+    opacity: 1;
+  }
+  .album-art .edit i:first-child{
+    margin: 0 15px 0 0;
+  }
