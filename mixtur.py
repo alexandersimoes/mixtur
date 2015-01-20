@@ -185,7 +185,7 @@ def mix(mix_type, mix_slug):
                                 where m.slug = ? and s.mix = m.id
                                 order by m.id, s.position;""", (mix_slug,))
     elif mix_type == "a":
-        songs = query_db("""select a.name as anthology_name, m.name as mix_name, cover, m.slug as mix_slug, s.title, s.artist, s.slug as song_slug, disc, palette, position, runtime, date, user from
+        songs = query_db("""select a.name as anthology_name, m.name as mix_name, cover, m.slug as mix_slug, s.title, s.artist, s.slug as song_slug, disc, palette, position, runtime, m.date, user from
                                 song as s, anthology as a, mixanthology as ma, mix as m
                                 where a.slug = ? and ma.anthology_id = a.id and m.id = ma.mix_id and s.mix = m.id
                                 order by m.id, s.disc, s.position;""", (mix_slug,))
@@ -249,10 +249,43 @@ def mix_del(mix_type, mix_slug):
     flash("Mix successfully deleted.", "success")
     return redirect(url_for("home"))
 
-@app.route("/uploadr/")
-def uploadr():
+@app.route("/create/mix/")
+def create_mix():
     if not session.get("logged_in"): abort(401)
-    return render_template("uploadr.html")
+    return render_template("create_mix.html")
+
+def make_slug(title, tbl="mix"):
+    slug = secure_filename(title)
+    if query_db("SELECT * FROM {} WHERE slug=?".format(tbl), (slug,), one=True) is None:
+        return slug
+    version = 2
+    while True:
+        new_slug = slug + str(version)
+        if query_db("SELECT * FROM {} WHERE slug=?".format(tbl), (new_slug,), one=True) is None:
+            break
+        version += 1
+    return new_slug
+
+@app.route("/create/anthology/", methods=["GET", "POST"])
+def create_anthology():
+    if not session.get("logged_in"): abort(401)
+    if request.method == 'POST':
+        anth = request.get_json()
+        anth_title = anth.get('title', None)
+        anth_desc = anth.get('desc', None)
+        anth_mixes = anth.get('mixes', [])
+        
+        # create anthology
+        anth_slug = make_slug(anth_title, tbl="anthology")
+        anth_id = insert_db("anthology", fields=('name', 'slug', 'date'), args=(anth_title, anth_slug, str(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))))
+        
+        # add mixes
+        for m_id in anth_mixes:
+            insert_db("mixanthology", fields=('mix_id', 'anthology_id'), args=(m_id, anth_id))
+        
+        return jsonify(id=anth_id, slug=anth_slug)
+    mixes = query_db("select * from mix where user = ? order by id;", (g.user,))
+    return render_template("create_anthology.html", mixes=mixes)
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -264,18 +297,6 @@ def parse_files(file_dict):
     files = [(int(re.findall(r'\d+', f_tuple[0])[0]), f_tuple[1][0]) for f_tuple in files]
     files.sort()
     return [f[1] for f in files]
-
-def make_slug(title):
-    slug = secure_filename(title)
-    if query_db("SELECT * FROM mix WHERE slug=?", (slug,), one=True) is None:
-        return slug
-    version = 2
-    while True:
-        new_slug = slug + str(version)
-        if query_db("SELECT * FROM mix WHERE slug=?", (new_slug,), one=True) is None:
-            break
-        version += 1
-    return new_slug
 
 @app.route("/uploadr/<file_type>/", methods=["GET", "POST"])
 def uploadr_file(file_type):

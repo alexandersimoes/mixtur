@@ -35,7 +35,7 @@ li { list-style: none; }
 }
 
 body > header {
-  overflow: hidden;
+/*  overflow: hidden;*/
   position: absolute;
   top: 0;
   width: 100%;
@@ -43,6 +43,7 @@ body > header {
 body > header a {
   color: black;
   font-size: 14px;
+  outline: 0;
   padding: 10px;
   text-decoration: none;
 }
@@ -60,10 +61,27 @@ body > header h1 a img {
 }
 body > header nav {
   padding: 10px;
+  position: relative;
   float: right;
 }
 body > header nav a {
   color: inherit;
+}
+body > header nav ul.subnav {
+  display: none;
+  background: white;
+/*  border: solid 1px green;*/
+  margin: 10px 0 0 0;
+  position: absolute;
+  z-index: 999;
+}
+body > header nav ul.subnav a {
+/*  border: solid 1px red;*/
+  display: block;
+  padding: 5px 10px;
+}
+body > header nav ul.subnav a:hover {
+  background: rgba(0,0,0,0.2);
 }
 
 .flash-wrapper {

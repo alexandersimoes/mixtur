@@ -21,7 +21,6 @@ body {
   flex-direction: column;
 }
 body > header {
-  overflow: hidden;
   position: absolute;
   top: 0;
   width: 100%;

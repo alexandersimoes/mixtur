@@ -2,13 +2,13 @@ a {
   color: white;
   text-decoration: none;
 }
-ul {
+section ul {
 /*  display: flex;*/
   margin: 50px 0;
   width: 100%;
   float: left;
 }
-ul li {
+section ul li {
 /*  height: 100px;  */
   cursor: pointer;
   background: #1d1d1d;
@@ -23,12 +23,12 @@ ul li {
   border-right: none;
   position: relative;
 }
-ul li.bigger {
+section ul li.bigger {
   width: 50%;
   padding-bottom: 50%;
   float: left;
 }
-ul li.bigger.right {
+section ul li.bigger.right {
   float: right;
 }
 

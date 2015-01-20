@@ -8,17 +8,6 @@
 {% endblock %}
 
 {% block body %}
-<!-- <header>
-  <h1><a {% if songs[0].palette[1] %}style="color:{{songs[0].palette[1]}}"{% endif %} href="{{ url_for('home') }}"><i title="Go home" class="fa fa-music"></i> mixtur</a></h1>
-  <nav {% if songs[0].palette[1] %}style="color:{{songs[0].palette[1]}}"{% endif %}>
-  {% if not session.logged_in %}
-    <a href="{{ url_for('login') }}">Sign in</a>
-  {% else %}
-    <a href="{{ url_for('uploadr') }}">Upload</a>
-    <a href="{{ url_for('logout') }}">{{ g.user }}</a>
-  {% endif %}
-  </nav>
-</header> -->
 <div class="anthology">
   {% if mix_type == "a" %}
   <div class="anthology-title" style="background:{{songs[0].palette[0]}}">
