@@ -125,17 +125,23 @@ d3.selectAll("i.fa-step-forward").on("click", function(){
   }
 })
 
-d3.selectAll("i.fa-random").on("click", function(){
+d3.selectAll("a.fa-random").on("click", function(){
   shuffle_on = true;
-  if(d3.select(this).classed("anthology-shuffle")){
-    var audio_node_list = document.getElementsByTagName("audio");
-  }
-  else{
-    var album = this.parentNode.parentNode.parentNode
-    var audio_node_list = album.getElementsByTagName("audio");
-  }
+  d3.select(this).classed("active", true);
+  var audio_node_list = document.getElementsByTagName("audio");
   for(var i = 0, ll = audio_node_list.length; i != ll; shuffle_songs.push(audio_node_list[i++]));
   get_next().play();
+  d3.event.preventDefault();
+
+  // if(d3.select(this).classed("anthology-shuffle")){
+  //   var audio_node_list = document.getElementsByTagName("audio");
+  // }
+  // else{
+  //   var album = this.parentNode.parentNode.parentNode
+  //   var audio_node_list = album.getElementsByTagName("audio");
+  // }
+  // for(var i = 0, ll = audio_node_list.length; i != ll; shuffle_songs.push(audio_node_list[i++]));
+  // get_next().play();
 })
 
 function is_playing(audio) {
@@ -328,8 +334,12 @@ d3.select(".progress")
   .call(drag);
 
 d3.selectAll(".delete").on("click", function(){
-  // d3.event.preventDefault();
-  return confirm('Are you sure want to continue? This will delete the entire mix and all songs associated with it.');
+  if(confirm('Are you sure want to continue? This will delete the entire mix and all songs associated with it.')){
+    return true;
+  }
+  else {
+    d3.event.preventDefault();
+  }
 })
 d3.selectAll(".update").on("click", function(){
   d3.event.preventDefault();
@@ -379,3 +389,33 @@ d3.selectAll(".tracklisting ol li.track")
     if(d3.select(this).classed("active")) return;
     d3.select(this).style("background", "none");
   })
+
+// set hover for top header
+d3.selectAll(".anthology-title, .album > header")
+  .on("mouseover", function() { 
+    d3.selectAll(".album-title h1 > span a").style("display", "inline")
+  })
+  .on("mouseout", function() {
+    d3.selectAll(".album-title h1 > span a").style("display", "none")
+  });
+
+// set hover for top header
+d3.selectAll(".album a")
+  .on("mouseover", function() { 
+    if(d3.select(this).classed("active")) return;
+    var this_album = getParents(this, ".album");
+    var this_bg_col = d3.select(this_album[0]).attr("data-bg-col");
+    var hcl_col = d3.hcl(this_bg_col);
+    d3.select(this).style("color", function(){
+      var bg_brightness = get_brightness(hcl_col),
+          bg_darker_brightness = get_brightness(hcl_col.darker()),
+          bg_brighter_brightness = get_brightness(hcl_col.brighter());
+      if(Math.abs(bg_brightness - bg_darker_brightness) > Math.abs(bg_brightness - bg_brighter_brightness)){
+        return hcl_col.darker();
+      }
+      return hcl_col.brighter();
+    })
+  })
+  .on("mouseout", function() {
+    d3.select(this).style("color", "black")
+  });

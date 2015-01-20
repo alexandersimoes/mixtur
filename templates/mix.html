@@ -13,7 +13,7 @@
   <div class="anthology-title" style="background:{{songs[0].palette[0]}}">
     <header>
       <div class="album-title">
-        <h1 style="color:{{songs[0].palette[1]}}">{{ songs[0].anthology_name }}</h1>
+        <h1 style="color:{{songs[0].palette[1]}}">{{ songs[0].anthology_name }} <span><a href="#" class="fa fa-random"></a> {% if songs[0].user == g.user %}<a href="update/" class="update fa fa-pencil" title="Edit mix"></a> <a href="delete/" class="delete fa fa-trash-o" title="Delete mix"></a>{% endif %} </span></h1>
         <span {% if songs[0].palette[2] %}style="color:{{songs[0].palette[2]}}"{% else %}class="no-col"{% endif %}>{{ num_albums }} album{% if num_albums > 1%}s{% endif %}, {{ songs|length }} songs &bull; {% if total_runtime.hours %}{{ total_runtime.hours }} hours{% endif %} {% if total_runtime.minutes %}{{ total_runtime.minutes }} minutes{% endif %}</span>
       </div>
       <div class="album-controls" style="color:{{songs[0].palette[1]}}">
@@ -39,7 +39,7 @@
     {% if mix_type == "m" %}
     <header>
       <div class="album-title">
-        <h1 style="color:{{s.palette[1]}}">{{ s.mix_name }}</h1>
+        <h1 style="color:{{s.palette[1]}}">{{ s.mix_name }} <span><a href="#" class="fa fa-random"></a> {% if s.user == g.user %}<a href="update/" title="Edit mix" class="fa fa-pencil update"></a> <a href="delete/" title="Delete mix" class="fa fa-trash-o delete"></a>{% endif %} </span></h1>
         <span {% if s.palette[2] %}style="color:{{s.palette[2]}}"{% else %}class="no-col"{% endif %}>{{ songs|length }} songs &bull; {% if total_runtime.hours %}{{ total_runtime.hours }} hours{% endif %} {% if total_runtime.minutes %}{{ total_runtime.minutes }} minutes{% endif %} {% if not total_runtime.hours and not total_runtime.minutes %}{{ total_runtime.seconds }} seconds{% endif %}</span>
       </div>
       <div class="album-controls" style="color:{{s.palette[1]}}">
@@ -64,8 +64,6 @@
         {% endif %}
         {% if s.user == g.user %}
         <div class="edit" {% if s.palette[1] %}style="color:{{s.palette[1]}}"{% endif %}>
-          <a href="update/" class="update"><i title="Edit mix" class="fa fa-pencil"></i></a>
-          <a href="delete/" class="delete"><i title="Delete mix" class="fa fa-trash-o"></i></a>
         </div>
         {% endif %}
       </nav>
@@ -84,12 +82,6 @@
         <img src="{{url_for('uploaded_file', user=s.user, mix=s.mix_slug, filename=s.cover) }}" alt="cover image for {{s.mix_name}}" />
         {% else %}
         <img src='/static/img/no_cover.jpg' />
-        {% endif %}
-        {% if s.user == g.user %}
-        <div class="edit" {% if s.palette[1] %}style="color:{{s.palette[1]}}"{% endif %}>
-          <a href="update/" class="update"><i title="Edit mix" class="fa fa-pencil fa-lg"></i></a>
-          <a href="delete/" class="delete"><i title="Delete mix" class="fa fa-trash-o fa-lg"></i></a>
-        </div>
         {% endif %}
       </nav>
       <main class="tracklisting">

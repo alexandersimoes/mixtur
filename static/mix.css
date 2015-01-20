@@ -24,6 +24,8 @@ body > header {
   position: absolute;
   top: 0;
   width: 100%;
+  pointer-events: none;
+  z-index: 99;
 }
 body > header a {
   color: black;
@@ -35,9 +37,7 @@ body > header h1 {
   float: left;
   margin: 0;
   padding: 5px;
-}
-body > header h1 a {
-  font-size: 24px;
+  pointer-events: auto;
 }
 body > header h1 a img {
   vertical-align: bottom;
@@ -45,6 +45,7 @@ body > header h1 a img {
 body > header nav {
   padding: 10px;
   float: right;
+  pointer-events: auto;
 }
 body > header nav a {
   color: inherit;
@@ -116,7 +117,24 @@ div.album {
 .album-title h1 {
   font-size: 28px;
   margin: 0;
+  position: relative;
   text-align: center;
+}
+.album-title h1 > span {
+  display: inline;
+  margin: 0 0 0 10px;
+  position: absolute;
+  top: 10px;
+}
+.album-title h1 > span a {
+  display: none;
+  color: inherit;
+  font-size: 20px;
+  margin: 0 5px;
+  text-decoration: none;
+}
+.album-title h1 > span a.active{
+  display: inline !important;
 }
 .album-title span {
   display: block;
@@ -311,20 +329,4 @@ header .album-artist {
   }
   .album-art img{
     width: 100%;
-  }
-  .album-art .edit {
-    font-size: 16px;
-    margin: 5px 0;
-    text-align: center;
-  }
-  .album-art .edit a {
-    color: inherit;
-    opacity: .6;
-    padding: 5px;
-  }
-  .album-art .edit a:hover {
-    opacity: 1;
-  }
-  .album-art .edit i:first-child{
-    margin: 0 15px 0 0;
   }
