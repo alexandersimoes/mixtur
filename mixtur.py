@@ -397,6 +397,14 @@ def logout():
     session.pop("user", None)
     flash("Logged out", "success")
     return redirect(url_for("home"))
+
+'''Generate PW'''
+@app.route("/pw/", methods=["GET", "POST"])
+def pw():
+    pw = None
+    if request.method == 'POST':
+        pw = generate_password_hash(request.form["pw"], salt_length=11)
+    return render_template('pw.html', pw=pw)
 '''
 
     Run the file!

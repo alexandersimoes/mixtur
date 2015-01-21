@@ -1,9 +1,10 @@
 {% extends "layout.html" %}
 {% block body %}
+<div style="margin: 60px 20px 20px 20px">
   <form action="{{ url_for('pw') }}" method="post">
     <h3>Create Password:</h3>
     <div class="input_cont">
-      <input type="password" name="pw" />
+      <input type="password" name="pw" autofocus />
     </div>
     <input type="submit" value="Generate" />
   </form>
@@ -11,4 +12,5 @@
     <h2>Copy and paste the following:</h2>
     <p>{{pw}}</p>
   {% endif %}
+</div>
 {% endblock %}
