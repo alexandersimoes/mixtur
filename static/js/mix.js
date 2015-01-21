@@ -336,7 +336,11 @@ d3.select(".progress")
   .call(drag);
 
 d3.selectAll(".delete").on("click", function(){
-  if(confirm('Are you sure want to continue? This will delete the entire mix and all songs associated with it.')){
+  var txt = 'Are you sure want to continue? This will delete the entire mix and all songs associated with it.'
+  if (mix_type == "a"){
+    txt = 'Are you sure want to continue? This will delete this anthology but will not delete any of the mixes or songs associated with it.'
+  }
+  if(confirm(txt)){
     return true;
   }
   else {
