@@ -46,7 +46,7 @@
 </div>
 
 <div id="success">
-  Congrats! Your mixXx has been uploaded <a href="#">view it here</a>. Or <a href=".">upload another mix</a>.
+  Congrats! Your anthology has been created <a href="#">view it here</a>. Or <a href=".">create another</a>.
 </div>
 
 <div class="container">
@@ -194,7 +194,16 @@ d3.select("#upload").on("click", function(){
   // console.log(anth_title, anth_desc, mixes);
   
   d3.json("./",function(error, data) {
-       console.log(data)
+      console.log(data)
+    
+      document.body.scrollTop = document.documentElement.scrollTop = 0;
+      d3.select("input#anth-title").attr("disabled", true);
+      d3.select(".album-meta textarea").attr("disabled", true);
+      d3.select(".actions").style("display", "none");
+      d3.select("#success").style("display", "block");
+      d3.select("#success a").attr("href", "/a/"+data["slug"]+"/");
+    
+    
     })
    .header("Content-Type","application/json")
    .send("POST", JSON.stringify({title: anth_title, desc: anth_desc, mixes: mixes}));

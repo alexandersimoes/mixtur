@@ -20,36 +20,7 @@ body {
   -ms-flex-direction: column;
   flex-direction: column;
 }
-body > header {
-  position: absolute;
-  top: 0;
-  width: 100%;
-  pointer-events: none;
-  z-index: 99;
-}
-body > header a {
-  color: black;
-  font-size: 14px;
-  padding: 10px;
-  text-decoration: none;
-}
-body > header h1 {
-  float: left;
-  margin: 0;
-  padding: 5px;
-  pointer-events: auto;
-}
-body > header h1 a img {
-  vertical-align: bottom;
-}
-body > header nav {
-  padding: 10px;
-  float: right;
-  pointer-events: auto;
-}
-body > header nav a {
-  color: inherit;
-}
+
 
 .tracks {
   display: -webkit-box;
