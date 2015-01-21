@@ -35,7 +35,9 @@ d3.selectAll("li.track").on("click", function(){
     songs.each(function(){
       this.pause();
       if(this !== song){
-        this.currentTime = 0;
+        if(this.currentTime){
+          this.currentTime = 0;
+        }
       }
     })  
     song.play();
@@ -191,7 +193,9 @@ function stop_all(exception_el) {
       var this_li = d3.select(this.parentNode.parentNode.parentNode);
       hilite(this_li, false)
       this.pause();
-      this.currentTime = 0;
+      if(this.currentTime){
+        this.currentTime = 0;
+      }
     }
   })
 }

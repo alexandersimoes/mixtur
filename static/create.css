@@ -1,17 +1,4 @@
 h1, h2, h3, h4, h5, h6 { font-weight: normal; }
-/*
-body {
-  margin: 0;
-  padding: 0;
-  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Open Sans", sans-serif;
-  font-size: 13px;
-  font-weight: 300;
-  color: gray;
-
-  display: flex;
-  min-height: 100%;
-  flex-direction: column;
-}*/
 
 a {
   color: skyBlue;
@@ -224,6 +211,10 @@ p.song-title input {
   display: flex;
 }*/
 .dz-details > p {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
   display: flex;
 }
 .dz-details > p input {
@@ -236,23 +227,45 @@ p.song-title input {
 }
 .dz-details > p label,
 .dz-details > p span.file {
+  -webkit-box-flex: 1;
+  -moz-box-flex: 1;
+  -webkit-flex: 1;
+  -ms-flex: 1;
   flex: 1;
 }
 .dz-details > p input,
 .dz-details > p span.file-info {
+  -webkit-box-flex: 9;
+  -moz-box-flex: 9;
+  -webkit-flex: 9;
+  -ms-flex: 9;
   flex: 9;
 }
 
 .dz-preview{
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
   display: flex;
 }
 .dz-preview > div.dz-num{
+  -webkit-box-flex: 2%;
+  -moz-box-flex: 2%;
+  -webkit-flex: 2%;
+  -ms-flex: 2%;
   flex: 2%;
+  
   font-size: 20px;
   font-weight: bold;
 }
 .dz-preview > div.dz-details{
+  -webkit-box-flex: 96%;
+  -moz-box-flex: 96%;
+  -webkit-flex: 96%;
+  -ms-flex: 96%;
   flex: 96%;
+
 }
 
 .overlay {
@@ -279,13 +292,23 @@ p.song-title input {
 }
 
 .container header {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
   display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
   flex-direction: row;
   justify-content: center;
   min-height: 200px;
   width: 100%;
 }
 header .album-art{
+  -webkit-box-flex: 1;
+  -moz-box-flex: 1;
+  -webkit-flex: 1;
+  -ms-flex: 1;
   flex: 1;
   margin: 0 10px 0 0;
   position: relative;
@@ -303,8 +326,11 @@ header .album-art p {
   padding: 20px;
 }
 header .album-meta{
+  -webkit-box-flex: 200px;
+  -moz-box-flex: 200px;
+  -webkit-flex: 200px;
+  -ms-flex: 200px;
   flex: 200px;
-/*  margin: 0 0 0 10px;*/
 }
 header .album-meta #mix-title,
 header .album-meta #anth-title {
@@ -344,6 +370,10 @@ header .album-meta textarea {
 }
 
 div.actions {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
   display: flex;
   justify-content: flex-end;
   margin: 20px 0 0 0;
@@ -396,11 +426,21 @@ div#success a {
     position: relative;
   }
   .uploaded_songs ol li div.track-info {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
     display: flex;
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
     flex-direction: row;
   }
   .uploaded_songs ol li div.track-info > p {
 /*      border: solid blue 1px;*/
+    -webkit-box-flex: 1;
+    -moz-box-flex: 1;
+    -webkit-flex: 1;
+    -ms-flex: 1;
     flex: 1;
     margin: 5px 0;
     -webkit-touch-callout: none;
@@ -417,9 +457,17 @@ div#success a {
     margin: 5px 5px 5px 0;
   }
   .uploaded_songs ol li div.track-info p.track-num{
+    -webkit-box-flex: 0 0 20px;
+    -moz-box-flex: 0 0 20px;
+    -webkit-flex: 0 0 20px;
+    -ms-flex: 0 0 20px;
     flex: 0 0 20px;
   }
   .uploaded_songs ol li div.track-info p.track-play{
+    -webkit-box-flex: 0 0 40px;
+    -moz-box-flex: 0 0 40px;
+    -webkit-flex: 0 0 40px;
+    -ms-flex: 0 0 40px;
     flex: 0 0 40px;
   }
   .uploaded_songs ol li div.track-info p.track-title .track-name{

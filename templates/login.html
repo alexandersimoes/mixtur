@@ -3,6 +3,7 @@
 {% block head_title %}Log in{% endblock %}
 
 {% block body %}
+<div style="margin: 60px 20px 20px 20px">
   <form action="{{ url_for('login') }}" method="post" class="login">
     {% if error %}<div class="notify error"><strong>Error:</strong> {{ error }}</div>{% endif %}
     <div class="input_cont">
@@ -18,4 +19,5 @@
     </div>
     <!-- <button>Login</button> -->
   </form>
+</div>
 {% endblock %}
