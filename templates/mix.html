@@ -10,10 +10,10 @@
 {% block body %}
 <div class="anthology">
   {% if mix_type == "a" %}
-  <div class="anthology-title" style="background:{{songs[0].palette[0]}}">
+  <div class="anthology-title" style="background:{{songs[0].palette[0]}}" {% if songs[0].palette[0] %}data-bg-col="{{songs[0].palette[0]}}"{% endif %}>
     <header>
       <div class="album-title">
-        <h1 style="color:{{songs[0].palette[1]}}">{{ songs[0].anthology_name }} <span><a href="#" class="fa fa-random"></a> {% if songs[0].user == g.user %}<a href="update/" class="update fa fa-pencil" title="Edit mix"></a> <a href="delete/" class="delete fa fa-trash-o" title="Delete mix"></a>{% endif %} </span></h1>
+        <h1 style="color:{{songs[0].palette[1]}}">{{ songs[0].anthology_name }} <span><a href="#" class="fa fa-random" title="Shuffle songs"></a> {% if songs[0].user == g.user %}<a href="update/" class="update fa fa-pencil" title="Edit mix"></a> <a href="delete/" class="delete fa fa-trash-o" title="Delete mix"></a>{% endif %} </span></h1>
         <span {% if songs[0].palette[2] %}style="color:{{songs[0].palette[2]}}"{% else %}class="no-col"{% endif %}>{{ num_albums }} album{% if num_albums > 1%}s{% endif %}, {{ songs|length }} songs &bull; {% if total_runtime.hours %}{{ total_runtime.hours }} hours{% endif %} {% if total_runtime.minutes %}{{ total_runtime.minutes }} minutes{% endif %}</span>
       </div>
       <div class="album-controls" style="color:{{songs[0].palette[1]}}">
@@ -39,7 +39,7 @@
     {% if mix_type == "m" %}
     <header>
       <div class="album-title">
-        <h1 style="color:{{s.palette[1]}}">{{ s.mix_name }} <span><a href="#" class="fa fa-random"></a> {% if s.user == g.user %}<a href="update/" title="Edit mix" class="fa fa-pencil update"></a> <a href="delete/" title="Delete mix" class="fa fa-trash-o delete"></a>{% endif %} </span></h1>
+        <h1 style="color:{{s.palette[1]}}">{{ s.mix_name }} <span><a href="#" class="fa fa-random" title="Shuffle songs"></a> {% if s.user == g.user %}<a href="update/" title="Edit mix" class="fa fa-pencil update"></a> <a href="delete/" title="Delete mix" class="fa fa-trash-o delete"></a>{% endif %} </span></h1>
         <span {% if s.palette[2] %}style="color:{{s.palette[2]}}"{% else %}class="no-col"{% endif %}>{{ songs|length }} songs &bull; {% if total_runtime.hours %}{{ total_runtime.hours }} hours{% endif %} {% if total_runtime.minutes %}{{ total_runtime.minutes }} minutes{% endif %} {% if not total_runtime.hours and not total_runtime.minutes %}{{ total_runtime.seconds }} seconds{% endif %}</span>
       </div>
       <div class="album-controls" style="color:{{s.palette[1]}}">

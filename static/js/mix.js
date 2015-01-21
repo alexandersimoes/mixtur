@@ -126,11 +126,13 @@ d3.selectAll("i.fa-step-forward").on("click", function(){
 })
 
 d3.selectAll("a.fa-random").on("click", function(){
-  shuffle_on = true;
-  d3.select(this).classed("active", true);
-  var audio_node_list = document.getElementsByTagName("audio");
-  for(var i = 0, ll = audio_node_list.length; i != ll; shuffle_songs.push(audio_node_list[i++]));
-  get_next().play();
+  shuffle_on = !shuffle_on;
+  d3.select("a.fa-random").classed("active", !d3.select("a.fa-random").classed("active"));
+  if(shuffle_on){
+    var audio_node_list = document.getElementsByTagName("audio");
+    for(var i = 0, ll = audio_node_list.length; i != ll; shuffle_songs.push(audio_node_list[i++]));
+    get_next().play();
+  }
   d3.event.preventDefault();
 
   // if(d3.select(this).classed("anthology-shuffle")){
@@ -400,10 +402,9 @@ d3.selectAll(".anthology-title, .album > header")
   });
 
 // set hover for top header
-d3.selectAll(".album a")
+d3.selectAll(".album a, .anthology-title a, body > header a")
   .on("mouseover", function() { 
-    if(d3.select(this).classed("active")) return;
-    var this_album = getParents(this, ".album");
+    var this_album = getParents(this, ".album") || getParents(this, ".anthology-title") || [d3.select(".album").node()];
     var this_bg_col = d3.select(this_album[0]).attr("data-bg-col");
     var hcl_col = d3.hcl(this_bg_col);
     d3.select(this).style("color", function(){
@@ -417,5 +418,5 @@ d3.selectAll(".album a")
     })
   })
   .on("mouseout", function() {
-    d3.select(this).style("color", "black")
+    d3.select(this).style("color", "inherit")
   });

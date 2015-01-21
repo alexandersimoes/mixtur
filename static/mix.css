@@ -131,6 +131,7 @@ div.album {
   color: inherit;
   font-size: 20px;
   margin: 0 5px;
+  outline: none !important;
   text-decoration: none;
 }
 .album-title h1 > span a.active{
@@ -243,7 +244,7 @@ header .album-artist {
     user-select: none;
   }
   .tracklisting ol li div.track-info > p:nth-child(1) {
-    margin: 5px 0 5px 5px;
+    margin: 7px 0 5px 5px;
   } 
   .tracklisting ol li div.track-info > p:last-child {
     margin: 5px 5px 5px 0;

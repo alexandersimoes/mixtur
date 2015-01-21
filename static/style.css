@@ -15,6 +15,7 @@ h1, h2, h3 {
 }
 a {
   color: #bbb;
+  outline: none;
 /*  text-decoration: none;*/
 }
 a:hover {
@@ -43,7 +44,7 @@ body > header {
 body > header a {
   color: black;
   font-size: 14px;
-  outline: 0;
+  outline: none !important;
   padding: 10px;
   text-decoration: none;
 }

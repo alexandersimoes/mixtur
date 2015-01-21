@@ -23,7 +23,7 @@
         <li><a href="{{ url_for('create_mix') }}">Mix</a></li>
         <li><a href="{{ url_for('create_anthology') }}">Anthology</a></li>
       </ul>
-      <a href="{{ url_for('logout') }}">{{ g.user }}</a>
+      <a title="Log out" href="{{ url_for('logout') }}">{{ g.user }}</a>
     {% endif %}
     </nav>
   </header>
