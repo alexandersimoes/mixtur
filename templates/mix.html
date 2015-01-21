@@ -3,6 +3,9 @@
 {% set header_col = songs[0].palette[1] %}
 {% endif %}
 
+
+{% block head_title %}{% if mix_type == "a" %}{{ songs[0].anthology_name }}{% else %}{{ songs[0].mix_name }}{% endif %}{% endblock %}
+
 {% block head %}
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='mix.css') }}">
 {% endblock %}
