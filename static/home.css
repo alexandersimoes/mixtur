@@ -23,7 +23,11 @@ section ul li {
   border-right: none;
   position: relative;
 }
-section ul li.bigger {
+section#anthologies ul li {
+  padding-bottom: 25%;
+  width: 25%;
+}
+section#anthologies ul li.bigger {
   width: 50%;
   padding-bottom: 50%;
   float: left;
