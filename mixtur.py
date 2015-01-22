@@ -193,6 +193,10 @@ def mix(mix_type, mix_slug):
     else:
         abort(404)
     
+    if not songs:
+        flash("Could not find {} mix.".format(mix_slug), "error")
+        return redirect(url_for("home"))
+    
     # format palettes
     def fix_palette(s):
         if "palette" in s and s["palette"]:
