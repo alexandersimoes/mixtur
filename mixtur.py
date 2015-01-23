@@ -115,25 +115,27 @@ def home():
                             where s.mix = m.id
                             order by m.id;""")
     mixes = []
-    current_mix = {"slug": None}
-    for s in songs:
-        runtime = datetime.strptime(s["runtime"], '%Y-%m-%d %H:%M:%S')
-        if s["mix_slug"] != current_mix["slug"]:
-            if current_mix["slug"]: 
-                current_mix["runtime"] = format_runtime(current_mix["runtime"])
-                mixes.append(current_mix)
-            current_mix = {
-                "slug": s["mix_slug"],
-                "title": s["mix_name"],
-                "author": s["user"],
-                "cover": s["cover"],
-                "songs": 0,
-                "runtime": base_date - base_date
-            }
-        current_mix["songs"] += 1
-        current_mix["runtime"] += runtime - base_date
-    current_mix["runtime"] = format_runtime(current_mix["runtime"])
-    mixes.append(current_mix)
+
+    if songs:
+        current_mix = {"slug": None}
+        for s in songs:
+            runtime = datetime.strptime(s["runtime"], '%Y-%m-%d %H:%M:%S')
+            if s["mix_slug"] != current_mix["slug"]:
+                if current_mix["slug"]: 
+                    current_mix["runtime"] = format_runtime(current_mix["runtime"])
+                    mixes.append(current_mix)
+                current_mix = {
+                    "slug": s["mix_slug"],
+                    "title": s["mix_name"],
+                    "author": s["user"],
+                    "cover": s["cover"],
+                    "songs": 0,
+                    "runtime": base_date - base_date
+                }
+            current_mix["songs"] += 1
+            current_mix["runtime"] += runtime - base_date
+        current_mix["runtime"] = format_runtime(current_mix["runtime"])
+        mixes.append(current_mix)
     
     # ----------------------------------------------------
     # Anthologies
@@ -144,32 +146,33 @@ def home():
         order by a.id, m.id;
     """)
     anthologies = []
-    current_anthology = {"slug": None}
-    for i, s in enumerate(songs):
-        runtime = datetime.strptime(s["runtime"], '%Y-%m-%d %H:%M:%S')
-        if s["anthology_slug"] != current_anthology["slug"]:
-            if current_anthology["slug"]:
-                current_anthology["cover"] = list(current_anthology["cover"])
-                current_anthology["albums"] = len(current_anthology["albums"])
-                current_anthology["runtime"] = format_runtime(current_anthology["runtime"])
-                anthologies.append(current_anthology)
-            current_anthology = {
-                "slug": s["anthology_slug"],
-                "title": s["anthology_name"],
-                "author": s["user"],
-                "cover": set([]),
-                "albums": set([]),
-                "songs": 0,
-                "runtime": base_date - base_date
-            }
-        current_anthology["cover"].add(url_for('uploaded_file', user=s["user"], mix=s["mix_slug"], filename=s["cover"]))
-        current_anthology["albums"].add(s["mix_slug"])
-        current_anthology["songs"] += 1
-        current_anthology["runtime"] += runtime - base_date
-    current_anthology["cover"] = list(current_anthology["cover"])
-    current_anthology["albums"] = len(current_anthology["albums"])
-    current_anthology["runtime"] = format_runtime(current_anthology["runtime"])
-    anthologies.append(current_anthology)
+    if songs:
+        current_anthology = {"slug": None, "cover": [], "albums": [], "runtime": base_date - base_date}
+        for i, s in enumerate(songs):
+            runtime = datetime.strptime(s["runtime"], '%Y-%m-%d %H:%M:%S')
+            if s["anthology_slug"] != current_anthology["slug"]:
+                if current_anthology["slug"]:
+                    current_anthology["cover"] = list(current_anthology["cover"])
+                    current_anthology["albums"] = len(current_anthology["albums"])
+                    current_anthology["runtime"] = format_runtime(current_anthology["runtime"])
+                    anthologies.append(current_anthology)
+                current_anthology = {
+                    "slug": s["anthology_slug"],
+                    "title": s["anthology_name"],
+                    "author": s["user"],
+                    "cover": set([]),
+                    "albums": set([]),
+                    "songs": 0,
+                    "runtime": base_date - base_date
+                }
+            current_anthology["cover"].add(url_for('uploaded_file', user=s["user"], mix=s["mix_slug"], filename=s["cover"]))
+            current_anthology["albums"].add(s["mix_slug"])
+            current_anthology["songs"] += 1
+            current_anthology["runtime"] += runtime - base_date
+        current_anthology["cover"] = list(current_anthology["cover"])
+        current_anthology["albums"] = len(current_anthology["albums"])
+        current_anthology["runtime"] = format_runtime(current_anthology["runtime"])
+        anthologies.append(current_anthology)
 
     return render_template("home.html", mixes=mixes, anthologies=anthologies)
 
@@ -409,6 +412,12 @@ def pw():
     if request.method == 'POST':
         pw = generate_password_hash(request.form["pw"], salt_length=11)
     return render_template('pw.html', pw=pw)
+
+'''Just catch all the 404s plz'''
+@app.errorhandler(404)
+def not_found_error(error):
+    return render_template('404.html'), 404    
+    
 '''
 
     Run the file!

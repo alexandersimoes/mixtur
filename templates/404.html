@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+
+{% block head %}
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='home.css') }}">
+{% endblock %}
+
+{% block body %}
+<div style="margin-top:45px; margin-left:20px;">
+  <h1>File Not Found</h1>
+    <p><a href="{{ url_for('home') }}">Back</a></p>
+    <img src="http://nethackz.com/wp-content/uploads/2008/08/capture47.jpg">
+</div>  
+{% endblock %}
