@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+
+{% block head_title %}Log in{% endblock %}
+
+{% block body %}
+<div style="margin: 60px 20px 20px 20px">
+  <form action="{{ url_for('signup') }}" method="post" class="login">
+    {% if error %}<div class="notify error"><strong>Error:</strong> {{ error }}</div>{% endif %}
+    <div class="input_cont">
+      <label for="email">Desired User (email)</label>
+      <input type="text" name="email" autofocus placeholder="user@gmail.com" />
+    </div>
+    <div class="input_cont">
+      <label for="pwd">Password</label>
+      <input type="password" name="pwd" />
+    </div>
+    <div class="actions">
+      <input type="submit" value="Sign Up" />
+    </div>
+    <!-- <button>Login</button> -->
+  </form>
+</div>
+{% endblock %}
