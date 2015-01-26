@@ -80,10 +80,10 @@ def get_artist(list_of_songs):
         return artists[0]
         
 def user_exists(user):
-    return query_db("""SELECT EXISTS(SELECT * FROM user WHERE name = ?)""",[user])[0][0]
+    return query_db("""SELECT EXISTS(SELECT * FROM user WHERE name = ?)""", [user], one=True)[0]
 
 def email_exists(user):
-    return query_db("""SELECT EXISTS(SELECT * FROM user WHERE email = ?)""",[user])[0][0]
+    return query_db("""SELECT EXISTS(SELECT * FROM user WHERE email = ?)""",[user], one=True)[0]
   
 
 '''Access to static files'''
@@ -188,7 +188,7 @@ def home():
 
     return render_template("home.html", mixes=mixes, anthologies=anthologies)
 
-@app.route("/<user>")
+@app.route("/<user>/")
 def profile(user):
     '''A list of a users specific uploads'''
     if not user_exists(user):
@@ -507,7 +507,7 @@ class signUp(Form):
     email = TextField("email", [DataRequired("Email is required"), Email()])
     pwd = PasswordField("pwd", [DataRequired("Password is required")])
 
-@app.route("/signup", methods=["GET", "POST"])
+@app.route("/signup/", methods=["GET", "POST"])
 def signup(): 
     
     form = signUp(csrf_enabled=False)   
