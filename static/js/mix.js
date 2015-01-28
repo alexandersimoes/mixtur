@@ -351,9 +351,7 @@ d3.selectAll(".delete").on("click", function(){
     d3.event.preventDefault();
   }
 })
-d3.selectAll(".update").on("click", function(){
-  d3.event.preventDefault();
-})
+
 
 // determine color of progress bar -- 
 function get_brightness(col){

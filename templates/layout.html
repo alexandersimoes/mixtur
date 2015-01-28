@@ -47,20 +47,22 @@
   </script>
     
   <script type="text/javascript">
-    document.getElementById("create").addEventListener("click", function(e) {
-      var drop = document.getElementById("create_drop");
-      if(drop.style.display == 'block') {
-        drop.style.display = 'none';
-      }
-      else {
-        drop.style.display = 'block';
-      }
-      e.stopPropagation();
-      e.preventDefault();
-    });
-    document.addEventListener("click", function(e) {
-      document.getElementById("create_drop").style.display = 'none';
-    });
+    if(document.getElementById("create")) {
+      document.getElementById("create").addEventListener("click", function(e) {
+        var drop = document.getElementById("create_drop");
+        if(drop.style.display == 'block') {
+          drop.style.display = 'none';
+        }
+        else {
+          drop.style.display = 'block';
+        }
+        e.stopPropagation();
+        e.preventDefault();
+      });
+      document.addEventListener("click", function(e) {
+        document.getElementById("create_drop").style.display = 'none';
+      });
+    }
   </script>
   
   {% block js %}{% endblock %}

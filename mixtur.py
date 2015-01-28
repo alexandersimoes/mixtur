@@ -356,9 +356,15 @@ def mix_del(mix_type, mix_slug):
     return redirect(url_for("home"))
 
 @app.route("/create/mix/")
-def create_mix():
+@app.route("/create/mix/<mix_slug>/")
+def create_mix(mix_slug=None):
     if not session.get("logged_in"): abort(401)
-    return render_template("create_mix.html")
+    if mix_slug:
+        mix = query_db("""select * from mix where slug = ?;""", (mix_slug,), one=True)
+        songs = query_db("""select s.* from song as s, mix as m where m.slug = ? and s.mix = m.id order by s.position;""", (mix_slug,))
+        return render_template("create_mix.html", mix=mix, songs=songs)
+    else:
+        return render_template("create_mix.html")
 
 def make_slug(title, tbl="mix"):
     slug = secure_filename(title)
@@ -397,13 +403,6 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1] in app.config['ALLOWED_EXTENSIONS']
 
-def parse_files(file_dict):
-    if not file_dict: return None
-    files = dict(file_dict).items()
-    files = [(int(re.findall(r'\d+', f_tuple[0])[0]), f_tuple[1][0]) for f_tuple in files]
-    files.sort()
-    return [f[1] for f in files]
-
 @app.route("/uploadr/<file_type>/", methods=["GET", "POST"])
 def uploadr_file(file_type):
     if not session.get("logged_in"): abort(401)
@@ -415,24 +414,31 @@ def uploadr_file(file_type):
         mix_palette = request.form.get('mix_palette')
         no_img = request.form.get('no_img')
         user = session.get("user")
-        files = parse_files(request.files)
-        artists = request.form.getlist('song_artist')
-        titles = request.form.getlist('song_title')
-        track_nums = request.form.getlist('song_num')
+        file = request.files.get('file')
+        artist = request.form.get('song_artist')
+        title = request.form.get('song_title') or "Untitled"
+        track_num = request.form.get('song_num')
         
         if not mix_id:
             new_mix_title = mix_title or 'Untitled Mix'
             mix_slug = make_slug(new_mix_title)
             mix_id = insert_db("mix", fields=('date', 'user', 'name', 'slug'), args=(str(datetime.now().strftime('%Y-%m-%d %H:%M:%S')), user, new_mix_title, mix_slug))
-
-        if mix_title and not mix_slug:
-            mix_slug = make_slug(mix_title)
-            query_db("UPDATE mix SET name=?, slug=? WHERE id=?", (mix_title, mix_slug, mix_id), update=True)
+            user_mix_dir = os.path.join(app.config['UPLOAD_FOLDER'], user, mix_slug)
+            if not os.path.exists(user_mix_dir): os.makedirs(user_mix_dir)
         else:
-            mix_slug = query_db("SELECT slug FROM mix WHERE id=?", (mix_id,), one=True)["slug"]
-        
-        user_mix_dir = os.path.join(app.config['UPLOAD_FOLDER'], user, mix_slug)
-        if not os.path.exists(user_mix_dir): os.makedirs(user_mix_dir)
+            mix = query_db("SELECT * FROM mix WHERE id=?", (mix_id,), one=True)
+            user_mix_dir = os.path.join(app.config['UPLOAD_FOLDER'], user, mix["slug"])
+            mix_slug = mix["slug"]
+            if mix_title:
+                if mix_title != mix["name"]:
+                    new_mix_slug = make_slug(mix_title)
+                    query_db("UPDATE mix SET name=?, slug=? WHERE id=?", (mix_title, new_mix_slug, mix_id), update=True)
+                    # also need to rename upload directory
+                    user_mix_dir = os.path.join(app.config['UPLOAD_FOLDER'], user, mix_slug)
+                    new_user_mix_dir = os.path.join(app.config['UPLOAD_FOLDER'], user, new_mix_slug)
+                    os.rename(user_mix_dir, new_user_mix_dir)
+                    user_mix_dir = new_user_mix_dir
+                    mix_slug = new_mix_slug
         
         if mix_desc:
             query_db("UPDATE mix SET desc=? WHERE id=?", [mix_desc, mix_id], update=True)
@@ -446,20 +452,21 @@ def uploadr_file(file_type):
         if mix_palette:
             query_db("UPDATE mix SET palette=? WHERE id=?", [mix_palette, mix_id], update=True)
         
-        if files:
-            for f, artist, title, track_num in zip(files, artists, titles, track_nums):
-                # raise Exception(f, artist, title, track_num)
-                if f and allowed_file(f.filename):
-                    filename = secure_filename(f.filename)
-                    f.save(os.path.join(user_mix_dir, filename))
-                    if "image" in f.mimetype:
-                        # add cover img file_name to db
-                        query_db("UPDATE mix SET cover=?, palette=? WHERE id=?", [filename, mix_palette, mix_id], update=True)
-                    if "audio" in f.mimetype:
-                        # add song file_name to db
-                        audio = MP3(os.path.join(user_mix_dir, filename))
-                        runtime = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(audio.info.length))
-                        insert_db("song", fields=('title','artist','position','runtime','slug','mix'), args=(title, artist, track_num, runtime, filename, mix_id))
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(user_mix_dir, filename))
+            if "image" in file.mimetype:
+                # was there already a file? if so delete it
+                cover = query_db("SELECT cover FROM mix WHERE id=?", (mix_id,), one=True)["cover"]
+                if cover:
+                    os.remove(os.path.join(user_mix_dir, cover))
+                # add cover img file_name to db
+                query_db("UPDATE mix SET cover=?, palette=? WHERE id=?", [filename, mix_palette, mix_id], update=True)
+            if "audio" in file.mimetype:
+                # add song file_name to db
+                audio = MP3(os.path.join(user_mix_dir, filename))
+                runtime = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(audio.info.length))
+                insert_db("song", fields=('title','artist','position','runtime','slug','mix'), args=(title, artist, track_num, runtime, filename, mix_id))
         
         return jsonify(mix_id=mix_id, mix_slug=mix_slug)
 
@@ -538,8 +545,11 @@ def signup():
 '''Just catch all the 404s plz'''
 @app.errorhandler(404)
 def not_found_error(error):
-    return render_template('404.html'), 404    
-    
+    return render_template('404.html'), 404
+
+@app.errorhandler(401)
+def not_found_error(error):
+    return render_template('401.html'), 401
 '''
 
     Run the file!

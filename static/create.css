@@ -1,11 +1,16 @@
+html, body, .drop_container {
+  height: 100% !important;
+}
+
 h1, h2, h3, h4, h5, h6 { font-weight: normal; }
 
 a {
-  color: skyBlue;
-  text-decoration: none;
+  color: inherit;
+  text-decoration: underline;
 }
 a:hover {
-  color: #3cb0fd;
+  color: inherit;
+  text-decoration: none;
 }
 
 /* The MIT License */
@@ -19,57 +24,14 @@ a:hover {
 }
 .dropzone {
   padding: 10px;
-/*    position: relative;
-  border: 1px solid rgba(0,0,0,0.08);
-  background: rgba(0,0,0,0.02);
-  padding: 10px;*/
 }
-.dropzone.dz-clickable {
-  cursor: pointer;
-}
-.dropzone.dz-clickable .dz-message,
-.dropzone.dz-clickable .dz-message span {
-  cursor: pointer;
-}
-.dropzone.dz-clickable * {
-  cursor: default;
-}
-.dropzone .dz-message {
-  opacity: 1;
-  -ms-filter: none;
-  filter: none;
+.dropzone > span {
+  display: block;
+  text-align: center;
 }
 .dropzone.dz-drag-hover {
   border-color: rgba(0,0,0,0.15);
   background: rgba(0,0,0,0.04);
-}
-.dropzone.dz-started .dz-message {
-  display: none;
-}
-.dropzone .dz-preview,
-.dropzone-previews .dz-preview {
-/*    background: rgba(255,255,255,0.8);
-  position: relative;
-  display: inline-block;
-  vertical-align: top;
-  border: 1px solid #acacac;
-  padding: 6px 6px 6px 6px;*/
-}
-.dropzone .dz-preview.over {
-  border: 2px dashed #000 !important;
-}
-#songs-dropzone .dz-preview {
-/*    background: rgba(255,255,255,0.8);
-  position: relative;
-  display: block;
-  margin: 0 0 10px 0;
-  vertical-align: top;
-  border: 1px solid #acacac;
-  padding: 6px 6px 6px 6px;*/
-}
-.dropzone .dz-preview.dz-file-preview [data-dz-thumbnail],
-.dropzone-previews .dz-preview.dz-file-preview [data-dz-thumbnail] {
-/*    display: none;*/
 }
 .dropzone .dz-preview .dz-details,
 .dropzone-previews .dz-preview .dz-details {
@@ -86,60 +48,14 @@ a:hover {
 }
 .dropzone .dz-preview .dz-details img,
 .dropzone-previews .dz-preview .dz-details img {
-/*    position: absolute;*/
-/*    top: 0;
-  left: 0;
-  width: 100px;
-  height: 100px;*/
   max-width: 100%;
-}
-.dropzone .dz-preview .dz-details .dz-size,
-.dropzone-previews .dz-preview .dz-details .dz-size {
-/*    position: absolute;
-  bottom: -28px;
-  left: 3px;
-  height: 28px;
-  line-height: 28px;*/
-}
-.dropzone .dz-preview.dz-error .dz-error-mark,
-.dropzone-previews .dz-preview.dz-error .dz-error-mark {
-  display: block;
-}
-.dropzone .dz-preview.dz-success .dz-success-mark,
-.dropzone-previews .dz-preview.dz-success .dz-success-mark {
-  display: block;
-}
-.dropzone .dz-preview:hover .dz-details img,
-.dropzone-previews .dz-preview:hover .dz-details img {
-/*    display: none;*/
-}
-.dropzone .dz-preview .dz-success-mark,
-.dropzone-previews .dz-preview .dz-success-mark,
-.dropzone .dz-preview .dz-error-mark,
-.dropzone-previews .dz-preview .dz-error-mark {
-  display: none;
-  position: absolute;
-  width: 40px;
-  height: 40px;
-  font-size: 30px;
-  text-align: center;
-  right: -10px;
-  top: -10px;
-}
-.dropzone .dz-preview .dz-success-mark,
-.dropzone-previews .dz-preview .dz-success-mark {
-  color: #8cc657;
-}
-.dropzone .dz-preview .dz-error-mark,
-.dropzone-previews .dz-preview .dz-error-mark {
-  color: #ee162d;
 }
 .dropzone .dz-preview .dz-progress,
 .dropzone-previews .dz-preview .dz-progress {
   position: absolute;
   top: 100px;
-  left: 6px;
-  right: 6px;
+  right: 0px;
+  left: 0px;
   height: 6px;
   background: #d7d7d7;
   display: none;
@@ -152,36 +68,15 @@ a:hover {
   bottom: 0;
   left: 0;
   width: 0%;
-  background-color: #8cc657;
+  background-color: skyblue;
 }
 .dropzone .dz-preview.dz-processing .dz-progress,
 .dropzone-previews .dz-preview.dz-processing .dz-progress {
   display: block;
 }
-.dropzone .dz-preview .dz-error-message,
-.dropzone-previews .dz-preview .dz-error-message {
-  display: none;
-  position: absolute;
-  top: -5px;
-  left: -20px;
-  background: rgba(245,245,245,0.8);
-  padding: 8px 10px;
-  color: #800;
-  min-width: 140px;
-  max-width: 500px;
-/*    z-index: 500;*/
-}
-.dropzone .dz-preview:hover.dz-error .dz-error-message,
-.dropzone-previews .dz-preview:hover.dz-error .dz-error-message {
-  display: block;
-}
-
-html, body, .drop_container {
-    min-height: 100% !important;
-/*      height: 90%;*/
-}
 
 .delete {
+  background: rgba(255, 255, 255, 0.5);
   bottom: 0;
   color: black;
   cursor: pointer;
@@ -242,12 +137,22 @@ p.song-title input {
   flex: 9;
 }
 
-.dz-preview{
+.dz-preview {
   display: -webkit-box;
   display: -moz-box;
   display: -ms-flexbox;
   display: -webkit-flex;
   display: flex;
+  position: relative;
+}
+.dz-preview > div.dz-drag{
+  -webkit-box-flex: 2%;
+  -moz-box-flex: 2%;
+  -webkit-flex: 2%;
+  -ms-flex: 2%;
+  flex: 2%;
+  font-size: 20px;
+  cursor: move;
 }
 .dz-preview > div.dz-num{
   -webkit-box-flex: 2%;
@@ -257,19 +162,19 @@ p.song-title input {
   flex: 2%;
   
   font-size: 20px;
-  font-weight: bold;
 }
 .dz-preview > div.dz-details{
-  -webkit-box-flex: 96%;
-  -moz-box-flex: 96%;
-  -webkit-flex: 96%;
-  -ms-flex: 96%;
-  flex: 96%;
+  -webkit-box-flex: 92%;
+  -moz-box-flex: 92%;
+  -webkit-flex: 92%;
+  -ms-flex: 92%;
+  flex: 92%;
 
 }
 
 .overlay {
-  display:none;
+  background: url('/static/img/stripe_skyblue.png');
+  display: none;
   /*set the div in the top-left corner of the screen*/
   position: fixed;
   top:0;
@@ -279,15 +184,31 @@ p.song-title input {
   /*set the width and height to 100% of the screen*/
   width:100%;
   height:100%;
-  color: white;
   z-index: 9999;
+  pointer-events: none;
+  opacity: .8;
   
   justify-content: center;
   align-items: center;
 }
+.overlay span {
+  background: white;
+  padding: 10px;
+}
+body.dz-drag-hover .overlay {
+  display: flex;
+}
+body.dz-drag-hover > header {
+  display: none;
+}
+
+.notify {
+  display: none;
+}
 
 .container {
-  margin: 20px auto;
+  margin: 0 auto;
+  padding: 20px 0;
   width: 800px;
 }
 
