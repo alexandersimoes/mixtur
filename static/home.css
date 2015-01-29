@@ -2,6 +2,9 @@ a {
   color: white;
   text-decoration: none;
 }
+a:hover {
+  color: #ccc;
+}
 section ul {
 /*  display: flex;*/
   margin: 50px 0;
@@ -76,14 +79,14 @@ a.link-cover:hover {
   z-index: 999;
 }
 .content h1 {
-  text-transform: uppercase;
+  color: #fff;
   font-family: "Helvetica Neue", Helvetica, Arial, "Open Sans", sans-serif;
+  font-size: 16px;
   font-weight: normal;
   letter-spacing: 1px;
-  margin: 0;
-  font-size: 16px;
   line-height: normal;
-  color: #fff;
+  margin: 0;
+  text-transform: uppercase;
 }
 .content h2 {
   font-family: 'Garamond', 'Georgia', serif;

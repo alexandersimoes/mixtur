@@ -12,7 +12,7 @@
       <a class="link-cover" href="{{ url_for('mix', mix_type='m', mix_slug=m.slug) }}"></a>
       <div class="content">
         <div class="post-meta">
-          <h1>{{ m.title|truncate(45) }}</h1>
+          <h1><a href="{{ url_for('mix', mix_type='m', mix_slug=m.slug) }}">{{ m.title|truncate(45) }}</a></h1>
           <h2 style="z-index: 1;">{{ m.songs }} songs, {{ m.runtime }}</h2>
           <div class="author-meta">
             <b>By</b> <a class="author-name" href="#">{{ m.author }}</a>
