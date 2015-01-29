@@ -87,7 +87,9 @@ div.album {
 }
 .album-title h1 {
   font-size: 28px;
-  margin: 0;
+  line-height: 31px;
+  margin: 5px 0 0 0;
+  padding: 0px 195px 0px 110px;
   position: relative;
   text-align: center;
 }
@@ -95,22 +97,27 @@ div.album {
   display: inline;
   margin: 0 0 0 10px;
   position: absolute;
-  top: 10px;
 }
 .album-title h1 > span a {
-  display: none;
+/*  display: none;*/
   color: inherit;
   font-size: 20px;
   margin: 0 5px;
+  opacity: 0.35;
   outline: none !important;
   text-decoration: none;
 }
-.album-title h1 > span a.active{
-  display: inline !important;
+.album-title h1 > span a:hover {
+  color: inherit;
 }
-.album-title span {
+.album-title h1 > span a.active{
+/*  display: inline !important;*/
+  opacity: 1;
+}
+.album-title > span {
   display: block;
   font-size: 15px;
+  padding: 0px 195px 0px 110px;
   text-align: center;
 }
 .album-title i {
@@ -123,6 +130,8 @@ div.album {
   height: 35px;
   text-align: center;
   margin: 0 0 10px 0;
+  padding: 0px 195px 0px 110px;
+  white-space: nowrap;
 }
 .album-controls i{
   cursor: pointer;
@@ -141,7 +150,7 @@ div.album {
   left: 0;
   z-index: 999;
   width: 100%;
-  height: 135px;
+/*  height: 135px;*/
   z-index: 1;
 }
 

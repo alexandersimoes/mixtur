@@ -133,19 +133,14 @@ d3.selectAll("a.fa-random").on("click", function(){
   if(shuffle_on){
     var audio_node_list = document.getElementsByTagName("audio");
     for(var i = 0, ll = audio_node_list.length; i != ll; shuffle_songs.push(audio_node_list[i++]));
-    get_next().play();
+    if(current_song && is_playing(current_song)){
+      shuffle_songs.splice(shuffle_songs.indexOf(current_song), 1);
+    }
+    else {
+      get_next().play();
+    }
   }
   d3.event.preventDefault();
-
-  // if(d3.select(this).classed("anthology-shuffle")){
-  //   var audio_node_list = document.getElementsByTagName("audio");
-  // }
-  // else{
-  //   var album = this.parentNode.parentNode.parentNode
-  //   var audio_node_list = album.getElementsByTagName("audio");
-  // }
-  // for(var i = 0, ll = audio_node_list.length; i != ll; shuffle_songs.push(audio_node_list[i++]));
-  // get_next().play();
 })
 
 function is_playing(audio) {
@@ -399,13 +394,13 @@ d3.selectAll(".tracklisting ol li.track")
   })
 
 // set hover for top header
-d3.selectAll(".anthology-title, .album > header")
-  .on("mouseover", function() { 
-    d3.selectAll(".album-title h1 > span a").style("display", "inline")
-  })
-  .on("mouseout", function() {
-    d3.selectAll(".album-title h1 > span a").style("display", "none")
-  });
+// d3.selectAll(".anthology-title, .album > header")
+//   .on("mouseover", function() {
+//     d3.selectAll(".album-title h1 > span a").style("opacity", 0.5)
+//   })
+//   .on("mouseout", function() {
+//     d3.selectAll(".album-title h1 > span a").style("opacity", 0.25)
+//   });
 
 // set hover for top header
 d3.selectAll(".album a, .anthology-title a, body > header a")
@@ -426,3 +421,8 @@ d3.selectAll(".album a, .anthology-title a, body > header a")
   .on("mouseout", function() {
     d3.select(this).style("color", "inherit")
   });
+
+// set offset height for tracks since header could be multiple lines
+var header_h = d3.select(".anthology header").style("height")
+  console.log(header_h)
+d3.select(".anthology .tracks").style("padding-top", header_h)
