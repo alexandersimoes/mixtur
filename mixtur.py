@@ -9,6 +9,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 from mutagen.mp3 import MP3
 from tint import image_tint
+import cStringIO, base64
 ''' Some forms stuff '''
 from flask_wtf import Form
 from wtforms.validators import DataRequired, Email
@@ -443,10 +444,14 @@ def uploadr_file(file_type):
         if mix_desc:
             query_db("UPDATE mix SET desc=? WHERE id=?", [mix_desc, mix_id], update=True)
         
+        b64_img = None
         if no_img:
             input_image_path = os.path.join(app.root_path, 'static/img/no_cover.jpg')
-            new_img = image_tint(input_image_path)
+            (new_img, tinted_col) = image_tint(input_image_path)
             new_img.save(os.path.join(user_mix_dir, "default_cover.jpg"))
+            jpeg_image_buffer = cStringIO.StringIO()
+            new_img.save(jpeg_image_buffer, format="JPEG")
+            b64_img = base64.b64encode(jpeg_image_buffer.getvalue())
             query_db("UPDATE mix SET cover=? WHERE id=?", ["default_cover.jpg", mix_id], update=True)
         
         if mix_palette:
@@ -468,7 +473,7 @@ def uploadr_file(file_type):
                 runtime = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(audio.info.length))
                 insert_db("song", fields=('title','artist','position','runtime','slug','mix'), args=(title, artist, track_num, runtime, filename, mix_id))
         
-        return jsonify(mix_id=mix_id, mix_slug=mix_slug)
+        return jsonify(mix_id=mix_id, mix_slug=mix_slug, b64_img=b64_img)
 
 '''
 

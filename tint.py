@@ -32,4 +32,4 @@ def image_tint(src, tint=None):
         merge_args = (src.mode, (l, l, l, a))  # for RGBA verion of grayscale
         luts += range(256)  # for 1:1 mapping of copied alpha values
 
-    return Image.merge(*merge_args).point(luts)
+    return (Image.merge(*merge_args).point(luts), tint)

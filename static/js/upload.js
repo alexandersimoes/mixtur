@@ -15,7 +15,9 @@ var dz = new Dropzone(document.body, {
       // if(!d3.select(".album-art p").empty()){
       //   formData.append("no_img", "true");
       // }
-      formData.append("mix_palette", d3.select("input[name='mix-palette']").property("value"));
+      if(file.type == "image/jpeg" || file.type == "image/png"){
+        formData.append("mix_palette", d3.select("input[name='mix-palette']").property("value"));
+      }
       formData.append("song_filesize", file.size);
       formData.append("song_artist", d3.select(file.previewElement).select("p.song-artist input").property("value"));
       formData.append("song_title", d3.select(file.previewElement).select("p.song-title input").property("value"));
@@ -26,14 +28,7 @@ var dz = new Dropzone(document.body, {
     },
     thumbnail: function(file, img_data) {
       d3.select(".album-art img").attr("src", img_data)
-      var img = new Image();
-      img.onload = function ( ) { 
-        var cols = Colibri.extractImageColors(img, 'hex');
-        var palette = [cols.background].concat(cols.content)
-        d3.select("input[name='mix-palette']").property("value", JSON.stringify(palette))
-        console.log(palette)
-      };
-      img.src = img_data;
+      set_palette(img_data)
     },
     thumbnailWidth: 300,
     thumbnailHeight: 300,
@@ -58,6 +53,12 @@ dz.on("addedfile", function(file) {
   // Capture the Dropzone instance as closure.
   var _this = this;
   if(file.type == "image/jpeg" || file.type == "image/png"){
+    // remove previous image from queue
+    _this.getQueuedFiles().forEach(function(qf){
+      if(qf.type == "image/jpeg" || qf.type == "image/png"){
+        _this.removeFile(qf);
+      }
+    })
     d3.select(file.previewElement).remove();
     d3.select(".album-art").html('<img src="" data-dz-thumbnail />')
     var remove_link = d3.select(".album-art").append("a").attr("class", "delete dz-remove").attr("data-dz-remove", "true").html('<i title="Delete mix" class="fa fa-trash-o"></i> remove')
@@ -104,16 +105,38 @@ d3.select("#upload").on("click", function(){
   var mix_id = d3.select("input[name='mix-id']").property("value");
   var mix_title = d3.select("input[name='mix-title']").property("value");
   var mix_desc = d3.select("textarea").property("value");
+  var qstr = "mix_id="+mix_id+"&mix_title="+mix_title+"&mix_desc="+mix_desc;
+  if(!d3.select(".album-art p").empty()){
+    qstr += "&no_img=true"
+  }
+  // first test if a title or songs have been added
+  if(!mix_id && !queue_has_songs()){
+    d3.select(".notify.error").style("display", "block").text("You need to add songs to your mix!")
+    setTimeout(function(){
+      d3.select(".notify.error").style("display", "none");
+    }, 5000);
+    return;
+    d3.event.preventDefault();
+  }
   d3.xhr("/uploadr/song/",function(error, data) {
       data = JSON.parse(data.response);
       if(data["mix_id"]){
         d3.select(".notify.success a").attr("href", "/m/"+data["mix_slug"]+"/");
         d3.select("input[name='mix-id']").property("value", data["mix_id"])
+        if(data["b64_img"]){
+          var img_data = "data:image/png;base64,"+data["b64_img"]
+          d3.select(".album-art").html("<img src='"+img_data+"' />")
+          set_palette(img_data, function(){
+            d3.xhr("/uploadr/song/",function(error, data) {})
+              .header("Content-type", "application/x-www-form-urlencoded")
+              .send("POST", "mix_id="+data["mix_id"]+"&mix_palette="+d3.select("input[name='mix-palette']").property("value"));
+          })
+        }
         dz.processQueue(); //processes the queue
       }
     })
     .header("Content-type", "application/x-www-form-urlencoded")
-    .send("POST", "mix_id="+mix_id+"&mix_title="+mix_title+"&mix_desc="+mix_desc);
+    .send("POST", qstr);
   d3.event.preventDefault();
 })
 
@@ -167,4 +190,28 @@ function set_track_nums(){
   nums.forEach(function(n, i){
     d3.select(n).text(i)
   })
+}
+
+function set_palette(img_data, callback){
+  var img = new Image();
+  img.onload = function ( ) { 
+    var cols = Colibri.extractImageColors(img, 'hex');
+    var palette = [cols.background].concat(cols.content)
+    d3.select("input[name='mix-palette']").property("value", JSON.stringify(palette))
+    console.log(palette)
+    if(callback){
+      callback();
+    }
+  };
+  img.src = img_data;
+}
+
+function queue_has_songs(){
+  has_songs = false;
+  dz.getQueuedFiles().forEach(function(qf){
+    if(qf.type == "audio/mp3"){
+      has_songs = true;
+    }
+  })
+  return has_songs;
 }

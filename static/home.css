@@ -2,9 +2,6 @@ a {
   color: white;
   text-decoration: none;
 }
-a:hover {
-  color: #ccc;
-}
 section > h1 {
   margin: 10px 0;
   text-align: center;
@@ -93,6 +90,9 @@ a.link-cover:hover {
   line-height: normal;
   margin: 0;
   text-transform: uppercase;
+}
+.content h1 a:hover {
+  color: #bbb;
 }
 .content h2 {
   font-family: 'Garamond', 'Georgia', serif;
