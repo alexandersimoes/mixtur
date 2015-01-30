@@ -59,23 +59,18 @@
     </header>
     {% endif %}
     <div class="tracks">
-      <div class="albumart_container" onclick="this.classList.toggle('hover');">
-      	<div class="albumart">
-      		<div class="albumart_front">
-            <button><i class="fa fa-info-circle"></i> More Info</button>
-            {% if s.cover %}
-            <img src="{{url_for('uploaded_file', user=s.user, mix=s.mix_slug, filename=s.cover) }}" alt="cover image for {{s.mix_name}}" />
-            {% else %}
-            <img src='/static/img/no_cover.jpg' />
-            {% endif %}
-      		</div>
-      		<div class="albumart_back">
-            <button><i class="fa fa-info-circle"></i> More Info</button>
-      			<p>Revolucionamos a maneira como as organizações transformam dados em informação, conhecimento e inteligência, por meio de soluções inovadoras de visualização de dados, possibilitando melhores decisões e negócios.</p>
-      		</div>
-      	</div>
-      </div>
-      <!-- <nav class="album-art"></nav> -->
+      <nav class="album-art">
+        {% if s.desc %}
+        <div class="album-desc">
+          <h2>{{ s.desc }}</h2>
+        </div>
+        {% endif %}
+        {% if s.cover %}
+        <img src="{{url_for('uploaded_file', user=s.user, mix=s.mix_slug, filename=s.cover) }}" alt="cover image for {{s.mix_name}}" />
+        {% else %}
+        <img src='/static/img/no_cover.jpg' />
+        {% endif %}
+      </nav>
       <main class="tracklisting">
   {% elif s.mix_slug != mix_slug %}
                 </ol>
@@ -87,6 +82,11 @@
   <div class="album" style="background:{{s.palette[0]}}" {% if s.palette[0] %}data-bg-col="{{s.palette[0]}}"{% endif %} {% if s.palette[1] %}data-hilite-col="{{s.palette[1]}}"{% endif %} {% if s.palette[2] %}data-hilite-col2="{{s.palette[2]}}"{% endif %}>
     <div class="tracks">
       <nav class="album-art">
+        {% if s.desc %}
+        <div class="album-desc">
+          <h2>{{ s.desc }}</h2>
+        </div>
+        {% endif %}
         {% if s.cover %}
         <img src="{{url_for('uploaded_file', user=s.user, mix=s.mix_slug, filename=s.cover) }}" alt="cover image for {{s.mix_name}}" />
         {% else %}

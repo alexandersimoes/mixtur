@@ -6,6 +6,7 @@
 
 {% block body %}
 <section id="mixes">
+  <h1>Mixes</h1>
   <ul>
   {% for m in mixes %}
     <li {% if m.cover %}style="background: url('{{ url_for('uploaded_file', user=m.author, mix=m.slug, filename=m.cover) }}')"{% endif %}>
@@ -25,7 +26,7 @@
 </section>
 
 <section id="anthologies">
-
+  <h1>Anthologies</h1>
   {% for a in anthologies %}
   <div class="anthology">
     <ul>

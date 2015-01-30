@@ -5,9 +5,15 @@ a {
 a:hover {
   color: #ccc;
 }
+section > h1 {
+  margin: 10px 0;
+  text-align: center;
+  font-size: 2.4vw;
+  white-space: nowrap;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+}
 section ul {
-/*  display: flex;*/
-  margin: 50px 0;
   width: 100%;
   float: left;
 }

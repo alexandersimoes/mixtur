@@ -272,13 +272,13 @@ def mix(mix_type, mix_slug):
     total_time = 3
     base_date = datetime(1970, 1, 1)
     if mix_type == "m":
-        songs = query_db("""select m.name as mix_name, cover, m.slug as mix_slug, s.title, s.artist, s.slug as song_slug, disc, position, runtime, date, palette, user from
-                                song as s, mix as m
+        songs = query_db("""select m.name as mix_name, cover, m.slug as mix_slug, s.title, s.artist, s.slug as song_slug, disc, position, runtime, date, palette, user, desc 
+                                from song as s, mix as m
                                 where m.slug = ? and s.mix = m.id
                                 order by m.id, s.position;""", (mix_slug,))
     elif mix_type == "a":
-        songs = query_db("""select a.name as anthology_name, m.name as mix_name, cover, m.slug as mix_slug, s.title, s.artist, s.slug as song_slug, disc, palette, position, runtime, m.date, user from
-                                song as s, anthology as a, mixanthology as ma, mix as m
+        songs = query_db("""select a.name as anthology_name, m.name as mix_name, cover, m.slug as mix_slug, s.title, s.artist, s.slug as song_slug, disc, palette, position, runtime, m.date, user, desc 
+                                from song as s, anthology as a, mixanthology as ma, mix as m
                                 where a.slug = ? and ma.anthology_id = a.id and m.id = ma.mix_id and s.mix = m.id
                                 order by m.id, s.disc, s.position;""", (mix_slug,))
         num_albums = len({s["mix_slug"] for s in songs})
