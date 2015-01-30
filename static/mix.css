@@ -176,7 +176,7 @@ header .album-artist {
     -webkit-flex: 1;
     -ms-flex: 1;
     flex: 1;
-    padding-top:135px;
+/*    padding-top:135px;*/
   }
   .tracklisting {
 /*      border: solid 1px red;*/
@@ -322,4 +322,49 @@ header .album-artist {
   }
   .album-art img{
     width: 100%;
+  }
+  
+  .albumart_container {
+    perspective: 1000;
+    -webkit-box-flex: 1;
+    -moz-box-flex: 1;
+    -webkit-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    margin: 5px 20px 0 0;
+  }
+  .albumart_container.hover .albumart {
+    transform: rotateY(180deg);
+  }
+  .albumart {
+    transition: 0.6s;
+    transform-style: preserve-3d;
+    position: relative;
+  }
+  .albumart_front, .albumart_back {
+    backface-visibility: hidden;
+  }
+  .albumart_back {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+  .albumart_front {
+    z-index: 2;
+    /* for firefox 31 */
+    transform: rotateY(0deg);
+  }
+  .albumart_front img {
+    width: 100%;
+  }
+  /* back, initially hidden pane */
+  .albumart_back {
+    transform: rotateY(180deg);
+  }
+  .albumart button {
+    background: rgba(255, 255, 255, 0.5);
+    border: none;
+    bottom: 0;
+    left: 50%;
+    position: absolute;
   }

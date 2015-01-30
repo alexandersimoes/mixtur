@@ -424,5 +424,4 @@ d3.selectAll(".album a, .anthology-title a, body > header a")
 
 // set offset height for tracks since header could be multiple lines
 var header_h = d3.select(".anthology header").style("height")
-  console.log(header_h)
 d3.select(".anthology .tracks").style("padding-top", header_h)
