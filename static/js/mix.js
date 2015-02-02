@@ -111,9 +111,15 @@ d3.selectAll("i.fa-pause").on("click", function(){
 
 d3.selectAll("i.fa-step-backward").on("click", function(){
   if(current_song){
-    var prev = get_prev(current_song);
-    if (prev) {
-      prev.play();
+    var amt_played = current_song.currentTime / current_song.duration;
+    if(amt_played > 0.01){
+      current_song.currentTime = 0;
+    }
+    else {
+      var prev = get_prev(current_song);
+      if (prev) {
+        prev.play();
+      }
     }
   }
 })
