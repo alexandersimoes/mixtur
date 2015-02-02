@@ -22,16 +22,9 @@ a:hover {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
-.dropzone {
-  padding: 10px;
-}
 .dropzone > span {
   display: block;
   text-align: center;
-}
-.dropzone.dz-drag-hover {
-  border-color: rgba(0,0,0,0.15);
-  background: rgba(0,0,0,0.04);
 }
 .dropzone .dz-preview .dz-details,
 .dropzone-previews .dz-preview .dz-details {
@@ -143,7 +136,25 @@ p.song-title input {
   display: -ms-flexbox;
   display: -webkit-flex;
   display: flex;
+  padding: 10px;
   position: relative;
+}
+.dz-preview.disabled  {
+  background: url('/static/img/stripe_skyblue.png');
+  color: #aaa;
+}
+.dz-preview.disabled input {
+  color: #aaa;
+}
+.dz-preview.disabled .dz-remove {
+  display: none;
+}
+.dz-preview .dz-undo {
+  color: black;
+  display: none;
+}
+.dz-preview.disabled .dz-undo {
+  display: inline;
 }
 .dz-preview > div.dz-drag{
   -webkit-box-flex: 2%;

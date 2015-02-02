@@ -26,7 +26,6 @@ d3.selectAll("li.track").on("click", function(){
   anthology_on = true;
   
   var song = d3.select(this).select("audio").node();
-  // console.log(is_playing(song))
   if(is_playing(song)){
     song.pause();
   }
@@ -42,7 +41,6 @@ d3.selectAll("li.track").on("click", function(){
     })  
     song.play();
   }
-  // console.log(song)
 })
 
 d3.selectAll("audio").on("timeupdate", function(){
@@ -69,7 +67,6 @@ d3.selectAll("audio").on("play", function(){
 })
 
 d3.selectAll("audio").on("pause", function(){
-  // console.log('pause called!')
   d3.select("i.fa-play").style("display", "inline");
   d3.select("i.fa-pause").style("display", "none");
 })
@@ -230,62 +227,6 @@ function hilite(li, turn_on){
   }
 }
 
-/**
- * Get all DOM element up the tree that contain a class, ID, or data attribute
- * @param  {Node} elem The base element
- * @param  {String} selector The class, id, data attribute, or tag to look for
- * @return {Array} Null if no match
- */
-var getParents = function (elem, selector) {
-
-    var parents = [];
-    if ( selector ) {
-        var firstChar = selector.charAt(0);
-    }
-
-    // Get matches
-    for ( ; elem && elem !== document; elem = elem.parentNode ) {
-        if ( selector ) {
-
-            // If selector is a class
-            if ( firstChar === '.' ) {
-                if ( elem.classList.contains( selector.substr(1) ) ) {
-                    parents.push( elem );
-                }
-            }
-
-            // If selector is an ID
-            if ( firstChar === '#' ) {
-                if ( elem.id === selector.substr(1) ) {
-                    parents.push( elem );
-                }
-            }
-
-            // If selector is a data attribute
-            if ( firstChar === '[' ) {
-                if ( elem.hasAttribute( selector.substr(1, selector.length - 1) ) ) {
-                    parents.push( elem );
-                }
-            }
-
-            // If selector is a tag
-            if ( elem.tagName.toLowerCase() === selector ) {
-                parents.push( elem );
-            }
-
-        } else {
-            parents.push( elem );
-        }
-    }
-
-    // Return parents if any exist
-    if ( parents.length === 0 ) {
-        return null;
-    } else {
-        return parents;
-    }
-
-}
 d3.selectAll(".no-col").style("color", function(){
   if(getParents(this, ".album")){
     var bg = d3.rgb(d3.select(getParents(this, ".album")[0]).style("background"));

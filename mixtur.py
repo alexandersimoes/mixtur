@@ -420,11 +420,12 @@ def uploadr_file(file_type):
         title = request.form.get('song_title') or "Untitled"
         track_num = request.form.get('song_num')
         song_id = request.form.get('song_id')
+        song_remove = request.form.get('song_remove')
         
         if not mix_id:
             new_mix_title = mix_title or 'Untitled Mix'
             mix_slug = make_slug(new_mix_title)
-            mix_id = insert_db("mix", fields=('date', 'user', 'name', 'slug'), args=(str(datetime.now().strftime('%Y-%m-%d %H:%M:%S')), user, new_mix_title, mix_slug))
+            mix_id = insert_db("mix", fields=('date', 'user', 'name', 'slug', 'desc'), args=(str(datetime.now().strftime('%Y-%m-%d %H:%M:%S')), user, new_mix_title, mix_slug, mix_desc))
             user_mix_dir = os.path.join(app.config['UPLOAD_FOLDER'], user, mix_slug)
             if not os.path.exists(user_mix_dir): os.makedirs(user_mix_dir)
         else:
@@ -440,8 +441,9 @@ def uploadr_file(file_type):
                     new_user_mix_dir = os.path.join(app.config['UPLOAD_FOLDER'], user, new_mix_slug)
                     os.rename(user_mix_dir, new_user_mix_dir)
                     user_mix_dir = new_user_mix_dir
-                    mix_slug = new_mix_slug        
-            query_db("UPDATE mix SET desc=? WHERE id=?", [mix_desc, mix_id], update=True)
+                    mix_slug = new_mix_slug
+            if mix_desc is not None:
+                query_db("UPDATE mix SET `desc`=? WHERE id=?", [mix_desc, mix_id], update=True)
         
         b64_img = None
         if no_img:
@@ -473,7 +475,13 @@ def uploadr_file(file_type):
                 insert_db("song", fields=('title','artist','position','runtime','slug','mix'), args=(title, artist, track_num, runtime, filename, mix_id))
         
         if song_id:
-            query_db("UPDATE song SET title=?, artist=?, position=? WHERE id=?", [title, artist, track_num, song_id], update=True)
+            if song_remove:
+                song_file = query_db("SELECT slug FROM song WHERE id=?", (song_id,), one=True)["slug"]
+                os.remove(os.path.join(user_mix_dir, song_file))
+                query_db("DELETE FROM song WHERE id=?", [song_id], update=True)
+            else:
+                query_db("UPDATE song SET title=?, artist=?, position=? WHERE id=?", [title, artist, track_num, song_id], update=True)
+
         
         return jsonify(mix_id=mix_id, mix_slug=mix_slug, b64_img=b64_img)
 

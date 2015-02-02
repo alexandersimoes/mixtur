@@ -138,9 +138,15 @@ d3.select("#upload").on("click", function(){
           var song_title = d3.select(this).select("p.song-title input").property("value");
           var song_num = d3.select(this).select("input.song-num-input").property("value");
           var song_id = d3.select(this).select("input.song-id-input").property("value");
-          d3.xhr("/uploadr/song/",function(error, data) {})
+          var song_remove = d3.select(this).select("input.song-remove-input").property("value");
+          var _this = this;
+          d3.xhr("/uploadr/song/",function(error, data) {
+              if(d3.select(_this).classed("disabled")){
+                d3.select(_this).remove();
+              }
+            })
             .header("Content-type", "application/x-www-form-urlencoded")
-            .send("POST", "mix_id="+data["mix_id"]+"&song_id="+song_id+"&song_artist="+song_artist+"&song_title="+song_title+"&song_num="+song_num);
+            .send("POST", "mix_id="+data["mix_id"]+"&song_id="+song_id+"&song_artist="+song_artist+"&song_title="+song_title+"&song_num="+song_num+"&song_remove="+song_remove);
         })
         d3.select(".notify.updated.success").style("display", "block");
       }
@@ -196,11 +202,11 @@ function isAbove(node, coords){
 }
 
 function set_track_nums(){
-  var nums = [].slice.call(document.querySelectorAll("form > .dz-preview .dz-num"));
+  var nums = [].slice.call(document.querySelectorAll("form > .dz-preview:not(.disabled) .dz-num"));
   nums.forEach(function(n, i){
     d3.select(n).text(i+1)
   })
-  var song_pos = [].slice.call(document.querySelectorAll("form > .dz-preview .song-num-input"));
+  var song_pos = [].slice.call(document.querySelectorAll("form > .dz-preview:not(.disabled) .song-num-input"));
   song_pos.forEach(function(n, i){
     d3.select(n).property("value", i+1)
   })
@@ -230,6 +236,21 @@ function queue_has_songs(){
   return has_songs;
 }
 
+function remove_song(){
+  d3.select(getParents(this, ".dz-preview", true)).classed("disabled", true)
+  d3.select(getParents(this, ".dz-preview", true)).selectAll("input").attr("disabled", true)
+  d3.select(getParents(this, ".dz-preview", true)).selectAll("input.song-remove-input").property("value", 1)
+  set_track_nums()
+  d3.event.preventDefault();
+}
+function undo_remove_song(){
+  d3.select(getParents(this, ".dz-preview", true)).classed("disabled", false)
+  d3.select(getParents(this, ".dz-preview", true)).selectAll("input").attr("disabled", null)
+  d3.select(getParents(this, ".dz-preview", true)).selectAll("input.song-remove-input").property("value", "")
+  set_track_nums()
+  d3.event.preventDefault();
+}
+
 // set dragging events on song element
 var all_songs = document.getElementsByClassName("dz-preview");
 for(var i = 0; i < all_songs.length; i++){
@@ -238,4 +259,8 @@ for(var i = 0; i < all_songs.length; i++){
   all_songs[i].addEventListener('dragover', handleDragOver);
   all_songs[i].addEventListener('dragleave', handleDragLeave);
   all_songs[i].addEventListener('drop', handleDrop);
+  d3.select(all_songs[i]).select("a.dz-remove").on("click", remove_song)
+  d3.select(all_songs[i]).select("a.dz-undo").on("click", undo_remove_song)
 }
+
+// d3.select(".dz-preview").classed("disabled", true)
