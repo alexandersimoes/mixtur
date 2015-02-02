@@ -13,8 +13,11 @@
 </div>
 
 <div class="notify error"></div>
-<div class="notify success">
+<div class="notify success uploaded">
   Congrats! Your mixXx has been uploaded <a href="#">view it here</a>. Or <a href=".">upload another mix</a>.
+</div>
+<div class="notify success updated">
+  Congrats! Your mixXx has been updated <a href="{% if mix %}{{ url_for('mix', mix_type='m', mix_slug=mix.slug) }}{% else %}#{% endif %}">view it here</a>.
 </div>
 
 <div class="container">
@@ -36,10 +39,11 @@
   </header>
 
   <div class="songs drop_container">
-    <form action="/uploadr/song/" id="songs-dropzone" class="dropzone">
+    <form action="/uploadr/song/" id="songs-dropzone" class="dropzone" method="POST">
       {% if songs %}
       {% for s in songs %}
       <div class="dz-preview dz-file-preview" draggable="true">
+        <div class="dz-drag"><i class="fa fa-paw"></i></div>
         <div class="dz-num">{{ s.position }}.</div>
         <div class="dz-details">
           <p class="song-title">
@@ -54,6 +58,8 @@
             <span class="file">&nbsp;</span>
             <span class="file-info" data-dz-name></span>
             <a href="#" class="dz-remove" data-dz-remove><i title="Delete mix" class="fa fa-trash-o"></i> remove</a>
+            <input type="hidden" name="song-position" value="{{ s.position }}" class="song-num-input"></input>
+            <input type="hidden" name="song-id" value="{{ s.id }}" class="song-id-input"></input>
           </p>
           <img data-dz-thumbnail />
         </div>
@@ -79,6 +85,7 @@
               <span class="file">&nbsp;</span>
               <span class="file-info" data-dz-name></span>
               <a href="#" class="dz-remove" data-dz-remove><i title="Delete mix" class="fa fa-trash-o"></i> remove</a>
+              <input type="hidden" name="song-position" value="" class="song-num-input"></input>
             </p>
             <img data-dz-thumbnail />
           </div>

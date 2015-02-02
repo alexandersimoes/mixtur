@@ -24,7 +24,7 @@ var dz = new Dropzone(document.body, {
       formData.append("song_num", d3.select(file.previewElement).select(".dz-num").text());
     },
     success: function(file, resp) {
-        d3.select(".notify.success a").attr("href", "/m/"+resp["mix_slug"]+"/");
+        d3.select(".notify.uploaded.success a").attr("href", "/m/"+resp["mix_slug"]+"/");
     },
     thumbnail: function(file, img_data) {
       d3.select(".album-art img").attr("src", img_data)
@@ -96,7 +96,7 @@ dz.on("removedfile", function(){
 })
 dz.on("queuecomplete", function() {
   document.body.scrollTop = document.documentElement.scrollTop = 0;
-  d3.select(".notify.success").style("display", "block");
+  d3.select(".notify.uploaded.success").style("display", "block");
   d3.select("#upload").text("Update");
 })
 
@@ -121,7 +121,7 @@ d3.select("#upload").on("click", function(){
   d3.xhr("/uploadr/song/",function(error, data) {
       data = JSON.parse(data.response);
       if(data["mix_id"]){
-        d3.select(".notify.success a").attr("href", "/m/"+data["mix_slug"]+"/");
+        d3.select(".notify.uploaded.success a").attr("href", "/m/"+data["mix_slug"]+"/");
         d3.select("input[name='mix-id']").property("value", data["mix_id"])
         if(data["b64_img"]){
           var img_data = "data:image/png;base64,"+data["b64_img"]
@@ -133,6 +133,16 @@ d3.select("#upload").on("click", function(){
           })
         }
         dz.processQueue(); //processes the queue
+        d3.selectAll("form > .dz-preview").each(function(d, i){
+          var song_artist = d3.select(this).select("p.song-artist input").property("value");
+          var song_title = d3.select(this).select("p.song-title input").property("value");
+          var song_num = d3.select(this).select("input.song-num-input").property("value");
+          var song_id = d3.select(this).select("input.song-id-input").property("value");
+          d3.xhr("/uploadr/song/",function(error, data) {})
+            .header("Content-type", "application/x-www-form-urlencoded")
+            .send("POST", "mix_id="+data["mix_id"]+"&song_id="+song_id+"&song_artist="+song_artist+"&song_title="+song_title+"&song_num="+song_num);
+        })
+        d3.select(".notify.updated.success").style("display", "block");
       }
     })
     .header("Content-type", "application/x-www-form-urlencoded")
@@ -186,9 +196,13 @@ function isAbove(node, coords){
 }
 
 function set_track_nums(){
-  var nums = [].slice.call(document.querySelectorAll(".dz-num"));
+  var nums = [].slice.call(document.querySelectorAll("form > .dz-preview .dz-num"));
   nums.forEach(function(n, i){
-    d3.select(n).text(i)
+    d3.select(n).text(i+1)
+  })
+  var song_pos = [].slice.call(document.querySelectorAll("form > .dz-preview .song-num-input"));
+  song_pos.forEach(function(n, i){
+    d3.select(n).property("value", i+1)
   })
 }
 
@@ -214,4 +228,14 @@ function queue_has_songs(){
     }
   })
   return has_songs;
+}
+
+// set dragging events on song element
+var all_songs = document.getElementsByClassName("dz-preview");
+for(var i = 0; i < all_songs.length; i++){
+  all_songs[i].addEventListener('dragstart', handleDragStart);
+  all_songs[i].addEventListener('dragend', handleDragEnd);
+  all_songs[i].addEventListener('dragover', handleDragOver);
+  all_songs[i].addEventListener('dragleave', handleDragLeave);
+  all_songs[i].addEventListener('drop', handleDrop);
 }

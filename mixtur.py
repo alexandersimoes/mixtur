@@ -419,6 +419,7 @@ def uploadr_file(file_type):
         artist = request.form.get('song_artist')
         title = request.form.get('song_title') or "Untitled"
         track_num = request.form.get('song_num')
+        song_id = request.form.get('song_id')
         
         if not mix_id:
             new_mix_title = mix_title or 'Untitled Mix'
@@ -439,9 +440,7 @@ def uploadr_file(file_type):
                     new_user_mix_dir = os.path.join(app.config['UPLOAD_FOLDER'], user, new_mix_slug)
                     os.rename(user_mix_dir, new_user_mix_dir)
                     user_mix_dir = new_user_mix_dir
-                    mix_slug = new_mix_slug
-        
-        if mix_desc:
+                    mix_slug = new_mix_slug        
             query_db("UPDATE mix SET desc=? WHERE id=?", [mix_desc, mix_id], update=True)
         
         b64_img = None
@@ -472,6 +471,9 @@ def uploadr_file(file_type):
                 audio = MP3(os.path.join(user_mix_dir, filename))
                 runtime = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(audio.info.length))
                 insert_db("song", fields=('title','artist','position','runtime','slug','mix'), args=(title, artist, track_num, runtime, filename, mix_id))
+        
+        if song_id:
+            query_db("UPDATE song SET title=?, artist=?, position=? WHERE id=?", [title, artist, track_num, song_id], update=True)
         
         return jsonify(mix_id=mix_id, mix_slug=mix_slug, b64_img=b64_img)
 
