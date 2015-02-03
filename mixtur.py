@@ -7,8 +7,8 @@ from flask import Flask, g, render_template, send_from_directory, abort, \
     jsonify, request, json, session, flash, redirect, url_for
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
-from mutagen.mp3 import MP3
 from tint import image_tint
+from audio import Audio
 import cStringIO, base64
 ''' Some forms stuff '''
 from flask_wtf import Form
@@ -469,9 +469,16 @@ def uploadr_file(file_type):
                 # add cover img file_name to db
                 query_db("UPDATE mix SET cover=?, palette=? WHERE id=?", [filename, mix_palette, mix_id], update=True)
             if "audio" in file.mimetype:
-                # add song file_name to db
-                audio = MP3(os.path.join(user_mix_dir, filename))
-                runtime = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(audio.info.length))
+                mix_title, cover = query_db("SELECT name, cover FROM mix WHERE id=?", (mix_id,), one=True)
+                # add song file_name to db -
+                audio = Audio(os.path.join(user_mix_dir, filename))
+                audio.flush()
+                audio.title(title)
+                audio.artist(artist)
+                audio.tracknumber(track_num)
+                audio.album(mix_title)
+                audio.albumart(os.path.join(user_mix_dir, cover))
+                runtime = audio.runtime()
                 insert_db("song", fields=('title','artist','position','runtime','slug','mix'), args=(title, artist, track_num, runtime, filename, mix_id))
         
         if song_id:
@@ -534,7 +541,6 @@ def signup():
     
     form = signUp(csrf_enabled=False)   
     if not form.validate_on_submit():
-        print "invalid"
         for field, errors in form.errors.items():
             for error in errors:
                 flash(error, "error")
