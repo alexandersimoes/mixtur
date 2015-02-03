@@ -268,11 +268,11 @@ header .album-artist {
     font-size:18px;
   }
   .tracklisting ol li div.track-info p.track-time{
-    -webkit-box-flex: 0 0 40px;
-    -moz-box-flex: 0 0 40px;
-    -webkit-flex: 0 0 40px;
-    -ms-flex: 0 0 40px;
-    flex: 0 0 40px;
+    -webkit-box-flex: 0 0 80px;
+    -moz-box-flex: 0 0 80px;
+    -webkit-flex: 0 0 80px;
+    -ms-flex: 0 0 80px;
+    flex: 0 0 80px;
     
     text-align: right;
   }

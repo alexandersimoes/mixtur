@@ -116,7 +116,7 @@
                   <span {% if s.palette[2] %}class="track-artist" style="color:{{s.palette[2]}}"{% else %}class="track-artist no-col"{% endif %}>{{ s.artist }}</span><br />
                   <audio preload="none" src="{{url_for('uploaded_file', user=s.user, mix=s.mix_slug, filename=s.song_slug) }}"></audio>
                 </p>
-                <p {% if s.palette[2] %}class="track-time" style="color:{{s.palette[2]}}"{% else %}class="track-time no-col"{% endif %}>{{ s.runtime|dateformat('%-M:%S') }}</p>
+                <p {% if s.palette[2] %}class="track-time" style="color:{{s.palette[2]}}"{% else %}class="track-time no-col"{% endif %}><span></span>{{ s.runtime|dateformat('%-M:%S') }}</p>
               </div>
             </li>
         {% set mix = s.mix_name %}

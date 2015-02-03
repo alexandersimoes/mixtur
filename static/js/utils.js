@@ -1,4 +1,27 @@
 /**
+ * Convert number of seconds into time object
+ *
+ * @param integer secs Number of seconds to convert
+ * @return object
+ *
+ * from http://codeaid.net/javascript/convert-seconds-to-hours-minutes-and-seconds-%28javascript%29
+ */
+function formatSecondsAsTime(secs) {
+  var hr  = Math.floor(secs / 3600);
+  var min = Math.floor((secs - (hr * 3600))/60);
+  var sec = Math.floor(secs - (hr * 3600) -  (min * 60));
+
+  // if (min < 10){
+  //   min = "0" + min;
+  // }
+  if (sec < 10){ 
+    sec  = "0" + sec;
+  }
+
+  return min + ':' + sec;
+}
+
+/**
  * Get all DOM element up the tree that contain a class, ID, or data attribute
  * @param  {Node} elem The base element
  * @param  {String} selector The class, id, data attribute, or tag to look for

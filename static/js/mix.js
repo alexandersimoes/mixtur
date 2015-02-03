@@ -53,18 +53,21 @@ d3.selectAll("audio").on("timeupdate", function(){
     // console.log(this, this.currentTime, this.duration, progress, this_li);
     d3.select(".track-progress").style("width", progress+"%");
     d3.select(".track-progress-loaded").style("width", load_progress+"%");
+    this_li.select(".track-time span").text(formatSecondsAsTime(this.currentTime) + " / ")
   }
 })
 
 d3.selectAll("audio").on("play", function(){
   current_song = this;
   stop_all(this);
+  d3.selectAll(".track-time span").style("display", "none")
   d3.selectAll("li.track").classed("active", false);
   d3.select("i.fa-play").style("display", "none");
   d3.select("i.fa-pause").style("display", "inline");
   var this_li = d3.select(this.parentNode.parentNode.parentNode);
   d3.select(".track-progress-bg").style("width", "100%");
   // this_li.select("p.track-num i").style("display", "inline")
+  this_li.select(".track-time span").style("display", "inline")
   hilite(this_li, true)
 })
 
