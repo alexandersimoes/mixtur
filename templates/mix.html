@@ -24,6 +24,7 @@
       </div>
       <div class="progress">
         <div class="track-progress-bg" style="background:{{songs[0].palette[1]}}; border-color: {{songs[0].palette[1]}};"></div>
+        <div class="track-progress-loaded" style="background:black"></div>
         <div {% if songs[0].palette[2] %}class="track-progress" style="background:{{songs[0].palette[2]}}"{% else %}class="track-progress no-col"{% endif %}></div>
         <div class="track-cursor" style="background:{{songs[0].palette[0]}}"></div>
       </div>
@@ -50,6 +51,7 @@
       </div>
       <div class="progress">
         <div class="track-progress-bg" style="background:{{s.palette[1]}}; border-color: {{s.palette[1]}};"></div>
+        <div class="track-progress-loaded" style="background:{{s.palette[1]}}; border-color: {{s.palette[1]}};"></div>
         <div {% if s.palette[2] %}class="track-progress" style="background:{{s.palette[2]}}"{% else %}class="track-progress no-col"{% endif %}></div>
         <div class="track-cursor" style="background:{{s.palette[0]}}"></div>
       </div>

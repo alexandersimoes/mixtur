@@ -47,10 +47,12 @@ d3.selectAll("audio").on("timeupdate", function(){
   d3.select("i.fa-play").style("display", "none");
   d3.select("i.fa-pause").style("display", "inline");
   if(!dragging){
+    var load_progress = (this.buffered.end(this.buffered.length-1) / this.duration) * 100;
     var progress = (this.currentTime / this.duration) * 100;
     var this_li = d3.select(this.parentNode.parentNode.parentNode);
     // console.log(this, this.currentTime, this.duration, progress, this_li);
     d3.select(".track-progress").style("width", progress+"%");
+    d3.select(".track-progress-loaded").style("width", load_progress+"%");
   }
 })
 
@@ -341,15 +343,6 @@ d3.selectAll(".tracklisting ol li.track")
   })
 
 // set hover for top header
-// d3.selectAll(".anthology-title, .album > header")
-//   .on("mouseover", function() {
-//     d3.selectAll(".album-title h1 > span a").style("opacity", 0.5)
-//   })
-//   .on("mouseout", function() {
-//     d3.selectAll(".album-title h1 > span a").style("opacity", 0.25)
-//   });
-
-// set hover for top header
 d3.selectAll(".album a, .anthology-title a, body > header a")
   .on("mouseover", function() { 
     var this_album = getParents(this, ".album") || getParents(this, ".anthology-title") || [d3.select(".album").node()];
@@ -381,3 +374,11 @@ d3.selectAll(".album-art")
   .on("mouseout", function(){
     d3.select(this).select(".album-desc").style("opacity", 0)
   })
+
+d3.select(".track-progress-loaded").style("background", function(){
+  var lab_col = d3.lab(d3.select(this).style("background"));
+  if(lab_col.l < 50){
+    return lab_col.brighter();
+  }
+  return lab_col.darker();
+})

@@ -293,6 +293,16 @@ header .album-artist {
     width: 0%;
     z-index: 0;
   }
+  div.track-progress-loaded{
+    background: gray;
+    display: block;
+    height: 10px;
+    left: 1px;
+    position: absolute;
+    top: 1px;
+    width: 0%;
+    z-index: 89;
+  }
   div.track-progress{
     background: white;
     display: block;
