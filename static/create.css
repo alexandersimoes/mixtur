@@ -131,6 +131,7 @@ p.song-title input {
 }
 
 .dz-preview {
+  border: solid 2px white;
   display: -webkit-box;
   display: -moz-box;
   display: -ms-flexbox;
@@ -138,6 +139,9 @@ p.song-title input {
   display: flex;
   padding: 10px;
   position: relative;
+}
+.dz-drag-hover .dz-preview {
+  border: solid 2px white !important;
 }
 .dz-preview.disabled  {
   background: url('/static/img/stripe_skyblue.png');

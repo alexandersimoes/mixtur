@@ -86,6 +86,7 @@ dz.on("addedfile", function(file) {
     file.previewElement.addEventListener('dragleave', handleDragLeave);
     file.previewElement.addEventListener('drop', handleDrop);
   }
+  d3.selectAll('[draggable=true]').style("border", "solid 2px white");
 });
 dz.on("processing", function() {
   this.options.autoProcessQueue = true;
@@ -133,7 +134,7 @@ d3.select("#upload").on("click", function(){
           })
         }
         dz.processQueue(); //processes the queue
-        d3.selectAll("form > .dz-preview").each(function(d, i){
+        d3.selectAll("form > .dz-preview.edit").each(function(d, i){
           var song_artist = d3.select(this).select("p.song-artist input").property("value");
           var song_title = d3.select(this).select("p.song-title input").property("value");
           var song_num = d3.select(this).select("input.song-num-input").property("value");
@@ -141,6 +142,9 @@ d3.select("#upload").on("click", function(){
           var song_remove = d3.select(this).select("input.song-remove-input").property("value");
           var _this = this;
           d3.xhr("/uploadr/song/",function(error, data) {
+              data = JSON.parse(data.response);            
+              d3.select(".notify.updated.success a").attr("href", "/m/"+data["mix_slug"]+"/");
+              d3.select(".notify.updated.success").style("display", "block");
               if(d3.select(_this).classed("disabled")){
                 d3.select(_this).remove();
               }
@@ -148,7 +152,6 @@ d3.select("#upload").on("click", function(){
             .header("Content-type", "application/x-www-form-urlencoded")
             .send("POST", "mix_id="+data["mix_id"]+"&song_id="+song_id+"&song_artist="+song_artist+"&song_title="+song_title+"&song_num="+song_num+"&song_remove="+song_remove);
         })
-        d3.select(".notify.updated.success").style("display", "block");
       }
     })
     .header("Content-type", "application/x-www-form-urlencoded")
@@ -164,23 +167,23 @@ function handleDragStart(e) {
 }
 function handleDragEnd(e) {
   dz.element = document.body;
-  d3.selectAll('[draggable=true]').style("border", "none");
+  d3.selectAll('[draggable=true]').style("border", "solid 2px white");
   set_track_nums();
 }
 
 function handleDragOver(e) {
   // if(!e.dataTransfer.getData("Text")) return;
   var coords = DragDropHelpers.getEventCoords(e);
-  d3.selectAll('[draggable=true]').style("border", "none")
-  if(isAbove(this, coords)){
+  d3.selectAll('[draggable=true]').style("border", "solid 2px white")
+  if(isAbove(this, coords) && !d3.select("body").classed("dz-preview")){
     d3.select(this).style("border-top", "dashed 2px black")
   }
-  else {
+  else if(!d3.select("body").classed("dz-preview")){
     d3.select(this).style("border-bottom", "dashed 2px black")
   }
 }
 function handleDragLeave(e) {
-  d3.select(this).style("border", "none")
+  d3.select(this).style("border", "solid 2px white")
 }
 function handleDrop(e) {
   if(!e.dataTransfer.getData("Text")) return;

@@ -42,7 +42,7 @@
     <form action="/uploadr/song/" id="songs-dropzone" class="dropzone" method="POST">
       {% if songs %}
       {% for s in songs %}
-      <div class="dz-preview dz-file-preview" draggable="true">
+      <div class="dz-preview dz-file-preview edit" draggable="true">
         <div class="dz-drag"><i class="fa fa-paw"></i></div>
         <div class="dz-num">{{ s.position }}.</div>
         <div class="dz-details">

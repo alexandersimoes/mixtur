@@ -4,7 +4,7 @@
 import sqlite3, os, time, re, operator, time
 from werkzeug import secure_filename
 from flask import Flask, g, render_template, send_from_directory, abort, \
-    jsonify, request, json, session, flash, redirect, url_for
+    jsonify, request, json, session, flash, redirect, url_for, send_file
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 from tint import image_tint
@@ -14,7 +14,9 @@ import cStringIO, base64
 from flask_wtf import Form
 from wtforms.validators import DataRequired, Email
 from wtforms.fields import TextField, PasswordField
-
+''' For file zipping '''
+from io import BytesIO
+import zipfile
 
 '''Create the application'''
 app = Flask(__name__)
@@ -277,6 +279,17 @@ def mix(mix_type, mix_slug):
                                 from song as s, mix as m
                                 where m.slug = ? and s.mix = m.id
                                 order by m.id, s.position;""", (mix_slug,))
+        if request.args.get('download') is not None:
+            memory_file = BytesIO()
+            with zipfile.ZipFile(memory_file, 'w') as zf:
+                for s in songs:
+                    song_file = os.path.join(app.config['UPLOAD_FOLDER'], s["user"], s["mix_slug"], s["song_slug"])
+                    data = zipfile.ZipInfo(s["song_slug"])
+                    data.date_time = time.localtime(time.time())[:6]
+                    data.compress_type = zipfile.ZIP_DEFLATED
+                    zf.writestr(data, open(song_file).read())
+            memory_file.seek(0)
+            return send_file(memory_file, attachment_filename='{}.zip'.format(s["mix_slug"]), as_attachment=True)
     elif mix_type == "a":
         songs = query_db("""select a.name as anthology_name, m.name as mix_name, cover, m.slug as mix_slug, s.title, s.artist, s.slug as song_slug, disc, palette, position, runtime, m.date, user, desc 
                                 from song as s, anthology as a, mixanthology as ma, mix as m
@@ -459,16 +472,23 @@ def uploadr_file(file_type):
             query_db("UPDATE mix SET palette=? WHERE id=?", [mix_palette, mix_id], update=True)
         
         if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(user_mix_dir, filename))
             if "image" in file.mimetype:
+                filename = secure_filename(file.filename)
+                file.save(os.path.join(user_mix_dir, filename))
                 # was there already a file? if so delete it
                 cover = query_db("SELECT cover FROM mix WHERE id=?", (mix_id,), one=True)["cover"]
                 if cover:
                     os.remove(os.path.join(user_mix_dir, cover))
                 # add cover img file_name to db
                 query_db("UPDATE mix SET cover=?, palette=? WHERE id=?", [filename, mix_palette, mix_id], update=True)
+                # add cover to all songs too
+                songs = query_db("SELECT * FROM song WHERE mix=?", (mix_id,))
+                for s in songs:
+                    audio = Audio(os.path.join(user_mix_dir, s["slug"]))
+                    audio.albumart(os.path.join(user_mix_dir, filename))
             if "audio" in file.mimetype:
+                filename = secure_filename("{:02d} {} - {}.mp3".format(int(track_num), artist, title))
+                file.save(os.path.join(user_mix_dir, filename))
                 mix_title, cover = query_db("SELECT name, cover FROM mix WHERE id=?", (mix_id,), one=True)
                 # add song file_name to db -
                 audio = Audio(os.path.join(user_mix_dir, filename))
@@ -477,7 +497,9 @@ def uploadr_file(file_type):
                 audio.artist(artist)
                 audio.tracknumber(track_num)
                 audio.album(mix_title)
-                audio.albumart(os.path.join(user_mix_dir, cover))
+                audio.compilation()
+                if cover:
+                    audio.albumart(os.path.join(user_mix_dir, cover))
                 runtime = audio.runtime()
                 insert_db("song", fields=('title','artist','position','runtime','slug','mix'), args=(title, artist, track_num, runtime, filename, mix_id))
         
@@ -487,7 +509,21 @@ def uploadr_file(file_type):
                 os.remove(os.path.join(user_mix_dir, song_file))
                 query_db("DELETE FROM song WHERE id=?", [song_id], update=True)
             else:
-                query_db("UPDATE song SET title=?, artist=?, position=? WHERE id=?", [title, artist, track_num, song_id], update=True)
+                song = query_db("SELECT * FROM song WHERE id=?", (song_id,), one=True)
+                mix_title, cover = query_db("SELECT name, cover FROM mix WHERE id=?", (mix_id,), one=True)
+                filename = secure_filename("{:02d} {} - {}.mp3".format(int(track_num), artist, title))
+                os.rename(os.path.join(user_mix_dir, song["slug"]), os.path.join(user_mix_dir, filename))
+                # add song file_name to db -
+                audio = Audio(os.path.join(user_mix_dir, filename))
+                audio.flush()
+                audio.title(title)
+                audio.artist(artist)
+                audio.tracknumber(track_num)
+                audio.album(mix_title)
+                audio.compilation()
+                if cover:
+                    audio.albumart(os.path.join(user_mix_dir, cover))
+                query_db("UPDATE song SET title=?, artist=?, position=?, slug=? WHERE id=?", [title, artist, track_num, filename, song_id], update=True)
 
         
         return jsonify(mix_id=mix_id, mix_slug=mix_slug, b64_img=b64_img)

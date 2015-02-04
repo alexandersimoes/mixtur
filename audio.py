@@ -1,6 +1,6 @@
 import mutagen, time
 from mutagen.mp3 import MP3
-from mutagen.id3 import ID3, APIC
+from mutagen.id3 import ID3, APIC, TCMP
 from mutagen.easyid3 import EasyID3
 
 ''' TEST
@@ -75,5 +75,10 @@ class Audio:
                 data=open(albumart_path).read()
             )
         )
+        mp3.save()
+    
+    def compilation(self):
+        mp3 = MP3(self.filepath, ID3=ID3)
+        mp3.tags.add(TCMP(encoding=3, text='1'))
         mp3.save()
     
