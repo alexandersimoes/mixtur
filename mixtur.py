@@ -141,7 +141,7 @@ def home():
                     mixes.append(current_mix)
                 current_mix = {
                     "slug": s["mix_slug"],
-                    "title": s["mix_name"],
+                    "title": unicode(s["mix_name"]),
                     "author": s["user"],
                     "cover": s["cover"],
                     "songs": 0,
@@ -173,7 +173,7 @@ def home():
                     anthologies.append(current_anthology)
                 current_anthology = {
                     "slug": s["anthology_slug"],
-                    "title": s["anthology_name"],
+                    "title": unicode(s["anthology_name"]),
                     "author": s["user"],
                     "cover": set([]),
                     "albums": set([]),
@@ -217,7 +217,7 @@ def profile(user):
                     mixes.append(current_mix)
                 current_mix = {
                     "slug": s["mix_slug"],
-                    "title": s["mix_name"],
+                    "title": unicode(s["mix_name"]),
                     "author": s["user"],
                     "cover": s["cover"],
                     "songs": 0,
@@ -443,8 +443,9 @@ def uploadr_file(file_type):
             if not os.path.exists(user_mix_dir): os.makedirs(user_mix_dir)
         else:
             mix = query_db("SELECT * FROM mix WHERE id=?", (mix_id,), one=True)
-            user_mix_dir = os.path.join(app.config['UPLOAD_FOLDER'], user, mix["slug"])
-            mix_slug = mix["slug"]
+            mix_slug = unicode(mix["slug"])
+            user_mix_dir = os.path.join(app.config['UPLOAD_FOLDER'], user, mix_slug)
+            
             if mix_title:
                 if mix_title != mix["name"]:
                     new_mix_slug = make_slug(mix_title)
@@ -490,6 +491,7 @@ def uploadr_file(file_type):
                 filename = secure_filename("{:02d} {} - {}.mp3".format(int(track_num), artist, title))
                 file.save(os.path.join(user_mix_dir, filename))
                 mix_title, cover = query_db("SELECT name, cover FROM mix WHERE id=?", (mix_id,), one=True)
+                mix_title = unicode(mix_title)
                 # add song file_name to db -
                 audio = Audio(os.path.join(user_mix_dir, filename))
                 audio.flush()
