@@ -350,7 +350,8 @@ def mix_del(mix_type, mix_slug):
     # step 3 - delete all files associated with this mix (songs and album art)
     #           including the directory itself
     if mix_type == "m":
-        user_mix_dir = os.path.join(app.config['UPLOAD_FOLDER'], mix["user"], mix["slug"])
+        mix_slug = unicode(mix["slug"])
+        user_mix_dir = os.path.join(app.config['UPLOAD_FOLDER'], mix["user"], mix_slug)
         if os.path.exists(user_mix_dir):
             file_list = os.listdir(user_mix_dir)
             for file_name in file_list:
