@@ -7,6 +7,11 @@ Flask library and Sqlite3 for datastore. (sqlite3 is part of the standard librar
 
 Install
 ---
+* Required server software (for pillow image manipulation library) [source](https://pillow.readthedocs.org/en/3.0.0/installation.html#linux-installation)
+```
+$ sudo apt-get install libtiff5-dev libjpeg8-dev zlib1g-dev \
+    libfreetype6-dev liblcms2-dev libwebp-dev tcl8.6-dev tk8.6-dev python-tk
+```
 * Initialize database
 ```
 sqlite3 -init mixtur_schema.sql mixtur.db
