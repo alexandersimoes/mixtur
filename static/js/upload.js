@@ -104,7 +104,7 @@ dz.on("queuecomplete", function() {
 d3.select("#upload").on("click", function(){
   // update DB with palette for randomly tinted default img
   var mix_id = d3.select("input[name='mix-id']").property("value");
-  var mix_title = d3.select("input[name='mix-title']").property("value");
+  var mix_title = encodeURIComponent(d3.select("input[name='mix-title']").property("value"));
   var mix_desc = d3.select("textarea").property("value");
   var qstr = "mix_id="+mix_id+"&mix_title="+mix_title+"&mix_desc="+mix_desc;
   if(!d3.select(".album-art p").empty()){

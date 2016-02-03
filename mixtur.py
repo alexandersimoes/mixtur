@@ -489,7 +489,7 @@ def uploadr_file(file_type):
                     audio = Audio(os.path.join(user_mix_dir, s["slug"]))
                     audio.albumart(os.path.join(user_mix_dir, filename))
             if "audio" in file.mimetype:
-                filename = secure_filename("{:02d} {} - {}.mp3".format(int(track_num), artist, title))
+                filename = secure_filename(u"{:02d} {} - {}.mp3".format(int(track_num), artist, title))
                 file.save(os.path.join(user_mix_dir, filename))
                 mix_title, cover = query_db("SELECT name, cover FROM mix WHERE id=?", (mix_id,), one=True)
                 mix_title = unicode(mix_title)
@@ -514,7 +514,7 @@ def uploadr_file(file_type):
             else:
                 song = query_db("SELECT * FROM song WHERE id=?", (song_id,), one=True)
                 mix_title, cover = query_db("SELECT name, cover FROM mix WHERE id=?", (mix_id,), one=True)
-                filename = secure_filename("{:02d} {} - {}.mp3".format(int(track_num), artist, title))
+                filename = secure_filename(u"{:02d} {} - {}.mp3".format(int(track_num), artist, title))
                 os.rename(os.path.join(user_mix_dir, song["slug"]), os.path.join(user_mix_dir, filename))
                 # add song file_name to db -
                 audio = Audio(os.path.join(user_mix_dir, filename))
