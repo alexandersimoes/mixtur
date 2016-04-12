@@ -124,7 +124,7 @@
           {% if s.disc %}<h3>Disc {{ s.disc }}</h3>{% endif %}
           <ol>
         {% endif %}
-            <li class="track">
+            <li class="track" title="{{ s.artist }} - {{ s.title }}">
               <div class="track-info">
                 <p {% if s.palette[2] %}class="track-num" style="color:{{s.palette[2]}}"{% else %}class="track-num no-col"{% endif %}><span>{{ s.position }}</span><i class="fa fa-volume-up"></i></p>
                 <p class="track-title">
