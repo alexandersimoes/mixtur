@@ -1,14 +1,17 @@
 var audio = new Audio(),
     shuffle_songs = [],
     songs = [],
+    song_titles = [],
     current_song_i = 0,
     current_song, shuffle_on, anthology_on, hilite_col, 
     hilite_txt_col, dragging, bg_col, txt_col, accent_col;
 
 
 var audio_els = document.getElementsByTagName('audio');
+var titles_els = document.getElementsByClassName('track');
 for(var i = 0; i < audio_els.length; i++){
-  songs.push(audio_els[i].src)
+  songs.push(audio_els[i].src);
+  song_titles.push(titles_els[i].title);
 }
 
 
@@ -35,6 +38,7 @@ d3.selectAll("li.track").on("click", function(d, i){
   audio.pause();
   audio.load();
   audio.play();
+  audio.setAttribute('title', song_titles[current_song_i]);
 })
 
 
@@ -109,6 +113,7 @@ audio.addEventListener('ended',function(){
     audio.pause();
     audio.load();
     audio.play();
+    audio.setAttribute('title', song_titles[currplace+1]);
   }
   else {
     shuffle_on = false;
@@ -145,13 +150,11 @@ d3.selectAll("i.fa-play").on("click", function(){
   }
   else {
     // d3.select("audio").node().play();
-    
-    
     audio.src = d3.select("audio").attr("src");
     audio.pause();
     audio.load();
     audio.play();
-    
+    audio.setAttribute('title', song_titles[0]);
   }
   if(d3.select(this).classed("anthology-play")){
     anthology_on = true;
@@ -182,6 +185,7 @@ d3.selectAll("i.fa-step-backward").on("click", function(){
         audio.pause();
         audio.load();
         audio.play();
+        audio.setAttribute('title', song_titles[current_song_i]);
       }
     }
   }
@@ -196,6 +200,7 @@ d3.selectAll("i.fa-step-forward").on("click", function(){
       audio.pause();
       audio.load();
       audio.play();
+      audio.setAttribute('title', song_titles[current_song_i]);
     }
   }
 })
