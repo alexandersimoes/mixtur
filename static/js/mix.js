@@ -1,6 +1,16 @@
-var shuffle_songs = [],
-    current_song, shuffle_on, anthology_on, hilite_col, hilite_txt_col, 
-    dragging, bg_col, txt_col, accent_col;
+var audio = new Audio(),
+    shuffle_songs = [],
+    songs = [],
+    current_song_i = 0,
+    current_song, shuffle_on, anthology_on, hilite_col, 
+    hilite_txt_col, dragging, bg_col, txt_col, accent_col;
+
+
+var audio_els = document.getElementsByTagName('audio');
+for(var i = 0; i < audio_els.length; i++){
+  songs.push(audio_els[i].src)
+}
+
 
 d3.select("body")
     .on("keydown", function() {
@@ -18,38 +28,48 @@ d3.select("body")
       }
     })
 
-d3.selectAll("li.track").on("click", function(){
-  // d3.selectAll("li.track").classed("active", false)
-  // var is_active = d3.select(this).classed("active")
-  // d3.select(this).classed("active", !is_active)
-  shuffle_on = false;
-  anthology_on = true;
-  
-  var song = d3.select(this).select("audio").node();
-  if(is_playing(song)){
-    song.pause();
-  }
-  else {
-    var songs = d3.selectAll("audio");
-    songs.each(function(){
-      this.pause();
-      if(this !== song){
-        if(this.currentTime){
-          this.currentTime = 0;
-        }
-      }
-    })  
-    song.play();
-  }
+d3.selectAll("li.track").on("click", function(d, i){
+  current_song_i = i;
+  audio.src = songs[current_song_i];
+  audio.currentTime = 0;
+  audio.pause();
+  audio.load();
+  audio.play();
 })
 
-d3.selectAll("audio").on("timeupdate", function(){
+
+// d3.selectAll("li.track").on("click", function(d, i){
+//   // d3.selectAll("li.track").classed("active", false)
+//   // var is_active = d3.select(this).classed("active")
+//   // d3.select(this).classed("active", !is_active)
+//   shuffle_on = false;
+//   anthology_on = true;
+//
+//   var song = d3.select(this).select("audio").node();
+//   if(is_playing(song)){
+//     song.pause();
+//   }
+//   else {
+//     var songs = d3.selectAll("audio");
+//     songs.each(function(){
+//       this.pause();
+//       if(this !== song){
+//         if(this.currentTime){
+//           this.currentTime = 0;
+//         }
+//       }
+//     })
+//     song.play();
+//   }
+// })
+
+audio.addEventListener('timeupdate',function(){
   d3.select("i.fa-play").style("display", "none");
   d3.select("i.fa-pause").style("display", "inline");
   if(!dragging){
     var load_progress = (this.buffered.end(this.buffered.length-1) / this.duration) * 100;
     var progress = (this.currentTime / this.duration) * 100;
-    var this_li = d3.select(this.parentNode.parentNode.parentNode);
+    var this_li = d3.select(document.querySelectorAll("li.track")[current_song_i]);
     // console.log(this, this.currentTime, this.duration, progress, this_li);
     d3.select(".track-progress").style("width", progress+"%");
     d3.select(".track-progress-loaded").style("width", load_progress+"%");
@@ -57,32 +77,59 @@ d3.selectAll("audio").on("timeupdate", function(){
   }
 })
 
-d3.selectAll("audio").on("play", function(){
+audio.addEventListener('play',function(){
   current_song = this;
   stop_all(this);
   d3.selectAll(".track-time span").style("display", "none")
   d3.selectAll("li.track").classed("active", false);
   d3.select("i.fa-play").style("display", "none");
   d3.select("i.fa-pause").style("display", "inline");
-  var this_li = d3.select(this.parentNode.parentNode.parentNode);
+  var this_li = d3.select(document.querySelectorAll("li.track")[current_song_i]);
   d3.select(".track-progress-bg").style("width", "100%");
   // this_li.select("p.track-num i").style("display", "inline")
+
   this_li.select(".track-time span").style("display", "inline")
   hilite(this_li, true)
 })
 
-d3.selectAll("audio").on("pause", function(){
+audio.addEventListener('pause',function(){
   d3.select("i.fa-play").style("display", "inline");
   d3.select("i.fa-pause").style("display", "none");
 })
 
-d3.selectAll("audio").on("ended", function(){
-  console.log('song done...')
+audio.addEventListener('ended',function(){
+  var this_li = d3.select(document.querySelectorAll("li.track")[current_song_i]);
+  hilite(this_li, false)
+  
+  var currplace = songs.indexOf(this.src);
+  current_song_i = currplace+1;
+  var next_song_src = songs[currplace+1];
+  if(next_song_src){
+    audio.src = next_song_src;
+    audio.pause();
+    audio.load();
+    audio.play();
+  }
+  else {
+    shuffle_on = false;
+    current_song = null;
+    current_song_i = 0;
+    d3.selectAll("li.track").classed("active", false);
+    console.log('album done...')
+  }
+  return;
+  
   var this_li = d3.select(this.parentNode.parentNode.parentNode);
   hilite(this_li, false)
   var next = get_next(this);
   if (next) {
-    next.play();
+    // next.play();
+    
+    // audiox.src = d3.select(next).attr("src");
+    // audiox.pause();
+    // audiox.load();
+    // audiox.play();
+    
   }
   else {
     shuffle_on = false;
@@ -93,11 +140,18 @@ d3.selectAll("audio").on("ended", function(){
 });
 
 d3.selectAll("i.fa-play").on("click", function(){
-  if(current_song) {
-    current_song.play();
+  if(audio.src) {
+    audio.play();
   }
   else {
-    d3.select("audio").node().play();
+    // d3.select("audio").node().play();
+    
+    
+    audio.src = d3.select("audio").attr("src");
+    audio.pause();
+    audio.load();
+    audio.play();
+    
   }
   if(d3.select(this).classed("anthology-play")){
     anthology_on = true;
@@ -108,29 +162,40 @@ d3.selectAll("i.fa-play").on("click", function(){
 })
 
 d3.selectAll("i.fa-pause").on("click", function(){
-  current_song.pause();
+  audio.pause();
 })
 
 d3.selectAll("i.fa-step-backward").on("click", function(){
-  if(current_song){
-    var amt_played = current_song.currentTime / current_song.duration;
-    if(amt_played > 0.01){
-      current_song.currentTime = 0;
+  if(audio.src){
+    var amt_played = audio.currentTime / audio.duration;
+    // if(amt_played > 0.1){
+    //   audio.currentTime = 0;
+    // }
+    if(audio.currentTime > 2){
+      audio.currentTime = 0;
     }
     else {
-      var prev = get_prev(current_song);
-      if (prev) {
-        prev.play();
+      current_song_i = Math.max(current_song_i-1, 0);
+      var prev_song_src = songs[current_song_i];
+      if (prev_song_src) {
+        audio.src = prev_song_src;
+        audio.pause();
+        audio.load();
+        audio.play();
       }
     }
   }
 })
 
 d3.selectAll("i.fa-step-forward").on("click", function(){
-  if(current_song){
-    var next = get_next(current_song);
-    if (next) {
-      next.play();
+  if(!audio.paused){
+    current_song_i = (current_song_i+1) % songs.length;
+    var next_song_src = songs[current_song_i];
+    if(next_song_src){
+      audio.src = next_song_src;
+      audio.pause();
+      audio.load();
+      audio.play();
     }
   }
 })
