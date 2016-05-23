@@ -609,16 +609,16 @@ def signup():
         flash("Failed to create user. Try again later.", "error")
         return render_template('signup.html')          
 
-@app.route("/<mix_type>/<mix_slug>/listen/<int:song_id>/", methods=["GET", "POST"])
+@app.route("/<mix_type>/<mix_slug>/listen/<int:song_id>/", methods=["POST"])
 def song_listen(mix_type, mix_slug, song_id):
-    if not session.get("logged_in"): abort(401)
-    # return jsonify(name="filename", size="file_size", file_type=file_type)
-    # if request.method == 'POST':
-    mix = query_db("SELECT * FROM mix WHERE slug=?;", (mix_slug,), one=True)
-    song = query_db("SELECT * FROM song WHERE id=?;", (song_id,), one=True)
-    if not song or not mix: return jsonify(success=False, error="No such song on this mix.")
-    insert_db("listen", fields=('user', 'mix', 'song'), args=(g.user, mix['id'], song_id))
-    return jsonify(success=True)
+    if request.method == 'POST':
+        mix = query_db("SELECT * FROM mix WHERE slug=?;", (mix_slug,), one=True)
+        song = query_db("SELECT * FROM song WHERE id=?;", (song_id,), one=True)
+        if not song or not mix: return jsonify(success=False, error="No such song on this mix.")
+        insert_db("listen", fields=('user', 'mix', 'song'), args=(g.user, mix['id'], song_id))
+        return jsonify(success=True)
+    else:
+        abort(404)
 
 '''Just catch all the 404s plz'''
 @app.errorhandler(404)

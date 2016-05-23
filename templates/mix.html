@@ -131,7 +131,7 @@
                   <span class="track-name" style="color:{{s.palette[1]}}">{{ s.title }}</span><br />
                   <span {% if s.palette[2] %}class="track-artist" style="color:{{s.palette[2]}}"{% else %}class="track-artist no-col"{% endif %}>{{ s.artist }}</span>
                   {% if s.listens %}
-                  <span {% if s.palette[2] %}class="track-listens" style="color:{{s.palette[2]}}"{% else %}class="track-artist no-col"{% endif %}><i class="fa fa-volume-up" aria-hidden="true"></i> {{ s.listens }}</span>
+                  <span {% if s.palette[2] %}class="track-listens" style="border-color:{{s.palette[2]}}; color:{{s.palette[2]}}"{% else %}class="track-artist no-col"{% endif %}><i class="fa fa-volume-up" aria-hidden="true"></i> {{ s.listens }}</span>
                   {% endif %}
                   <br />
                   <audio preload="none" src="{{url_for('uploaded_file', user=s.user, mix=s.mix_slug, filename=s.song_slug) }}"></audio>
