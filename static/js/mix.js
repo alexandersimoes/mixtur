@@ -13,6 +13,7 @@ for(var i = 0; i < audio_els.length; i++){
   songs.push(audio_els[i].src);
   song_titles.push(titles_els[i].title);
 }
+var shuffled_songs = shuffleArray(songs);
 
 
 d3.select("body")
@@ -119,9 +120,16 @@ audio.addEventListener('ended',function(){
   var this_li = d3.select(document.querySelectorAll("li.track")[current_song_i]);
   hilite(this_li, false)
   
-  var currplace = songs.indexOf(this.src);
-  current_song_i = currplace+1;
-  var next_song_src = songs[currplace+1];
+  if(shuffle_on) {
+    current_song_i = songs.indexOf(shuffled_songs.pop())
+    var next_song_src = songs[current_song_i];
+  }
+  else {
+    var currplace = songs.indexOf(this.src);
+    current_song_i = currplace+1;
+    var next_song_src = songs[currplace+1];
+  }
+  
   if(next_song_src){
     audio.src = next_song_src;
     audio.pause();
@@ -220,18 +228,23 @@ d3.selectAll("i.fa-step-forward").on("click", function(){
 })
 
 d3.selectAll("a.fa-random").on("click", function(){
-  shuffle_on = !shuffle_on;
-  d3.select("a.fa-random").classed("active", !d3.select("a.fa-random").classed("active"));
-  if(shuffle_on){
-    var audio_node_list = document.getElementsByTagName("audio");
-    for(var i = 0, ll = audio_node_list.length; i != ll; shuffle_songs.push(audio_node_list[i++]));
-    if(current_song && is_playing(current_song)){
-      shuffle_songs.splice(shuffle_songs.indexOf(current_song), 1);
-    }
-    else {
-      get_next().play();
-    }
+  if(!shuffle_on){
+    shuffled_songs = shuffleArray(songs);
   }
+  shuffle_on = !shuffle_on;
+  
+  if(shuffle_on){
+    current_song_i = songs.indexOf(shuffled_songs.pop())
+    audio.src = songs[current_song_i];
+    audio.currentTime = 0;
+    audio.pause();
+    audio.load();
+    audio.play();
+    audio.setAttribute('title', song_titles[current_song_i]);
+  }
+  
+  d3.select("a.fa-random").classed("active", !d3.select("a.fa-random").classed("active"));
+  
   d3.event.preventDefault();
 })
 
@@ -473,3 +486,18 @@ d3.select(".track-progress-loaded").style("background", function(){
   }
   return lab_col.darker();
 })
+
+/**
+ * Randomize array element order in-place.
+ * Using Durstenfeld shuffle algorithm.
+ */
+function shuffleArray(array) {
+  var newArray = array.slice(0);
+    for (var i = newArray.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var temp = newArray[i];
+        newArray[i] = newArray[j];
+        newArray[j] = temp;
+    }
+    return newArray;
+}

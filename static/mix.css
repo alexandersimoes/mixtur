@@ -119,6 +119,9 @@ div.album {
 .album-title h1 > span a.active{
 /*  display: inline !important;*/
   opacity: 1;
+  border: solid 1px;
+  border-radius: 3px;
+  padding: 2px 4px;
 }
 .album-title > span {
   display: block;

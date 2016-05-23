@@ -267,7 +267,6 @@ def profile(user):
     return render_template("home.html", mixes=mixes, anthologies=anthologies)    
         
         
-
 @app.route("/<mix_type>/<mix_slug>/")
 def mix(mix_type, mix_slug):
     mix_votes = {}
@@ -276,11 +275,12 @@ def mix(mix_type, mix_slug):
     total_time = 3
     base_date = datetime(1970, 1, 1)
     if mix_type == "m":
+        mix = query_db("SELECT * FROM mix WHERE slug=?;", (mix_slug,), one=True)
+        if not mix: abort(404)
         songs = query_db("""select m.name as mix_name, cover, m.slug as mix_slug, s.title, s.artist, s.slug as song_slug, disc, position, runtime, date, palette, user, desc, s.id as song_id 
                                 from song as s, mix as m
                                 where m.slug = ? and s.mix = m.id
                                 order by m.id, s.position;""", (mix_slug,))
-        mix = query_db("SELECT * FROM mix WHERE slug=?;", (mix_slug,), one=True)
         listens = query_db("""select song, count(*) as listens from listen where mix = ? group by song;""", (mix['id'],))
         if request.args.get('download') is not None:
             memory_file = BytesIO()
