@@ -124,12 +124,16 @@
           {% if s.disc %}<h3>Disc {{ s.disc }}</h3>{% endif %}
           <ol>
         {% endif %}
-            <li class="track" title="{{ s.artist }} - {{ s.title }}">
+            <li class="track" title="{{ s.artist }} - {{ s.title }}" data-id="{{ s.song_id }}">
               <div class="track-info">
                 <p {% if s.palette[2] %}class="track-num" style="color:{{s.palette[2]}}"{% else %}class="track-num no-col"{% endif %}><span>{{ s.position }}</span><i class="fa fa-volume-up"></i></p>
                 <p class="track-title">
                   <span class="track-name" style="color:{{s.palette[1]}}">{{ s.title }}</span><br />
-                  <span {% if s.palette[2] %}class="track-artist" style="color:{{s.palette[2]}}"{% else %}class="track-artist no-col"{% endif %}>{{ s.artist }}</span><br />
+                  <span {% if s.palette[2] %}class="track-artist" style="color:{{s.palette[2]}}"{% else %}class="track-artist no-col"{% endif %}>{{ s.artist }}</span>
+                  {% if s.listens %}
+                  <span {% if s.palette[2] %}class="track-listens" style="color:{{s.palette[2]}}"{% else %}class="track-artist no-col"{% endif %}><i class="fa fa-volume-up" aria-hidden="true"></i> {{ s.listens }}</span>
+                  {% endif %}
+                  <br />
                   <audio preload="none" src="{{url_for('uploaded_file', user=s.user, mix=s.mix_slug, filename=s.song_slug) }}"></audio>
                 </p>
                 <p {% if s.palette[2] %}class="track-time" style="color:{{s.palette[2]}}"{% else %}class="track-time no-col"{% endif %}><span></span>{{ s.runtime|dateformat('%-M:%S') }}</p>

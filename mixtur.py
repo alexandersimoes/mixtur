@@ -271,14 +271,17 @@ def profile(user):
 @app.route("/<mix_type>/<mix_slug>/")
 def mix(mix_type, mix_slug):
     mix_votes = {}
+    listens = None
     num_albums = 1
     total_time = 3
     base_date = datetime(1970, 1, 1)
     if mix_type == "m":
-        songs = query_db("""select m.name as mix_name, cover, m.slug as mix_slug, s.title, s.artist, s.slug as song_slug, disc, position, runtime, date, palette, user, desc 
+        songs = query_db("""select m.name as mix_name, cover, m.slug as mix_slug, s.title, s.artist, s.slug as song_slug, disc, position, runtime, date, palette, user, desc, s.id as song_id 
                                 from song as s, mix as m
                                 where m.slug = ? and s.mix = m.id
                                 order by m.id, s.position;""", (mix_slug,))
+        mix = query_db("SELECT * FROM mix WHERE slug=?;", (mix_slug,), one=True)
+        listens = query_db("""select song, count(*) as listens from listen where mix = ? group by song;""", (mix['id'],))
         if request.args.get('download') is not None:
             memory_file = BytesIO()
             with zipfile.ZipFile(memory_file, 'w') as zf:
@@ -312,6 +315,10 @@ def mix(mix_type, mix_slug):
         return s
     songs = map(dict, songs)
     songs = map(fix_palette, songs)
+    if listens:
+        for l in listens:
+            s = filter(lambda x: x['song_id'] == l['song'], songs)[0]
+            s['listens'] = l['listens']
     # get runtimes
     runtimes = [datetime.strptime(s["runtime"], '%Y-%m-%d %H:%M:%S') for s in songs]
     runtimes = [r - base_date for r in runtimes]
@@ -601,7 +608,18 @@ def signup():
     except Exception as e:
         flash("Failed to create user. Try again later.", "error")
         return render_template('signup.html')          
-    
+
+@app.route("/<mix_type>/<mix_slug>/listen/<int:song_id>/", methods=["GET", "POST"])
+def song_listen(mix_type, mix_slug, song_id):
+    if not session.get("logged_in"): abort(401)
+    # return jsonify(name="filename", size="file_size", file_type=file_type)
+    # if request.method == 'POST':
+    mix = query_db("SELECT * FROM mix WHERE slug=?;", (mix_slug,), one=True)
+    song = query_db("SELECT * FROM song WHERE id=?;", (song_id,), one=True)
+    if not song or not mix: return jsonify(success=False, error="No such song on this mix.")
+    insert_db("listen", fields=('user', 'mix', 'song'), args=(g.user, mix['id'], song_id))
+    return jsonify(success=True)
+
 '''Just catch all the 404s plz'''
 @app.errorhandler(404)
 def not_found_error(error):

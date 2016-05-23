@@ -3,7 +3,7 @@ var audio = new Audio(),
     songs = [],
     song_titles = [],
     current_song_i = 0,
-    current_song, shuffle_on, anthology_on, hilite_col, 
+    current_song, shuffle_on, anthology_on, hilite_col, listen_registered,
     hilite_txt_col, dragging, bg_col, txt_col, accent_col;
 
 
@@ -77,13 +77,27 @@ audio.addEventListener('timeupdate',function(){
     // console.log(this, this.currentTime, this.duration, progress, this_li);
     d3.select(".track-progress").style("width", progress+"%");
     d3.select(".track-progress-loaded").style("width", load_progress+"%");
-    this_li.select(".track-time span").text(formatSecondsAsTime(this.currentTime) + " / ")
+    this_li.select(".track-time span").text(formatSecondsAsTime(this.currentTime) + " / ");
+    if(progress > 75.4 && listen_registered !== true){
+      d3.selectAll(".track-time span").style("display", "none")
+      var listen_url = window.location.pathname + "listen/" + this_li.attr("data-id") + '/';
+      listen_registered = true;
+      d3.xhr(listen_url)
+        .header("Content-Type", "application/json")
+        .post(
+            JSON.stringify({listen: this_li.attr("data-id")}),
+            function(err, rawData){
+              // console.log("listen response:", data);
+            }
+        );
+    }
   }
 })
 
 audio.addEventListener('play',function(){
   current_song = this;
   stop_all(this);
+  listen_registered = false;
   d3.selectAll(".track-time span").style("display", "none")
   d3.selectAll("li.track").classed("active", false);
   d3.select("i.fa-play").style("display", "none");
@@ -291,6 +305,8 @@ function hilite(li, turn_on){
     li.select(".track-time").style("color", hilite_col_2);
     li.select(".track-name").style("color", hilite_col);
     li.select(".track-artist").style("color", hilite_col_2);
+    li.select(".track-listens").style("color", hilite_col_2);
+    li.select(".track-listens").style("border-color", hilite_col_2);
   }
   else{
     li.classed("active", true);
@@ -299,6 +315,8 @@ function hilite(li, turn_on){
     li.select(".track-time").style("color", bg_col);
     li.select(".track-name").style("color", bg_col);
     li.select(".track-artist").style("color", bg_col);
+    li.select(".track-listens").style("color", bg_col);
+    li.select(".track-listens").style("border-color", bg_col);
   }
 }
 

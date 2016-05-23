@@ -277,6 +277,12 @@ header .album-artist {
     
     text-align: right;
   }
+  .tracklisting ol li div.track-info p.track-title .track-listens{
+    border: 1px solid black;
+    border-radius: 3px;
+    font-size: 10px;
+    padding: 0 3px;
+  }
 /*    .tracklisting ol li div.track-progress{
     display: block;
     clear: both;

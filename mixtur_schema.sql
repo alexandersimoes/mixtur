@@ -40,3 +40,10 @@ CREATE TABLE "mix" (
 	`slug`	string,
 	`palette`	string
 );
+CREATE TABLE listen (
+	`user`	string NOT NULL,
+	`mix`	integer NOT NULL,
+	`song`	integer NOT NULL,
+	`time`	TIMESTAMP
+  DEFAULT CURRENT_TIMESTAMP
+);
