@@ -142,6 +142,8 @@ audio.addEventListener('ended',function(){
     current_song = null;
     current_song_i = 0;
     d3.selectAll("li.track").classed("active", false);
+    d3.select("a.fa-random").classed("active", false);
+    d3.selectAll(".track-progress-bg, .track-progress, .track-progress-loaded").style("width", "0");
     console.log('album done...')
   }
   return;
@@ -215,7 +217,18 @@ d3.selectAll("i.fa-step-backward").on("click", function(){
 
 d3.selectAll("i.fa-step-forward").on("click", function(){
   if(!audio.paused){
-    current_song_i = (current_song_i+1) % songs.length;
+    
+    if(shuffle_on) {
+      if(!shuffled_songs.length){
+        return
+      }
+      current_song_i = songs.indexOf(shuffled_songs.pop());
+    }
+    else {
+      current_song_i = (current_song_i+1) % songs.length;
+    }
+    console.log(current_song_i)
+    
     var next_song_src = songs[current_song_i];
     if(next_song_src){
       audio.src = next_song_src;
