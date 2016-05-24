@@ -9,7 +9,7 @@
   <h1>Mixes</h1>
   <ul>
   {% for m in mixes %}
-    <li {% if m.cover %}style="background: url('{{ url_for('uploaded_file', user=m.author, mix=m.slug, filename=m.cover) }}')"{% endif %}>
+    <li {% if m.cover %}style="background: url('{{ url_for('uploaded_file', user=m.author, mix=m.slug, filename=m.thumb) }}')"{% endif %}>
       <a class="link-cover" href="{{ url_for('mix', mix_type='m', mix_slug=m.slug) }}"></a>
       <div class="content">
         <div class="post-meta">

@@ -17,6 +17,7 @@ from wtforms.fields import TextField, PasswordField
 ''' For file zipping '''
 from io import BytesIO
 import zipfile
+from PIL import Image, ImageOps
 
 '''Create the application'''
 app = Flask(__name__)
@@ -49,9 +50,12 @@ def make_dicts(cursor, row):
                 for idx, value in enumerate(row))
 
 def get_db():
-    db = getattr(g, '_database', None)
-    if db is None:
-        db = g._database = connect_db()
+    if g:
+        db = getattr(g, '_database', None)
+        if db is None:
+            db = g._database = connect_db()
+    else:
+        db = connect_db()
     return db
 
 def query_db(query, args=(), one=False, update=False):
@@ -149,6 +153,9 @@ def home():
                 }
             current_mix["songs"] += 1
             current_mix["runtime"] += runtime - base_date
+            if current_mix["cover"]:
+                cover_no_ext, cover_extension = os.path.splitext(current_mix["cover"])
+                current_mix["thumb"] = cover_no_ext+"_thumb"+cover_extension
         current_mix["runtime"] = format_runtime(current_mix["runtime"])
         mixes.append(current_mix)
     
@@ -483,11 +490,37 @@ def uploadr_file(file_type):
         if file and allowed_file(file.filename):
             if "image" in file.mimetype:
                 filename = secure_filename(file.filename)
-                file.save(os.path.join(user_mix_dir, filename))
+                
+                lg_file_path = os.path.join(user_mix_dir, filename)
+                filename_no_ext, file_extension = os.path.splitext(filename)
+                thumb_file_path = os.path.join(user_mix_dir, filename_no_ext+"_thumb"+file_extension)
+                
+                MAX_SIZE = 1600
+                QUALITY = 80
+                image = Image.open(file)
+                original_size = max(image.size[0], image.size[1])
+
+                if original_size >= MAX_SIZE:
+                    if (image.size[0] > image.size[1]):
+                        resized_width = MAX_SIZE
+                        resized_height = int(round((MAX_SIZE/float(image.size[0]))*image.size[1])) 
+                    else:
+                        resized_height = MAX_SIZE
+                        resized_width = int(round((MAX_SIZE/float(image.size[1]))*image.size[0]))
+
+                    full_image = image.resize((resized_width, resized_height), Image.ANTIALIAS)
+                    full_image.save(lg_file_path, image.format, quality=QUALITY)
+                
+                thumb_image = ImageOps.fit(image, (500,500), Image.ANTIALIAS)
+                thumb_image.save(thumb_file_path, image.format, quality=90)
+                
                 # was there already a file? if so delete it
                 cover = query_db("SELECT cover FROM mix WHERE id=?", (mix_id,), one=True)["cover"]
                 if cover:
                     os.remove(os.path.join(user_mix_dir, cover))
+                    # also remove thumb
+                    cover_no_ext, cover_extension = os.path.splitext(cover)
+                    os.remove(os.path.join(user_mix_dir, cover_no_ext+"_thumb"+cover_extension))
                 # add cover img file_name to db
                 query_db("UPDATE mix SET cover=?, palette=? WHERE id=?", [filename, mix_palette, mix_id], update=True)
                 # add cover to all songs too
