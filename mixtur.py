@@ -536,7 +536,6 @@ def uploadr_file(file_type):
                 songs = query_db("SELECT * FROM song WHERE mix=?", (mix_id,))
                 for s in songs:
                     audio = Audio(os.path.join(user_mix_dir, s["slug"]))
-                    print; print; print user_mix_dir, filename; print; print;
                     audio.albumart(os.path.join(user_mix_dir, filename))
             if "audio" in file.mimetype:
                 filename = secure_filename(u"{:02d} {} - {}.mp3".format(int(track_num), artist, title))
@@ -551,8 +550,8 @@ def uploadr_file(file_type):
                 audio.tracknumber(track_num)
                 audio.album(mix_title)
                 audio.compilation()
-                # if cover:
-                #     audio.albumart(os.path.join(user_mix_dir, cover))
+                if cover:
+                    audio.albumart(os.path.join(user_mix_dir, cover))
                 runtime = audio.runtime()
                 insert_db("song", fields=('title','artist','position','runtime','slug','mix'), args=(title, artist, track_num, runtime, filename, mix_id))
         
