@@ -2,3 +2,5 @@ flask
 pillow
 mutagen
 flask-wtf
+flask-assets
+flask-scss

@@ -1,0 +1,39 @@
+#recentMixes {
+  background-color: #f7f7f7;
+
+  h2 {
+    padding: 14px 0 16px 16px;
+    margin: 0;
+    text-align: left;
+  }
+
+  .mix {
+    // border: solid 1px red;
+    display: inline-block;
+    padding: 0 0 16px 22px;
+    position: relative;
+
+    .cover {
+      img {
+        border: 1px solid #fff;
+        -webkit-box-shadow: 0 3px 5px rgba(0,0,0,.3);
+        -moz-box-shadow: rgba(0,0,0,.3) 0 3px 5px;
+        border-color: #a2a2a2\9;
+        width: 150px;
+      }
+    }
+
+    .index {
+      font-size: 12px;
+      position: absolute;
+      top: 140px;
+      left: 0px;
+
+      color: #898989;
+      display: block;
+      width: 20px;
+      text-align: right;
+      font-size: 10px;
+    }
+  }
+}

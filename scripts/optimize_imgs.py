@@ -1,3 +1,6 @@
+import os, sys
+print sys.path
+sys.exit()
 import os, sys, mixtur
 from PIL import Image, ImageOps
 from shutil import copyfile
