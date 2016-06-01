@@ -408,7 +408,10 @@ def mix_del(mix_type, mix_slug):
 @app.route("/create/mix/")
 @app.route("/create/mix/<mix_slug>/")
 def create_mix(mix_slug=None):
-    if not session.get("logged_in"): abort(401)
+    if not session.get("logged_in"):
+        summer = request.args.get('summer', False)
+        flash("You need to be logged in to make a mix!", "error")
+        return redirect(url_for("login"))
     if mix_slug:
         mix = query_db("""select * from mix where slug = ?;""", (mix_slug,), one=True)
         songs = query_db("""select s.* from song as s, mix as m where m.slug = ? and s.mix = m.id order by s.position;""", (mix_slug,))
