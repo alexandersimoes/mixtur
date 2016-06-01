@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Bamboo Table Creator</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/site.css') }}">
+    <script src="https://fb.me/react-15.1.0.js"></script>
+    <script src="https://fb.me/react-dom-15.1.0.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script>
+    <!-- <script src="/static/scripts/react/babel.js"></script> -->
+    <style>
+
+    </style>
+  </head>
+  <body>
+    <h1>Mixtur</h1>
+    <div id="wrapper"></div>
+    <script type="text/babel">
+
+    var Mix = React.createClass({
+      render: function() {
+        var mix = this.props.data;
+        var index = this.props.index + 1;
+        return(
+          <div className="mix">
+            <a href="">
+              <div className="cover">
+                <img src={mix.cover} />
+              </div>
+            </a>
+            <span className="index">{index}. </span>
+            {mix.name}
+          </div>
+        );
+      }
+    });
+
+    var RecentMixes = React.createClass({
+      getInitialState: function(){
+        return {
+          offset: 0,
+          mixes: []
+        };
+      },
+
+      fetchx: function() {
+        var xhr = new XMLHttpRequest();
+        var _this = this;
+        xhr.onload = function() {
+          if (xhr.status == 200) {
+            var newMixes = JSON.parse(xhr.responseText);
+            // console.log(newMixes)
+            _this.setState({mixes:newMixes.mixes})
+          } else {
+            alert("Error! Upload failed");
+          }
+        };
+        xhr.onerror = function() {
+          alert("Error! Upload failed. Can not connect to server.");
+        };
+        xhr.open("GET", "/new/recent/?offset=0&items=5", true);
+        xhr.send();
+      },
+
+      componentDidMount: function(){
+        this.fetchx();
+      },
+
+      render: function() {
+
+        var mixes = this.state.mixes.map(function(m, i){
+          return (<Mix key={Math.random()} data={m} index={i} />)
+        });
+
+        return(
+          <div id="recentMixes">
+            <h2>Recently Added</h2>
+            {mixes}
+          </div>
+        );
+      }
+    });
+
+
+    ReactDOM.render(
+      <RecentMixes />,
+      document.getElementById('wrapper')
+    );
+    </script>
+  </body>
+</html>
