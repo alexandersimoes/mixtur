@@ -225,6 +225,10 @@ div.mix a.cover {
     font-size: 12px;
     text-align: center;
 }
+.notify a {
+  color: inherit;
+  text-decoration: underline;
+}
 .notify.error {
   background-color: #fef1f1;
   border: 1px solid #e2a8a8;
@@ -243,4 +247,9 @@ div.mix a.cover {
 .notify.info {
   border:1px solid #bdc4c9;
   color:#aaa
+}
+.notify.summer {
+  background-color:#cbe2fa;
+  border:1px solid #242765;
+  color:#242765;
 }

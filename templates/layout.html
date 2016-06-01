@@ -9,6 +9,7 @@
   {% block head %}{% endblock %}
 </head>
 <body>
+  {% if request.path == "/" %}<div class="notify summer">It's summer time baby! <a href="/summer16">Make your mixXX now &rarr;</a></div>{% endif %}
   {% for category, message in get_flashed_messages(with_categories=true) %}
   <div class="notify {{ category }}">
     {{ message }}
