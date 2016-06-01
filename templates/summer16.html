@@ -24,13 +24,13 @@ h1 {
   line-height: 90px;
 }
 h2 {
-    margin-top: 10px;
-    margin-bottom: 5px;
-    font-family: Raleway, sans-serif;
-    color: #fff;
-    font-size: 57px;
-    line-height: 62px;
-    font-weight: 900;
+  margin-top: 10px;
+  margin-bottom: 5px;
+  font-family: Raleway, sans-serif;
+  color: #fff;
+  font-size: 57px;
+  line-height: 62px;
+  font-weight: 900;
 }
 a {
   color: inherit;
@@ -163,6 +163,38 @@ p {
   color: white;
   text-align: left;
 }
+@media (max-width: 767px) {
+  .column {
+    width: 100%;
+  }
+}
+
+.go {
+  background-color: #5b2a2f;
+  padding: 40px 20px;
+  text-align: center;
+}
+.go a.btn {
+  width: 101%;
+  height: 48px;
+  line-height: 48px;
+  font-size: 20px;
+  border-radius: 2px;
+  border: 2px solid white;
+  
+  margin-top: 10px;
+  margin-bottom: 5px;
+  font-family: Raleway, sans-serif;
+  color: #fff;
+  font-weight: 900;
+  
+  padding: 10px 60px;
+  text-decoration: none;
+}
+.go a.btn:hover {
+  background-color: white;
+  color: #5b2a2f;
+}
 </style>
 {% endblock %}
 
@@ -227,5 +259,9 @@ p {
       </div>
     </div>
   </div>
+</div>
+
+<div class="go">
+  <a class="btn" href="/create/mix/?summer=ya">Get MixXxin' &rarr;</a>
 </div>
 {% endblock %}
