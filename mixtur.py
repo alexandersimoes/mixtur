@@ -412,9 +412,10 @@ def create_mix(mix_slug=None):
     if mix_slug:
         mix = query_db("""select * from mix where slug = ?;""", (mix_slug,), one=True)
         songs = query_db("""select s.* from song as s, mix as m where m.slug = ? and s.mix = m.id order by s.position;""", (mix_slug,))
-        return render_template("create_mix.html", mix=mix, songs=songs)
+        return render_template("create_mix.html", mix=mix, songs=songs, summer=mix["summer"])
     else:
-        return render_template("create_mix.html")
+        summer = request.args.get('summer', False)
+        return render_template("create_mix.html", summer=summer)
 
 def make_slug(title, tbl="mix"):
     slug = secure_filename(title)
@@ -459,6 +460,7 @@ def uploadr_file(file_type):
     # return jsonify(name="filename", size="file_size", file_type=file_type)
     if request.method == 'POST':
         mix_title = request.form.get('mix_title')
+        mix_summer = int(request.form.get('mix_summer', 0))
         mix_id = request.form.get('mix_id')
         mix_desc = request.form.get('mix_desc')
         mix_palette = request.form.get('mix_palette')
@@ -474,7 +476,7 @@ def uploadr_file(file_type):
         if not mix_id:
             new_mix_title = mix_title or 'Untitled Mix'
             mix_slug = make_slug(new_mix_title)
-            mix_id = insert_db("mix", fields=('date', 'user', 'name', 'slug', 'desc'), args=(str(datetime.now().strftime('%Y-%m-%d %H:%M:%S')), user, new_mix_title, mix_slug, mix_desc))
+            mix_id = insert_db("mix", fields=('date', 'user', 'name', 'slug', 'desc', 'summer'), args=(str(datetime.now().strftime('%Y-%m-%d %H:%M:%S')), user, new_mix_title, mix_slug, mix_desc, mix_summer))
             user_mix_dir = os.path.join(app.config['UPLOAD_FOLDER'], user, mix_slug)
             if not os.path.exists(user_mix_dir): os.makedirs(user_mix_dir)
         else:
@@ -492,6 +494,8 @@ def uploadr_file(file_type):
                     os.rename(user_mix_dir, new_user_mix_dir)
                     user_mix_dir = new_user_mix_dir
                     mix_slug = new_mix_slug
+                if mix_summer != mix["summer"]:
+                    query_db("UPDATE mix SET summer=? WHERE id=?", (mix_summer, mix_id), update=True)
             if mix_desc is not None:
                 query_db("UPDATE mix SET `desc`=? WHERE id=?", [mix_desc, mix_id], update=True)
 

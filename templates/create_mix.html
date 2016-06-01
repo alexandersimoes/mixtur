@@ -32,6 +32,7 @@
     </div>
     <div class="album-meta">
       <input id="mix-title" name="mix-title" type="text" placeholder="My New MixXx" {% if mix %}value="{{ mix.name }}"{% endif %}></input>
+      <input id="mix-summer" name="mix-summer" type="checkbox" {% if summer %}checked="checked"{% endif %}></input> Summer MixXx?
       <input id="mix-id" name="mix-id" type="hidden" {% if mix %}value="{{ mix.id }}"{% endif %}></input>
       <input id="mix-palette" name="mix-palette" type="hidden" {% if mix %}value="{{ mix.palette|safe }}"{% endif %}></input>
       <textarea class="" id="" rows="3" placeholder="Describe your mixXx..." style="resize: vertical;">{% if mix and mix.desc %}{{ mix.desc }}{% endif %}</textarea>

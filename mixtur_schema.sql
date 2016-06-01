@@ -38,7 +38,8 @@ CREATE TABLE "mix" (
 	`cover`	string,
 	`user`	string NOT NULL,
 	`slug`	string,
-	`palette`	string
+	`palette`	string,
+  `summer` integer
 );
 CREATE TABLE listen (
 	`user`	string,
