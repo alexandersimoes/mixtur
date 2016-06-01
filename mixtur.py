@@ -653,6 +653,12 @@ def song_listen(mix_type, mix_slug, song_id):
     else:
         abort(404)
 
+'''open call for summer mixXxes!'''
+@app.route("/summer16/")
+@app.route("/summer/")
+def summer16():
+    return render_template('summer16.html')
+
 '''Just catch all the 404s plz'''
 @app.errorhandler(404)
 def not_found_error(error):
