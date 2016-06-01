@@ -537,7 +537,9 @@ def uploadr_file(file_type):
                         resized_width = int(round((MAX_SIZE/float(image.size[1]))*image.size[0]))
 
                     full_image = image.resize((resized_width, resized_height), Image.ANTIALIAS)
-                    full_image.save(lg_file_path, image.format, quality=QUALITY)
+                else:
+                    full_image = image
+                full_image.save(lg_file_path, image.format, quality=QUALITY)
 
                 thumb_image = ImageOps.fit(image, (500,500), Image.ANTIALIAS)
                 thumb_image.save(thumb_file_path, image.format, quality=90)
@@ -555,6 +557,7 @@ def uploadr_file(file_type):
                 songs = query_db("SELECT * FROM song WHERE mix=?", (mix_id,))
                 for s in songs:
                     audio = Audio(os.path.join(user_mix_dir, s["slug"]))
+                    print; print; print user_mix_dir, filename; print; print;
                     audio.albumart(os.path.join(user_mix_dir, filename))
             if "audio" in file.mimetype:
                 filename = secure_filename(u"{:02d} {} - {}.mp3".format(int(track_num), artist, title))
@@ -569,8 +572,8 @@ def uploadr_file(file_type):
                 audio.tracknumber(track_num)
                 audio.album(mix_title)
                 audio.compilation()
-                if cover:
-                    audio.albumart(os.path.join(user_mix_dir, cover))
+                # if cover:
+                #     audio.albumart(os.path.join(user_mix_dir, cover))
                 runtime = audio.runtime()
                 insert_db("song", fields=('title','artist','position','runtime','slug','mix'), args=(title, artist, track_num, runtime, filename, mix_id))
 
