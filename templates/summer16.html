@@ -1,0 +1,231 @@
+{% extends "layout.html" %}
+
+{% block head_title %}Get Your Summer MixXx On!{% endblock %}
+
+{% block head %}
+<link href='https://fonts.googleapis.com/css?family=Raleway:900' rel='stylesheet' type='text/css'>
+<link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
+<link href='https://fonts.googleapis.com/css?family=Muli' rel='stylesheet' type='text/css'>
+<style>
+body {
+  margin: 0;
+  padding:0;
+  background-color: #020713;
+}
+h1 {
+  font-family: Raleway, sans-serif;
+  color: #fff;
+  color: #0b2358;
+  font-weight: 900;
+}
+.hero h1 {
+  margin-top: 10px 0;
+  font-size: 85px;
+  line-height: 90px;
+}
+h2 {
+    margin-top: 10px;
+    margin-bottom: 5px;
+    font-family: Raleway, sans-serif;
+    color: #fff;
+    font-size: 57px;
+    line-height: 62px;
+    font-weight: 900;
+}
+a {
+  color: inherit;
+}
+a:hover {
+  color: #5b2a2f !important;
+}
+p {
+  display: block;
+  margin-bottom: 10px;
+  font-family: Muli, sans-serif;
+  color: #707d8f;
+  font-size: 18px;
+  line-height: 29px;
+  letter-spacing: 0.4px;
+}
+.hero {
+  background:white url("/static/img/summer0.jpg") no-repeat center center;
+  -webkit-background-size: cover;
+     -moz-background-size: cover;
+       -o-background-size: cover;
+          background-size: cover;
+  min-height:100vh;
+  margin: 0;
+  padding:0;
+  overflow-x: hidden;
+  font-family: sans-serif;      
+}
+.title {
+  margin: 0px auto;
+  max-width: 940px;
+  text-align: center;
+  padding: 14% 0 0 0;
+}
+.underline {
+  display: inline-block;
+  width: 95px;
+  height: 5px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border-radius: 3px;
+  background-color: #fff;
+  background-color: #0b2358;
+}
+.underline.blue {
+  background-color: #3574ad;
+}
+.subtitle {
+  font-family: Georgia, Times, 'Times New Roman', serif;
+  color: #fff;
+  color: #0b2358;
+  font-size: 24px;
+  line-height: 32px;
+  font-style: italic;
+}
+.header-box {
+    position: relative;
+    text-align: center;
+}
+.header-box ::selection {
+  background: #5b2a2f; /* WebKit/Blink Browsers */
+}
+.mini-title {
+  color: #3574ad;
+  position: relative;
+  z-index: 1;
+  font-family: Montserrat, sans-serif;
+  font-size: 9px;
+  line-height: 9px;
+  font-weight: 700;
+  letter-spacing: 3.3px;
+  text-transform: uppercase;
+}
+.paragraph-box._80-percent-centered {
+  color: #3574ad;
+  display: block;
+  width: 80%;
+  margin-right: auto;
+  margin-left: auto;
+}
+.mixes {
+  margin: 60px 0;
+}
+.mixes img {
+  width: 200px;
+}
+
+
+.rules {
+  position: relative;
+  overflow: hidden;
+}
+.column {
+  padding-top: 8%;
+  padding-bottom: 8%;
+/*    padding-left: 8%;*/
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background-color: transparent;
+  float: left;
+  width: 50%;
+}
+.column.left {
+  background-image: url("http://c7.staticflickr.com/4/3863/14406951446_a813ff62d0_b.jpg");
+  background-position: 0px 50%;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+.column.right {
+}
+.underline.coral {
+  background-color: #5b2a2f;
+}
+.rules .mini-title {
+  color: #5b2a2f;
+}
+.rules .column.left p {
+  padding: 20px 60px;
+}
+.rules .column.right .paragraph-box {
+  margin: 80px 40px 0 40px;
+}
+.rules .column.right p {
+  color: white;
+  text-align: left;
+}
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="hero">
+  <div class="title">
+    <h1>Summer Mix<br />2016</h1>
+    <div class="underline"></div>
+    <div class="subtitle">
+      This is an open call for Summer MixXx submissions.<br />
+      <a href="/create/mix/?summer=ya">Make Yours Now &rarr;</a>
+    </div>
+  </div>
+</div>
+<div class="header-box">
+  <div class="mini-title">inspiration</div>
+  <h2>You Are Invited To Join <br>The Hall Of Fame</h2>
+  <div class="underline blue"></div>
+  <div class="paragraph-box _80-percent-centered">
+    <p>Making a summer mixXx that will stand the test of time is one of the hardest achievements to attain. The perfect mesh of timeless and timely. Gems of the past and jewels of the present. Below are some mixXxes to help you get inspired.</p>
+  </div>
+  <div class="mixes">
+    <a title="Al Jaffe's 2006 Summer Mix FROM DA VAULT!" href="/m/Summer_Mix_06/"><img src="http://mixtur.audio/uploads/aljaffe/Summer_Mix_06/default_cover_thumb.jpg" /></a>
+    <a title="Al Jaffe's 2011 Summer Mix" href="/m/Pure_Living_Summer_Mix_2011/"><img src="http://mixtur.audio/uploads/aljaffe/Pure_Living_Summer_Mix_2011/summermix2011_cover_thumb.jpg" alt="Al Jaffe's 2011 Summer Mix" /></a>
+    <a title="Al Jaffe's 2012 Summer Mix" href="/m/Summer_2012_You_Can_Walk_On_The_Clouds/"><img src="http://mixtur.audio/uploads/aljaffe/Summer_2012_You_Can_Walk_On_The_Clouds/summer_12_thumb.jpg" /></a>
+    <a title="Al Jaffe's 2013 Summer Mix" href="/m/Music_to_Take_Late_Night_Drives_to_With_Windows_Open_and_Ocean_Breeze_Blowing_Along_Bostons_North_Shore/"><img src="http://mixtur.audio/uploads/aljaffe/Music_to_Take_Late_Night_Drives_to_With_Windows_Open_and_Ocean_Breeze_Blowing_Along_Bostons_North_Shore/summer_13_alt_thumb.jpg" /></a>
+    <a title="Al Jaffe's 2014 Summer Mix" href="/m/Summer_2014_Something_to_Behold/"><img src="http://mixtur.audio/uploads/aljaffe/Summer_2014_Something_to_Behold/summer_14_thumb.jpg" /></a>
+    <a title="Al Jaffe's 2015 Summer Mix" href="/m/Summer_Transcendence/"><img src="http://mixtur.audio/uploads/aljaffe/Summer_Transcendence/SUMMERTRANSCENDENCE_thumb.jpg" /></a>
+    <a title="J.Basil's 2012 Summer Mix" href="/m/Ladies_of_Summer_2012/"><img src="http://mixtur.audio/uploads/jnoelbasil/Ladies_of_Summer_2012/ladiesofsummer_thumb.jpg" /></a>
+    <a title="J.Basil's 2014 Summer Mix" href="/m/Ladies_of_Summer_2014/"><img src="http://mixtur.audio/uploads/jnoelbasil/Ladies_of_Summer_2014/Album_Cover_thumb.jpg" /></a>
+    <a title="J.Basil's 2015 Summer Mix" href="/m/Ladies_of_Summer_2015/"><img src="http://mixtur.audio/uploads/jnoelbasil/Ladies_of_Summer_2015/ladiesofsummer2015_rev_thumb.jpg" /></a>
+  </div>
+</div>
+<div class="rules">
+  <div class="column left">
+    <div class="floated-right-details-box">
+      <div class="header-box left-justified">
+        <div class="mini-title white">rules</div>
+        <h2 class="heading-2 inline-block">A Few<br>Guidelines</h2>
+        <div><div class="underline coral"></div></div>
+        <div>
+          <div class="paragraph-box">
+            <p class="paragraph white">A starting point, in case you get stuck. Make sure your mixXx includes a song that fulfills each of the following...&nbsp;</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="column right">
+    <div class="floated-right-details-box">
+      <div class="header-box left-justified">
+        <div>
+          <div class="paragraph-box">
+            <p><i class="fa fa-check-square-o" aria-hidden="true"></i> Instrumental &nbsp;</p>
+            <p><i class="fa fa-check-square-o" aria-hidden="true"></i> Oldie (pre 1990) &nbsp;</p>
+            <p><i class="fa fa-check-square-o" aria-hidden="true"></i> Female Singer &nbsp;</p>
+            <p><i class="fa fa-check-square-o" aria-hidden="true"></i> Epic (5 min or longer) &nbsp;</p>
+            <p><i class="fa fa-check-square-o" aria-hidden="true"></i> Cover (not writ by the performer) &nbsp;</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
