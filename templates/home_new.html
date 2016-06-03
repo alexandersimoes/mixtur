@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <title>Bamboo Table Creator</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/site.css') }}">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
     <script src="https://fb.me/react-15.1.0.js"></script>
     <script src="https://fb.me/react-dom-15.1.0.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script>
@@ -16,6 +17,7 @@
     <h1>Mixtur</h1>
     <div id="wrapper"></div>
     <script type="text/babel">
+    var PERPAGE = 20;
 
     var Mix = React.createClass({
       render: function() {
@@ -35,22 +37,52 @@
       }
     });
 
+    var Pagination = React.createClass({
+      render: function() {
+        var count = this.props.count;
+        var page = this.props.page;
+        console.log(page)
+        var changePage = this.changePage;
+        var pages = [];
+        var totalPages = Math.ceil(count / PERPAGE);
+        for(var i = 0; i < totalPages; i++){
+          pages.push(i+1)
+        }
+        var pages = pages.map(function(p, i){
+          return (<span key={i} onClick={function() { changePage(p) }}>{p}</span>)
+        });
+        return(
+          <div className="pagination">
+            { page !== 1 ? <span onClick={function() { changePage(page-1) }}>Prev</span> : ""}
+            {pages}
+            { page !== totalPages ? <span onClick={function() { changePage(page+1) }}>Next</span> : ""}
+          </div>
+        );
+      },
+
+      changePage: function(newPage){
+        // console.log(newPage)
+        this.props.onPageChange(newPage);
+      }
+    });
+
     var RecentMixes = React.createClass({
       getInitialState: function(){
         return {
-          offset: 0,
-          mixes: []
+          page: 1,
+          mixes: [],
+          count: 0
         };
       },
 
-      fetchx: function() {
+      fetchx: function(page) {
         var xhr = new XMLHttpRequest();
         var _this = this;
         xhr.onload = function() {
           if (xhr.status == 200) {
             var newMixes = JSON.parse(xhr.responseText);
             // console.log(newMixes)
-            _this.setState({mixes:newMixes.mixes})
+            _this.setState({mixes:newMixes.mixes, count:newMixes.count, page:newMixes.page})
           } else {
             alert("Error! Upload failed");
           }
@@ -58,26 +90,33 @@
         xhr.onerror = function() {
           alert("Error! Upload failed. Can not connect to server.");
         };
-        xhr.open("GET", "/new/recent/?offset=0&items=5", true);
+        xhr.open("GET", "/new/recent/"+page+"/", true);
         xhr.send();
       },
 
       componentDidMount: function(){
-        this.fetchx();
+        this.fetchx(1);
       },
 
       render: function() {
 
         var mixes = this.state.mixes.map(function(m, i){
-          return (<Mix key={Math.random()} data={m} index={i} />)
+          return (<Mix key={i} data={m} index={i} />)
         });
+        var count = this.state.count;
+        var page = this.state.page;
 
         return(
           <div id="recentMixes">
             <h2>Recently Added</h2>
             {mixes}
+            <Pagination count={count} page={page} onPageChange={this.changePage} />
           </div>
         );
+      },
+
+      changePage: function(newPage){
+        this.fetchx(newPage);
       }
     });
 

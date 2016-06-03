@@ -131,11 +131,17 @@ def format_runtime(runtime):
 def home_new():
     return render_template('home_new.html')
 
-@app.route("/new/recent/")
-def get_recent():
+@app.route("/new/recent/", defaults={'page': 1})
+@app.route("/new/recent/<int:page>/")
+def get_recent(page):
+    PER_PAGE = 20
+    count = query_db('select count(*) as num_mixes from mix where cover is not null;', one=True)
+    count = count['num_mixes']
     mixes = []
-    offset = request.args.get('offset', 0)
-    mix_rows = query_db('select * from mix where cover is not null order by date desc limit 20 offset ?;', [offset])
+    offset = PER_PAGE * (page-1)
+    mix_rows = query_db('select * from mix where cover is not null order by date desc limit ? offset ?;', [PER_PAGE, offset])
+    if not mix_rows and page != 1:
+        abort(404)
     for m in mix_rows:
         mix = {'name':m['name'], 'date':m['date'], 'user':m['user'], 'cover':m['cover'], 'slug':m['slug']}
         if mix['cover']:
@@ -143,7 +149,7 @@ def get_recent():
             thumb = cover_no_ext+"_thumb"+cover_extension
             mix['cover'] = url_for('uploaded_file', user=mix['user'], mix=mix['slug'], filename=thumb)
         mixes.append(mix)
-    return jsonify(mixes=mixes)
+    return jsonify(mixes=mixes, count=count, page=page)
 
 @app.route("/")
 def home():
