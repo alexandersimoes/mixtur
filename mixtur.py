@@ -151,6 +151,37 @@ def get_recent(page):
         mixes.append(mix)
     return jsonify(mixes=mixes, count=count, page=page)
 
+@app.route("/api/mixes/")
+def api_get_mixes():
+    PER_PAGE = 20
+    page = request.args.get('page', 1, type=int)
+    user = request.args.get('user')
+
+    if user:
+        count = query_db('select count(*) as num_mixes from mix where cover is not null AND user=?;', [user], one=True)
+    else:
+        count = query_db('select count(*) as num_mixes from mix where cover is not null;', one=True)
+    count = count['num_mixes']
+    mixes = []
+    offset = PER_PAGE * (page-1)
+    mix_rows = query_db('select * from mix where cover is not null order by date desc limit ? offset ?;', [PER_PAGE, offset])
+    if not mix_rows and page != 1:
+        abort(404)
+    for m in mix_rows:
+        mix = {'name':m['name'], 'date':m['date'], 'user':m['user'], 'cover':m['cover'], 'slug':m['slug']}
+        if mix['cover']:
+            cover_no_ext, cover_extension = os.path.splitext(m["cover"])
+            thumb = cover_no_ext+"_thumb"+cover_extension
+            mix['cover'] = url_for('uploaded_file', user=mix['user'], mix=mix['slug'], filename=thumb)
+        mixes.append(mix)
+    return jsonify(mixes=mixes, count=count, page=page)
+
+@app.route("/new/users/")
+def get_users():
+    users = query_db('select distinct(user) as user from mix where cover is not null;')
+    users = [u['user'] for u in users]
+    return jsonify(users=users)
+
 @app.route("/")
 def home():
     base_date = datetime(1970, 1, 1)

@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Bamboo Table Creator</title>
+    <title>New Mixtur Homepage</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/site.css') }}">
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
     <script src="https://fb.me/react-15.1.0.js"></script>
@@ -41,7 +41,6 @@
       render: function() {
         var count = this.props.count;
         var page = this.props.page;
-        console.log(page)
         var changePage = this.changePage;
         var pages = [];
         var totalPages = Math.ceil(count / PERPAGE);
@@ -61,7 +60,6 @@
       },
 
       changePage: function(newPage){
-        // console.log(newPage)
         this.props.onPageChange(newPage);
       }
     });
@@ -107,11 +105,13 @@
         var page = this.state.page;
 
         return(
-          <div id="recentMixes">
-            <h2>Recently Added</h2>
+          <section id="recent">
+            <header>
+              <h2>Recently Added</h2>
+            </header>
             {mixes}
             <Pagination count={count} page={page} onPageChange={this.changePage} />
-          </div>
+          </section>
         );
       },
 
@@ -120,9 +120,109 @@
       }
     });
 
+    var UserMixes = React.createClass({
+      getInitialState: function(){
+        return {
+          page: 1,
+          mixes: [],
+          count: 0,
+          user: null,
+          users: []
+        };
+      },
+
+      fetchx: function(page, user) {
+        var xhr = new XMLHttpRequest();
+        var _this = this;
+        xhr.onload = function() {
+          if (xhr.status == 200) {
+            var newMixes = JSON.parse(xhr.responseText);
+            // console.log(newMixes)
+            _this.setState({mixes:newMixes.mixes, count:newMixes.count, page:newMixes.page})
+          } else {
+            alert("Error! Upload failed");
+          }
+        };
+        xhr.onerror = function() {
+          alert("Error! Upload failed. Can not connect to server.");
+        };
+        xhr.open("GET", "/api/mixes/?page="+page+"&user="+user, true);
+        xhr.send();
+      },
+
+      fetchUsers: function() {
+        var xhr = new XMLHttpRequest();
+        var _this = this;
+        var page = this.state.page;
+        xhr.onload = function() {
+          if (xhr.status == 200) {
+            var resp = JSON.parse(xhr.responseText);
+            _this.setState({users:resp.users, user:resp.users[0]})
+            _this.fetchx(page, resp.users[0])
+          } else {
+            console.log("Error! Upload failed");
+          }
+        };
+        xhr.onerror = function() {
+          console.log("Error! Upload failed. Can not connect to server.");
+        };
+        xhr.open("GET", "/api/users/", true);
+        xhr.send();
+      },
+
+      componentDidMount: function(){
+        this.fetchUsers();
+      },
+
+      render: function() {
+
+        var mixes = this.state.mixes.map(function(m, i){
+          return (<Mix key={i} data={m} index={i} />)
+        });
+        var count = this.state.count;
+        var page = this.state.page;
+
+        return(
+          <section id="user">
+            <header>
+              <h2>Mixturs by User</h2>
+              { this.renderUserDropdown() }
+            </header>
+          </section>
+        );
+      },
+
+      changePage: function(newPage){
+        this.fetchx(newPage);
+      },
+
+      renderUserDropdown: function(){
+        var users = this.state.users.map(function(u, i){
+          return (<option value={u} key={u}>{u}</option>)
+        })
+        return (
+          <div className="selection">
+            <select>
+            { users }
+            </select>
+          </div>
+        )
+      }
+    });
+
+    var Page = React.createClass({
+      render: function() {
+        return(
+          <div className="page">
+            // <RecentMixes />
+            <UserMixes />
+          </div>
+        );
+      }
+    });
 
     ReactDOM.render(
-      <RecentMixes />,
+      <Page />,
       document.getElementById('wrapper')
     );
     </script>
