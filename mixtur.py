@@ -164,7 +164,10 @@ def api_get_mixes():
     count = count['num_mixes']
     mixes = []
     offset = PER_PAGE * (page-1)
-    mix_rows = query_db('select * from mix where cover is not null order by date desc limit ? offset ?;', [PER_PAGE, offset])
+    if user:
+        mix_rows = query_db('select * from mix where user=? and cover is not null order by date desc limit ? offset ?;', [user, PER_PAGE, offset])
+    else:
+        mix_rows = query_db('select * from mix where cover is not null order by date desc limit ? offset ?;', [PER_PAGE, offset])
     if not mix_rows and page != 1:
         abort(404)
     for m in mix_rows:
@@ -176,7 +179,7 @@ def api_get_mixes():
         mixes.append(mix)
     return jsonify(mixes=mixes, count=count, page=page)
 
-@app.route("/new/users/")
+@app.route("/api/users/")
 def get_users():
     users = query_db('select distinct(user) as user from mix where cover is not null;')
     users = [u['user'] for u in users]
@@ -552,7 +555,7 @@ def uploadr_file(file_type):
             thumb_image = ImageOps.fit(new_img, (500,500), Image.ANTIALIAS)
             thumb_file_path = os.path.join(user_mix_dir, "default_cover_thumb.jpg")
             thumb_image.save(thumb_file_path, "JPEG", quality=90)
-        
+
         if mix_palette:
             query_db("UPDATE mix SET palette=? WHERE id=?", [mix_palette, mix_id], update=True)
 

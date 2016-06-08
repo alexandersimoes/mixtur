@@ -31,7 +31,8 @@
               </div>
             </a>
             <span className="index">{index}. </span>
-            {mix.name}
+            <span className="title">{mix.name}</span>
+            <span className="user">{mix.user}</span>
           </div>
         );
       }
@@ -48,19 +49,23 @@
           pages.push(i+1)
         }
         var pages = pages.map(function(p, i){
-          return (<span key={i} onClick={function() { changePage(p) }}>{p}</span>)
+          return (<li className={p === page ? "active": null} key={i}><a href="#" onClick={ changePage.bind(this, p) }>{p}</a></li>)
         });
         return(
-          <div className="pagination">
-            { page !== 1 ? <span onClick={function() { changePage(page-1) }}>Prev</span> : ""}
+          <ul className="pagination">
+            <li className={ page !== 1 ? null : "disabled"}><a href="#" className="fa fa-chevron-left" aria-hidden="true" onClick={ changePage.bind(this, page-1) }></a></li>
             {pages}
-            { page !== totalPages ? <span onClick={function() { changePage(page+1) }}>Next</span> : ""}
-          </div>
+            <li className={ page !== totalPages ? null : "disabled"}><a href="#" className="fa fa-chevron-right" aria-hidden="true" onClick={ changePage.bind(this, page+1) }></a></li>
+          </ul>
         );
       },
 
-      changePage: function(newPage){
-        this.props.onPageChange(newPage);
+      changePage: function(newPage, e){
+        e.preventDefault();
+        if(e.target.parentNode.className.indexOf('active') < 0 &&
+            e.target.parentNode.className.indexOf('disabled') < 0){
+          this.props.onPageChange(newPage);
+        }
       }
     });
 
@@ -137,7 +142,6 @@
         xhr.onload = function() {
           if (xhr.status == 200) {
             var newMixes = JSON.parse(xhr.responseText);
-            // console.log(newMixes)
             _this.setState({mixes:newMixes.mixes, count:newMixes.count, page:newMixes.page})
           } else {
             alert("Error! Upload failed");
@@ -188,12 +192,14 @@
               <h2>Mixturs by User</h2>
               { this.renderUserDropdown() }
             </header>
+            {mixes}
+            <Pagination count={count} page={page} onPageChange={this.changePage} />
           </section>
         );
       },
 
       changePage: function(newPage){
-        this.fetchx(newPage);
+        this.fetchx(newPage, this.state.user);
       },
 
       renderUserDropdown: function(){
@@ -202,11 +208,15 @@
         })
         return (
           <div className="selection">
-            <select>
+            <select onChange={this.changeUser}>
             { users }
             </select>
           </div>
         )
+      },
+
+      changeUser: function(e){
+        this.fetchx(1, e.target.value);
       }
     });
 
@@ -214,7 +224,7 @@
       render: function() {
         return(
           <div className="page">
-            // <RecentMixes />
+            <RecentMixes />
             <UserMixes />
           </div>
         );

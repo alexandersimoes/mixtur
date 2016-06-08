@@ -1,23 +1,31 @@
+$lightgray: #f7f7f7;
+$midgray: #999999;
+$darkgray: #333333;
+
 section {
   margin: 0 0 40px 0;
-  background-color: #f7f7f7;
+  background-color: $lightgray;
 
   header {
     @include flex();
 
     h2, .selection {
       margin: 0;
-      padding: 10px;
+      padding: 0 10px 0 20px;
     }
 
     h2 {
       @include flex-size(3);
-      border: solid 1px red;
+      margin: 10px 0;
+      font-size: 2.4vw;
+      font-weight: normal;
+      white-space: nowrap;
+      text-transform: uppercase;
+      letter-spacing: 4px;
     }
 
     .selection {
       @include flex-size(1);
-      border: solid 1px blue;
     }
   }
 
@@ -26,6 +34,7 @@ section {
     display: inline-block;
     padding: 0 0 16px 22px;
     position: relative;
+    width: 150px;
 
     .cover {
       img {
@@ -48,6 +57,57 @@ section {
       width: 20px;
       text-align: right;
       font-size: 10px;
+    }
+
+    .title {
+      font-size: 14px;
+      font-weight: normal;
+      display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-transform: uppercase;
+      white-space: nowrap;
+
+      color: $darkgray;
+      font-family: "Helvetica Neue", Helvetica, Arial, "Open Sans", sans-serif;
+      font-weight: normal;
+      line-height: normal;
+      margin: 4px 0 0 0;
+      text-transform: uppercase;
+    }
+
+    .user {
+      font-size: 11px;
+    }
+  }
+
+  .pagination {
+    padding: 10px;
+    text-align: center;
+
+    li {
+      display: inline-block;
+      font-size: 1.2rem;
+      padding: 0 10px;
+      line-height: 30px;
+      border-radius: 2px;
+      text-align: center;
+
+      &.active {
+        background: $darkgray;
+        a {
+          color: $lightgray;
+        }
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+    }
+
+    .disabled {
+      color: $midgray;
     }
   }
 }
