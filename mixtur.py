@@ -548,7 +548,11 @@ def uploadr_file(file_type):
             new_img.save(jpeg_image_buffer, format="JPEG")
             b64_img = base64.b64encode(jpeg_image_buffer.getvalue())
             query_db("UPDATE mix SET cover=? WHERE id=?", ["default_cover.jpg", mix_id], update=True)
-
+            # create thumbnail of default cover
+            thumb_image = ImageOps.fit(new_img, (500,500), Image.ANTIALIAS)
+            thumb_file_path = os.path.join(user_mix_dir, "default_cover_thumb.jpg")
+            thumb_image.save(thumb_file_path, "JPEG", quality=90)
+        
         if mix_palette:
             query_db("UPDATE mix SET palette=? WHERE id=?", [mix_palette, mix_id], update=True)
 
@@ -577,7 +581,6 @@ def uploadr_file(file_type):
                 else:
                     full_image = image
                 full_image.save(lg_file_path, image.format, quality=QUALITY)
-
                 thumb_image = ImageOps.fit(image, (500,500), Image.ANTIALIAS)
                 thumb_image.save(thumb_file_path, image.format, quality=90)
 
