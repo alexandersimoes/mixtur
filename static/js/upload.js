@@ -5,7 +5,7 @@ var dz = new Dropzone(document.body, {
     autoProcessQueue: false,
     clickable: false,
     maxFiles: 50,
-    maxFilesize: 20, // in MB
+    maxFilesize: 40, // in MB
     parallelUploads: 4,
     previewsContainer: "#songs-dropzone",
     previewTemplate: document.querySelector('#preview-template').innerHTML,
