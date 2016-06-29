@@ -39,7 +39,7 @@ CREATE TABLE "mix" (
 	`user`	string NOT NULL,
 	`slug`	string,
 	`palette`	string,
-  `summer` integer
+  `summer` integer DEFAULT 0
 );
 CREATE TABLE listen (
 	`user`	string,
@@ -48,4 +48,3 @@ CREATE TABLE listen (
 	`time`	TIMESTAMP
   DEFAULT CURRENT_TIMESTAMP
 );
-

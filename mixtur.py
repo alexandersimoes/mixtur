@@ -27,6 +27,7 @@ app.config.from_pyfile(os.path.join(os.path.dirname(__file__), 'mixtur.cfg'))
 
 from flask.ext.scss import Scss
 Scss(app)
+# Scss(app, static_dir='static/css', asset_dir='assets/materialize')
 
 @app.before_request
 def before_request():
@@ -155,19 +156,20 @@ def get_recent(page):
 def api_get_mixes():
     PER_PAGE = 20
     page = request.args.get('page', 1, type=int)
+    summer = request.args.get('summer', 0, type=int)
     user = request.args.get('user')
 
     if user:
-        count = query_db('select count(*) as num_mixes from mix where cover is not null AND user=?;', [user], one=True)
+        count = query_db('select count(*) as num_mixes from mix where cover is not null AND user=? AND summer=?;', [user, summer], one=True)
     else:
-        count = query_db('select count(*) as num_mixes from mix where cover is not null;', one=True)
+        count = query_db('select count(*) as num_mixes from mix where cover is not null AND summer=?;', [summer], one=True)
     count = count['num_mixes']
     mixes = []
     offset = PER_PAGE * (page-1)
     if user:
-        mix_rows = query_db('select * from mix where user=? and cover is not null order by date desc limit ? offset ?;', [user, PER_PAGE, offset])
+        mix_rows = query_db('select * from mix where user=? and cover is not null AND summer=? order by date desc limit ? offset ?;', [user, summer, PER_PAGE, offset])
     else:
-        mix_rows = query_db('select * from mix where cover is not null order by date desc limit ? offset ?;', [PER_PAGE, offset])
+        mix_rows = query_db('select * from mix where cover is not null AND summer=? order by date desc limit ? offset ?;', [summer, PER_PAGE, offset])
     if not mix_rows and page != 1:
         abort(404)
     for m in mix_rows:

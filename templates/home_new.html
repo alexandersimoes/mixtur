@@ -1,240 +1,387 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title>New Mixtur Homepage</title>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/site.css') }}">
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-    <script src="https://fb.me/react-15.1.0.js"></script>
-    <script src="https://fb.me/react-dom-15.1.0.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script>
-    <!-- <script src="/static/scripts/react/babel.js"></script> -->
-    <style>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
+  <title>Starter Template - Materialize</title>
 
-    </style>
-  </head>
-  <body>
-    <h1>Mixtur</h1>
-    <div id="wrapper"></div>
-    <script type="text/babel">
-    var PERPAGE = 20;
+  <!-- CSS  -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/materialize.css') }}">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/site.css') }}">
+  <style>
+  /*.tabs .tab a {
+    color: black;
+  }
+  .tabs .tab a:hover {
+    color: gray;
+  }
+  .tabs .indicator {
+    background-color: black;
+  }*/
+  </style>
+</head>
+<body>
 
-    var Mix = React.createClass({
-      render: function() {
-        var mix = this.props.data;
-        var index = this.props.index + 1;
-        return(
-          <div className="mix">
-            <a href="">
-              <div className="cover">
-                <img src={mix.cover} />
-              </div>
-            </a>
-            <span className="index">{index}. </span>
-            <span className="title">{mix.name}</span>
-            <span className="user">{mix.user}</span>
-          </div>
-        );
+  <nav class="light-blue lighten-1" role="navigation">
+    <div class="nav-wrapper">
+      <a id="logo-container" href="#" class="brand-logo white-text"><img src="/static/img/music.svg" /> Mixtur</a>
+      <ul class="right hide-on-med-and-down">
+        <li><a href="#">Sign In</a></li>
+      </ul>
+
+      <ul id="nav-mobile" class="side-nav">
+        <li><a href="#">Sign In</a></li>
+      </ul>
+      <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
+    </div>
+  </nav>
+
+  <div id="mixes" class="section">
+
+  </div>
+
+  <footer class="page-footer orange">
+    <div class="container">
+      <div class="row">
+        <div class="col l6 s12 white-text">
+          Made with love by <a class="orange-text text-lighten-3" href="http://materializecss.com">Al Jaffe</a> <i class="material-icons">motorcycle</i>
+        </div>
+        <div class="col l6 s12 white-text right-align">
+          View source on <a class="orange-text text-lighten-3" href="https://github.com/alexandersimoes/mixtur">GitHub</a> <i class="material-icons">library_music</i>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+
+  <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+
+  <!-- Materialize Scripts -->
+  <script src="/static/js/materialize.js"></script>
+  <script src="/static/js/init.js"></script>
+
+  <!-- React Scripts -->
+  <script src="https://fb.me/react-15.1.0.js"></script>
+  <script src="https://fb.me/react-dom-15.1.0.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script>
+
+  <script type="text/babel">
+  var PERPAGE = 20;
+
+  var Mix = React.createClass({
+    render: function() {
+      var mix = this.props.data;
+      var index = this.props.index + 1;
+      return(
+        <div className="mix">
+          <a href="">
+            <div className="cover">
+              <img src={mix.cover} />
+            </div>
+          </a>
+          <span className="title">{mix.name}</span>
+          <span className="user">{mix.user}</span>
+        </div>
+      );
+    }
+  });
+
+  var Pagination = React.createClass({
+    render: function() {
+      var count = this.props.count;
+      var page = this.props.page;
+      var changePage = this.changePage;
+      var pages = [];
+      var totalPages = Math.ceil(count / PERPAGE);
+      for(var i = 0; i < totalPages; i++){
+        pages.push(i+1)
       }
-    });
-
-    var Pagination = React.createClass({
-      render: function() {
-        var count = this.props.count;
-        var page = this.props.page;
-        var changePage = this.changePage;
-        var pages = [];
-        var totalPages = Math.ceil(count / PERPAGE);
-        for(var i = 0; i < totalPages; i++){
-          pages.push(i+1)
-        }
-        var pages = pages.map(function(p, i){
-          return (<li className={p === page ? "active": null} key={i}><a href="#" onClick={ changePage.bind(this, p) }>{p}</a></li>)
-        });
-        return(
+      var pages = pages.map(function(p, i){
+        return (<li onClick={ changePage.bind(null, p) } className={p === page ? "active": "waves-effect"} key={i}><a href="#!">{p}</a></li>)
+      });
+      console.log("page", page)
+      return(
+        <div className="row container center">
           <ul className="pagination">
-            <li className={ page !== 1 ? null : "disabled"}><a href="#" className="fa fa-chevron-left" aria-hidden="true" onClick={ changePage.bind(this, page-1) }></a></li>
+            <li onClick={ changePage.bind(null, page-1) } className={ page === 1 ? "disabled" : null}><a href="#!"><i className="material-icons">chevron_left</i></a></li>
             {pages}
-            <li className={ page !== totalPages ? null : "disabled"}><a href="#" className="fa fa-chevron-right" aria-hidden="true" onClick={ changePage.bind(this, page+1) }></a></li>
+            <li onClick={ changePage.bind(null, page+1) } className={ page === totalPages ? "disabled" : null}><a href="#!"><i className="material-icons">chevron_right</i></a></li>
           </ul>
-        );
-      },
+        </div>
+      );
+    },
 
-      changePage: function(newPage, e){
-        e.preventDefault();
-        if(e.target.parentNode.className.indexOf('active') < 0 &&
-            e.target.parentNode.className.indexOf('disabled') < 0){
-          this.props.onPageChange(newPage);
+    changePage: function(newPage, e){
+      e.preventDefault();
+      var liEl = $(e.target).parents("li");
+      if(!liEl.hasClass("active") && !liEl.hasClass("disabled")){
+        this.props.onPageChange(newPage);
+      }
+    }
+  });
+
+  var Mixes = React.createClass({
+    getInitialState: function(){
+      return {
+        page: 1,
+        mixes: [],
+        count: 0
+      };
+    },
+
+    fetchx: function(page) {
+      var xhr = new XMLHttpRequest();
+      var _this = this;
+      xhr.onload = function() {
+        if (xhr.status == 200) {
+          var newMixes = JSON.parse(xhr.responseText);
+          // console.log(newMixes)
+          _this.setState({mixes:newMixes.mixes, count:newMixes.count, page:newMixes.page})
+        } else {
+          alert("Error! Upload failed");
         }
+      };
+      xhr.onerror = function() {
+        alert("Error! Upload failed. Can not connect to server.");
+      };
+      xhr.open("GET", "/new/recent/"+page+"/", true);
+      xhr.send();
+    },
+
+    componentDidMount: function(){
+      this.fetchx(1);
+    },
+
+    render: function() {
+
+      var mixes = this.state.mixes.map(function(m, i){
+        return (<Mix key={i} data={m} index={i} />)
+      });
+      var count = this.state.count;
+      var page = this.state.page;
+
+      return(
+        <section id="recent" className="col s12">
+          {mixes}
+          <Pagination count={count} page={page} onPageChange={this.changePage} />
+        </section>
+      );
+    },
+
+    changePage: function(newPage){
+      this.fetchx(newPage);
+    }
+  });
+
+  var MixNav = React.createClass({
+    tabs: [
+      {"id":"recent", "title":"Recent"},
+      {"id":"user", "title":"By User"},
+      {"id":"summer", "title":"Summer Mixes"},
+      {"id":"auto", "title":"Auto Generated"}
+    ],
+
+    getInitialState: function(){
+      return {
+        tab: "recent"
+      };
+    },
+
+    componentDidMount: function(){
+       $('ul.tabs').tabs();
+    },
+
+    render: function() {
+
+      var currentTab = this.state.tab;
+      // var changeTab = this.changeTab;
+      var changeView = this.props.changeView;
+      var mixTabs = this.tabs.map(function(t){
+        return (<li onClick={changeView.bind(null, t["id"])} className="tab col s3" key={t["id"]}><a className={currentTab === t.id ? "active": null} href="#">{t["title"]}</a></li>)
+      });
+
+      return(
+        <div className="row container">
+          <ul className="tabs">
+            {mixTabs}
+          </ul>
+        </div>
+      );
+    },
+
+    // changeTab: function(tab, e) {
+    //   console.log(tab)
+    // }
+  });
+
+  var Mixes2 = React.createClass({
+    render: function() {
+      var mixes = this.props.mixes.map(function(m, i){
+        return (<Mix key={i} data={m} index={i} />)
+      });
+
+      return(
+        <section id="recent" className="col s12 center">
+          {mixes}
+          <Pagination count={this.props.count} page={this.props.page} onPageChange={this.changePage} />
+        </section>
+      );
+    },
+
+    changePage: function(newPage) {
+      this.props.changePage(newPage);
+      // console.log(newView)
+    },
+
+    changeView: function(newView) {
+      console.log(newView)
+    }
+  });
+
+  var Users = React.createClass({
+    componentDidMount: function(){
+      $('.dropdown-button').dropdown({
+        inDuration: 300,
+        outDuration: 225,
+        constrain_width: true, // Does not change width of dropdown to that of the activator
+        hover: true, // Activate on hover
+        gutter: 0, // Spacing from edge
+        belowOrigin: false, // Displays dropdown below the button
+        alignment: 'left' // Displays dropdown with edge aligned to the left of button
+      });
+    },
+
+    render: function() {
+      var _this = this;
+      var users = this.props.users.map(function(u){
+        return (<li key={u} onClick={_this.changeUser.bind(null, u)}><a href="#!">{u}</a></li>)
+      });
+      return(
+        <div className="row container center">
+          Showing MixXxes for user: <a className='dropdown-button btn' href='#' data-activates='dropdown1'>{this.props.currentUser}</a>
+          <ul id='dropdown1' className='dropdown-content'>
+            {users}
+          </ul>
+        </div>
+      );
+    },
+
+    changeUser: function(newUser){
+      this.props.fetchMixes(1, newUser);
+      $('.dropdown-button.btn').text(newUser);
+    }
+  });
+
+  var Page = React.createClass({
+    getInitialState: function(){
+      return {
+        page: 1,
+        mixes: [],
+        count: 0,
+        currentView: "recent",
+        users: [],
+        user: null,
+        summer: 0
+      };
+    },
+
+    fetch: function(page, user, summer) {
+      var user = user || "";
+      var summer = summer || 0;
+      var _this = this;
+      $.getJSON("/api/mixes/?page="+page+"&user="+user+"&summer="+summer, function( json ) {
+        _this.setState({mixes:json.mixes, count:json.count, page:json.page})
+      });
+      if(user){
+        this.setState({user:user});
       }
-    });
+    },
 
-    var RecentMixes = React.createClass({
-      getInitialState: function(){
-        return {
-          page: 1,
-          mixes: [],
-          count: 0
-        };
-      },
-
-      fetchx: function(page) {
-        var xhr = new XMLHttpRequest();
-        var _this = this;
-        xhr.onload = function() {
-          if (xhr.status == 200) {
-            var newMixes = JSON.parse(xhr.responseText);
-            // console.log(newMixes)
-            _this.setState({mixes:newMixes.mixes, count:newMixes.count, page:newMixes.page})
-          } else {
-            alert("Error! Upload failed");
-          }
-        };
-        xhr.onerror = function() {
-          alert("Error! Upload failed. Can not connect to server.");
-        };
-        xhr.open("GET", "/new/recent/"+page+"/", true);
-        xhr.send();
-      },
-
-      componentDidMount: function(){
-        this.fetchx(1);
-      },
-
-      render: function() {
-
-        var mixes = this.state.mixes.map(function(m, i){
-          return (<Mix key={i} data={m} index={i} />)
+    fetchUsers: function() {
+      var _this = this;
+      if(!this.state.users.length){
+        $.getJSON("/api/users/", function( json ) {
+          _this.setState({users:json.users, user:json.users[0]})
+          _this.fetch(1, _this.state.user);
         });
-        var count = this.state.count;
-        var page = this.state.page;
-
-        return(
-          <section id="recent">
-            <header>
-              <h2>Recently Added</h2>
-            </header>
-            {mixes}
-            <Pagination count={count} page={page} onPageChange={this.changePage} />
-          </section>
-        );
-      },
-
-      changePage: function(newPage){
-        this.fetchx(newPage);
       }
-    });
+      else {
+        this.fetch(1, this.state.user);
+      }
+    },
 
-    var UserMixes = React.createClass({
-      getInitialState: function(){
-        return {
-          page: 1,
-          mixes: [],
-          count: 0,
-          user: null,
-          users: []
-        };
-      },
+    componentDidMount: function(){
+      this.fetch(1);
+    },
 
-      fetchx: function(page, user) {
-        var xhr = new XMLHttpRequest();
-        var _this = this;
-        xhr.onload = function() {
-          if (xhr.status == 200) {
-            var newMixes = JSON.parse(xhr.responseText);
-            _this.setState({mixes:newMixes.mixes, count:newMixes.count, page:newMixes.page})
-          } else {
-            alert("Error! Upload failed");
-          }
-        };
-        xhr.onerror = function() {
-          alert("Error! Upload failed. Can not connect to server.");
-        };
-        xhr.open("GET", "/api/mixes/?page="+page+"&user="+user, true);
-        xhr.send();
-      },
+    render: function() {
+      return(
+        <div>
+          <MixNav changeView={this.changeView} />
+          { this.state.users.length && this.state.currentView === "user" ? <Users fetchMixes={this.fetch} currentUser={this.state.user} users={this.state.users} /> : null }
+          <Mixes2 count={this.state.count} page={this.state.page} mixes={this.state.mixes} changePage={this.changePage} />
+        </div>
+      );
+    },
 
-      fetchUsers: function() {
-        var xhr = new XMLHttpRequest();
-        var _this = this;
-        var page = this.state.page;
-        xhr.onload = function() {
-          if (xhr.status == 200) {
-            var resp = JSON.parse(xhr.responseText);
-            _this.setState({users:resp.users, user:resp.users[0]})
-            _this.fetchx(page, resp.users[0])
-          } else {
-            console.log("Error! Upload failed");
-          }
-        };
-        xhr.onerror = function() {
-          console.log("Error! Upload failed. Can not connect to server.");
-        };
-        xhr.open("GET", "/api/users/", true);
-        xhr.send();
-      },
+    changePage: function(page) {
+      var currentView = this.state.currentView;
+      if(currentView === "summer"){
+        this.fetch(page, '', 1);
+      }
+      else if(currentView === "user"){
+        this.fetch(page, this.state.user, 0);
+      }
+      else {
+        this.fetch(page, '', 0);
+      }
+      this.setState({page: page})
+    },
 
-      componentDidMount: function(){
+    changeView: function(newView) {
+      console.log(newView)
+      if(newView === "user") {
         this.fetchUsers();
-      },
-
-      render: function() {
-
-        var mixes = this.state.mixes.map(function(m, i){
-          return (<Mix key={i} data={m} index={i} />)
-        });
-        var count = this.state.count;
-        var page = this.state.page;
-
-        return(
-          <section id="user">
-            <header>
-              <h2>Mixturs by User</h2>
-              { this.renderUserDropdown() }
-            </header>
-            {mixes}
-            <Pagination count={count} page={page} onPageChange={this.changePage} />
-          </section>
-        );
-      },
-
-      changePage: function(newPage){
-        this.fetchx(newPage, this.state.user);
-      },
-
-      renderUserDropdown: function(){
-        var users = this.state.users.map(function(u, i){
-          return (<option value={u} key={u}>{u}</option>)
-        })
-        return (
-          <div className="selection">
-            <select onChange={this.changeUser}>
-            { users }
-            </select>
-          </div>
-        )
-      },
-
-      changeUser: function(e){
-        this.fetchx(1, e.target.value);
       }
-    });
-
-    var Page = React.createClass({
-      render: function() {
-        return(
-          <div className="page">
-            <RecentMixes />
-            <UserMixes />
-          </div>
-        );
+      else if(newView === "summer") {
+        this.fetch(1, '', 1);
       }
-    });
+      else if(newView === "auto") {
+        var mixes = [
+          {'name':"Most Popular", 'user':'', 'cover':"/static/img/mixtur_cpu_popular.jpg", 'slug':"most_popular"},
+          {'name':"Most Recent", 'user':'', 'cover':"/static/img/mixtur_cpu_recent.jpg", 'slug':"most_popular"},
+          {'name':"Random", 'user':'', 'cover':"/static/img/mixtur_cpu_random.jpg", 'slug':"most_popular"}
+        ]
+        this.setState({mixes: mixes})
+      }
+      else {
+        this.fetch(1);
+      }
+      this.setState({currentView: newView})
+    }
+  });
 
-    ReactDOM.render(
-      <Page />,
-      document.getElementById('wrapper')
-    );
-    </script>
+  ReactDOM.render(
+    <Page />,
+    document.getElementById('mixes')
+  );
+  </script>
+
   </body>
 </html>
+
+
+<!-- <div class="row">
+  <div class="col s12">
+    <ul class="tabs">
+      <li class="tab col s3"><a class="active" href="#test1">Recent</a></li>
+      <li class="tab col s3"><a href="#test2">By User</a></li>
+      <li class="tab col s3"><a href="#test3">Summer MixXxes</a></li>
+      <li class="tab col s3"><a href="#test4">Auto Generated</a></li>
+    </ul>
+  </div>
+  <div id="mixes" class="col s12">
+
+  </div>
+</div> -->

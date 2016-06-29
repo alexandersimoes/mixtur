@@ -156,6 +156,8 @@ body {
   font-weight: 300;
   letter-spacing: 0;
   line-height: 1.4; }
+nav .brand-logo img {
+  width: 28px; }
 section {
   margin: 0 0 40px 0;
   background-color: #f7f7f7; }
@@ -193,7 +195,7 @@ section {
           flex: 1; }
   section .mix {
     display: inline-block;
-    padding: 0 0 16px 22px;
+    margin: 10px;
     position: relative;
     width: 150px; }
     section .mix .cover img {
@@ -202,48 +204,19 @@ section {
       -moz-box-shadow: rgba(0, 0, 0, 0.3) 0 3px 5px;
       border-color: #a2a2a2 \9;
       width: 150px; }
-    section .mix .index {
-      font-size: 12px;
-      position: absolute;
-      top: 140px;
-      left: 0px;
-      color: #898989;
+    section .mix .title {
+      font-size: 14px;
+      font-weight: normal;
       display: block;
-      width: 20px;
-      text-align: right;
-      font-size: 10px; }
-      section .mix .title {
-        font-size: 14px;
-        font-weight: normal;
-        display: block;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        text-transform: uppercase;
-        white-space: nowrap;
-        color: #333333;
-        font-family: "Helvetica Neue", Helvetica, Arial, "Open Sans", sans-serif;
-        font-weight: normal;
-        line-height: normal;
-        margin: 4px 0 0 0;
-        text-transform: uppercase; }
-        section .mix .user {
-          font-size: 11px; }
-  section .pagination {
-    padding: 10px;
-    text-align: center; }
-    section .pagination li {
-      display: inline-block;
-      font-size: 1.2rem;
-      padding: 0 10px;
-      line-height: 30px;
-      border-radius: 2px;
-      text-align: center; }
-      section .pagination li.active {
-        background: #333333; }
-        section .pagination li.active a {
-          color: #f7f7f7; }
-      section .pagination li a {
-        color: inherit;
-        text-decoration: none; }
-    section .pagination .disabled {
-      color: #999999; }
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-transform: uppercase;
+      white-space: nowrap;
+      color: #333333;
+      font-family: "Helvetica Neue", Helvetica, Arial, "Open Sans", sans-serif;
+      font-weight: normal;
+      line-height: normal;
+      margin: 4px 0 0 0;
+      text-transform: uppercase; }
+      section .mix .user {
+        font-size: 11px; }
