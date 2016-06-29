@@ -670,7 +670,20 @@ def song_listen(mix_type, mix_slug, song_id):
 @app.route("/summer16/")
 @app.route("/summer/")
 def summer16():
-    return render_template('summer16.html')
+    mixes = query_db("SELECT * FROM mix WHERE summer=1 order by user, id;")
+    summer_mixes = []
+    for m in mixes:
+        current_mix = {
+            "slug": m["slug"],
+            "title": unicode(m["name"]),
+            "author": m["user"],
+            "cover": m["cover"]
+        }
+        if m["cover"]:
+            cover_no_ext, cover_extension = os.path.splitext(m["cover"])
+            current_mix["thumb"] = cover_no_ext+"_thumb"+cover_extension
+        summer_mixes.append(current_mix)
+    return render_template('summer16.html', summer_mixes=summer_mixes)
 
 '''Just catch all the 404s plz'''
 @app.errorhandler(404)

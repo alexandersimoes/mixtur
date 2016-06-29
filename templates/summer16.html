@@ -217,7 +217,10 @@ p {
     <p>Making a summer mixXx that will stand the test of time is one of the hardest achievements to attain. The perfect mesh of timeless and timely. Gems of the past and jewels of the present. Below are some mixXxes to help you get inspired.</p>
   </div>
   <div class="mixes">
-    <a title="Al Jaffe's 2006 Summer Mix FROM DA VAULT!" href="/m/Summer_Mix_06/"><img src="http://mixtur.audio/uploads/aljaffe/Summer_Mix_06/default_cover_thumb.jpg" /></a>
+    {% for m in summer_mixes %}
+    <a title="{{ m.title }}" href="{{ url_for('mix', mix_type='m', mix_slug=m.slug) }}"><img src="{{ url_for('uploaded_file', user=m.author, mix=m.slug, filename=m.thumb) }}" /></a>
+    {% endfor %}
+    <!-- <a title="Al Jaffe's 2006 Summer Mix FROM DA VAULT!" href="/m/Summer_Mix_06/"><img src="http://mixtur.audio/uploads/aljaffe/Summer_Mix_06/default_cover_thumb.jpg" /></a>
     <a title="Al Jaffe's 2007 Summer Mix FROM DA VAULT!" href="/m/Summer_Mix_2007/"><img src="http://mixtur.audio/uploads/aljaffe/Summer_Mix_2007/summer_mix_07_front_copy_thumb.jpg" /></a>
     <a title="Al Jaffe's 2008 Summer Mix FROM DA VAULT!" href="/m/Human_To_Only_God_Summer_Mix_08/"><img src="http://mixtur.audio/uploads/aljaffe/Human_To_Only_God_Summer_Mix_08/summerMix08front_thumb.jpg" /></a>
     <a title="Al Jaffe's 2011 Summer Mix" href="/m/Pure_Living_Summer_Mix_2011/"><img src="http://mixtur.audio/uploads/aljaffe/Pure_Living_Summer_Mix_2011/summermix2011_cover_thumb.jpg" alt="Al Jaffe's 2011 Summer Mix" /></a>
@@ -233,7 +236,7 @@ p {
     <a title="DPBriand's 2012 Summer Mix" href="/m/Growing_Younger_Summer_2012/"><img src="http://mixtur.audio/uploads/dpbriand/Growing_Younger_Summer_2012/Screen_Shot_2016-06-06_at_8.50.38_PM_copy_thumb.jpg" /></a>
     <a title="DPBriand's 2013 Summer Mix" href="/m/Summer_2013/"><img src="http://mixtur.audio/uploads/dpbriand/Summer_2013/default_cover_thumb.jpg" /></a>
     <a title="DPBriand's 2014 Summer Mix" href="/m/Movin_Down_the_Line_Summer_2014/"><img src="http://mixtur.audio/uploads/dpbriand/Movin_Down_the_Line_Summer_2014/MovinDownTheLineSummer2014_cover_thumb.jpg" /></a>
-    <a title="DPBriand's 2015 Summer Mix" href="/m/Alone_in_a_Satellite_Dream_Summer_2015/"><img src="http://mixtur.audio/uploads/dpbriand/Alone_in_a_Satellite_Dream_Summer_2015/CoverArt_AloneInASatelliteDream_thumb.jpg" /></a>
+    <a title="DPBriand's 2015 Summer Mix" href="/m/Alone_in_a_Satellite_Dream_Summer_2015/"><img src="http://mixtur.audio/uploads/dpbriand/Alone_in_a_Satellite_Dream_Summer_2015/CoverArt_AloneInASatelliteDream_thumb.jpg" /></a> -->
   </div>
 </div>
 <div class="rules">
