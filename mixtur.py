@@ -272,7 +272,55 @@ def profile(user):
         anthologies.append(current_anthology)
 
     return render_template("home.html", mixes=mixes, anthologies=anthologies)    
-        
+
+@app.route("/random/summer/")
+def cpumix():
+    listens = None
+    num_albums = 1
+    total_time = 3
+    base_date = datetime(1970, 1, 1)
+    
+    songs = query_db("""
+        select m.name as mix_name, cover, m.slug as mix_slug, s.title, s.artist, s.slug as song_slug, disc, position, runtime, date, palette, user, desc, s.id as song_id 
+            from song as s, mix as m
+        where 
+            m.summer = 1 and s.mix = m.id
+        order by RANDOM() limit 15;
+    """)
+    song_ids = [s["song_id"] for s in songs]
+    song_ids = map(str, song_ids)
+    sids = ", ".join(song_ids)
+    listens_q = """select song, count(*) as listens from listen where song in ({}) group by song;""".format(sids)
+    listens = query_db(listens_q)
+    
+    # format palettes
+    def fix_palette(s):
+        if "palette" in s and s["palette"]:
+            s["palette"] = json.loads(s["palette"])
+        else:
+            s["palette"] = ["#eee", "#222"]
+        return s
+    songs = map(dict, songs)
+    songs = map(fix_palette, songs)
+    if listens:
+        for l in listens:
+            s = filter(lambda x: x['song_id'] == l['song'], songs)[0]
+            s['listens'] = l['listens']
+    for i, s in enumerate(songs):
+        s["position"] = i+1
+        songs[i] = s
+    # get runtimes
+    runtimes = [datetime.strptime(s["runtime"], '%Y-%m-%d %H:%M:%S') for s in songs]
+    runtimes = [r - base_date for r in runtimes]
+    total_runtime = reduce(operator.add, runtimes)
+    hours, remainder = divmod(total_runtime.seconds, 3600)
+    minutes, seconds = divmod(remainder, 60)
+
+    return render_template("cpumix.html", 
+                            num_albums=num_albums,
+                            total_runtime={"hours":hours, "minutes":minutes, "seconds":seconds},
+                            songs=songs, 
+                            votes={})
         
 @app.route("/<mix_type>/<mix_slug>/")
 def mix(mix_type, mix_slug):
