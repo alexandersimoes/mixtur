@@ -274,7 +274,8 @@ def profile(user):
     return render_template("home.html", mixes=mixes, anthologies=anthologies)    
 
 @app.route("/random/summer/")
-def cpumix():
+@app.route("/summer4ever/", defaults={'sponsored': True})
+def cpumix(sponsored=False):
     listens = None
     num_albums = 1
     total_time = 3
@@ -315,8 +316,10 @@ def cpumix():
     total_runtime = reduce(operator.add, runtimes)
     hours, remainder = divmod(total_runtime.seconds, 3600)
     minutes, seconds = divmod(remainder, 60)
+    
+    html = "corona.html" if sponsored else "cpumix.html"
 
-    return render_template("cpumix.html", 
+    return render_template(html, 
                             num_albums=num_albums,
                             total_runtime={"hours":hours, "minutes":minutes, "seconds":seconds},
                             songs=songs, 

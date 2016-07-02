@@ -1,0 +1,178 @@
+{% extends "layout.html" %}
+{% if songs[0].palette[1] %}
+{% set header_col = songs[0].palette[1] %}
+{% endif %}
+
+
+{% block head_title %}A Random MixXx of Summer TraxXx{% endblock %}
+
+{% block head %}
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='mix.css') }}">
+  
+  <!-- Meta -->        
+  <meta name="keywords" content="Music, Mix Tape, Playlist, Soundtrack to your life, muxtape, html5 audio" />
+  <meta name="description" content="{{ songs[0].desc }}" />
+  <link rel="image_src" href="http://mixtur.audio{{url_for('uploaded_file', user=songs[0].user, mix=songs[0].mix_slug, filename=songs[0].cover) }}">
+
+  <meta property="og:site_name" content="Mixtur" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:title" content="{{ songs[0].mix_name }}" />
+  <meta property="og:type" content="music.playlist" />
+  <meta property="og:url" content="{{ request.url }}" />
+  <link rel="canonical" href="{{ request.url }}" />
+  <meta property="og:image" content="http://mixtur.audio{{url_for('uploaded_file', user=songs[0].user, mix=songs[0].mix_slug, filename=songs[0].cover) }}" />
+  <meta property="og:description" content="{{ songs[0].desc }}" />
+  <meta name="author" content="{{ songs[0].user }}" />
+  
+  <style>
+  header {
+    color: #163b76 !important;
+  }
+  .corona {
+    background-attachment: fixed;
+    background-image: url('/static/img/coronabg.jpg');
+    background-position: center top;
+    background-repeat: no-repeat;
+    
+    color: #163b76 !important;
+    
+    height: 100vh;
+    width: 100vw;
+    /* z-index: -1; */
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 0;
+  }
+  .anthology {
+    background: rgba(255, 255, 255, 0.76);
+    max-width: 800px;
+    margin: 0 auto;
+    z-index: 99;
+  }
+  .nav {
+    color: #163b76 !important;
+    
+    position: relative;
+    width: 800px;
+    margin: 0 auto;
+  }
+  .album-art{
+/*    -webkit-box-flex: 0 0 50px;
+    -moz-box-flex: 0 0 50px;
+    -webkit-flex: 0 0 50px;
+    -ms-flex: 0 0 50px;
+    flex: 0 0 50px;*/
+    margin: 5px 10px 0 0;
+    position: relative;
+  }
+  .tracklisting {
+    color: #163b76 !important;
+    
+    -webkit-box-flex: 1;
+    -moz-box-flex: 1;
+    -webkit-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+  }
+  .tracks{
+    padding-top: 10px !important;
+  }
+  div.track-progress-bg{
+    border: solid #163b76 1px;
+    background: #163b76;
+  }
+  div.track-progress-loaded{
+/*    background: #f0e892;*/
+  }
+  div.track-progress{
+    background: #f0e892;
+  }
+  div.track-cursor{
+  }
+  
+  /* Narrow */
+  @media only screen and (max-width: 480px) {
+    .anthology {
+      width: 100%;
+    }
+    .nav {
+      width: 100%;
+    }
+  }
+  </style>
+  
+{% endblock %}
+
+{% block body %}
+<div class="corona"></div>
+<div class="anthology">  
+  {% set disc = -1 %}
+  {% set mix = None %}
+  {% set prev_album_cover = None %}
+
+  <div class="album" data-bg-col="#f0e892" data-hilite-col="#163b76">
+  
+    <header class="nav">
+      <div class="album-title">
+        <h1>Summer 4 Ever <span><a href="#" class="fa fa-random" title="Shuffle songs"></a> </span></h1>
+        <span>{{ songs|length }} songs &bull; {% if total_runtime.hours %}{{ total_runtime.hours }} hours{% endif %} {% if total_runtime.minutes %}{{ total_runtime.minutes }} minutes{% endif %} {% if not total_runtime.hours and not total_runtime.minutes %}{{ total_runtime.seconds }} seconds{% endif %}</span>
+      </div>
+      <div class="album-controls">
+        <i title="Play previous song" class="fa fa-step-backward fa-lg"></i><i title="Play" class="fa fa-play fa-lg"></i><i title="Pause" class="fa fa-pause fa-lg"></i><i title="Play next song" class="fa fa-step-forward fa-lg"></i>
+      </div>
+      <div class="progress">
+        <div class="track-progress-bg"></div>
+        <div class="track-progress-loaded"></div>
+        <div class="track-progress"  style="background:#f0e892"></div>
+        <div class="track-cursor"></div>
+      </div>
+    </header>
+  
+    <div class="tracks">
+      <nav class="album-art">
+        <img src='/static/img/coronacrew.jpg' />
+      </nav>
+      <main class="tracklisting">
+        <div class="disc">
+          <ol>
+            {% for s in songs %}
+            <li class="track" title="{{ s.artist }} - {{ s.title }}" data-id="{{ s.song_id }}">
+              <div class="track-info">
+                <p class="track-num"><span>{{ s.position }}</span><i class="fa fa-volume-up"></i></p>
+                <p class="track-title">
+                  <span class="track-name">{{ s.title }}</span><br />
+                  <span class="track-artist">{{ s.artist }}</span>
+                  {% if s.listens %}
+                  <span class="track-listens"><i class="fa fa-volume-up" aria-hidden="true"></i> {{ s.listens }}</span>
+                  {% endif %}
+                  <br />
+                  <audio preload="none" src="{{url_for('uploaded_file', user=s.user, mix=s.mix_slug, filename=s.song_slug) }}"></audio>
+                </p>
+                <p class="track-time"><span></span>{{ s.runtime|dateformat('%-M:%S') }}</p>
+              </div>
+            </li>
+            {% set mix = s.mix_name %}
+            {% set mix_slug = s.mix_slug %}
+            {% set cover = s.cover %}
+            {% set disc = s.disc %}
+            {% endfor %}
+          </ol>
+        </div>
+      </main>
+    </div>
+    <footer></footer>
+  </div>
+</div>
+{% endblock %}
+
+{% block js %}
+  <script src="{{ url_for('static', filename='js/d3.js') }}" charset="utf-8"></script>
+  <script src="{{ url_for('static', filename='js/d3plus.min.js') }}"></script>
+  <script>
+  var mix_type = "m";
+      palette = ["#afafaf", "#414141", "#090909"];
+      console.log(palette)
+  </script>
+  <script src="{{ url_for('static', filename='js/mix.js') }}"></script>
+{% endblock %}
