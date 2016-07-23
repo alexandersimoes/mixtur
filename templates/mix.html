@@ -12,7 +12,9 @@
   <!-- Meta -->        
   <meta name="keywords" content="Music, Mix Tape, Playlist, Soundtrack to your life, muxtape, html5 audio" />
   <meta name="description" content="{{ songs[0].desc }}" />
+  {% if songs[0].cover %}
   <link rel="image_src" href="http://mixtur.audio{{url_for('uploaded_file', user=songs[0].user, mix=songs[0].mix_slug, filename=songs[0].cover) }}">
+  {% endif %}
 
   <meta property="og:site_name" content="Mixtur" />
   <meta property="og:locale" content="en_US" />
@@ -20,7 +22,9 @@
   <meta property="og:type" content="music.playlist" />
   <meta property="og:url" content="{{ request.url }}" />
   <link rel="canonical" href="{{ request.url }}" />
+  {% if songs[0].cover %}
   <meta property="og:image" content="http://mixtur.audio{{url_for('uploaded_file', user=songs[0].user, mix=songs[0].mix_slug, filename=songs[0].cover) }}" />
+  {% endif %}
   <meta property="og:description" content="{{ songs[0].desc }}" />
   <meta name="author" content="{{ songs[0].user }}" />
   
