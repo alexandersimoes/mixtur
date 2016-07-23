@@ -34,7 +34,7 @@ section#anthologies ul li {
   width: 25%;
 }
 section#anthologies ul li.bigger {
-  width: 50%;
+  width: 100%;
   padding-bottom: 50%;
   float: left;
 }

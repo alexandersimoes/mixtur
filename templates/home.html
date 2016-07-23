@@ -26,32 +26,19 @@
 </section>
 
 <section id="anthologies">
-  <h1>Anthologies</h1>
-  {% for a in anthologies %}
+  <h1>A Special Mix...</h1>
   <div class="anthology">
     <ul>
-      {% if a.albums > 4 %}
-      {% for n in range(5) %}
-      <li {% if n == 0 %}class="bigger"{% endif %} style="background: url('{{ a.cover[n] }}')"></li>
-      {% endfor %}
-      {% else %}
-      {% for n in range(2) %}
-      <li class="bigger" style="background: url('{{ a.cover[n] }}')"></li>
-      {% endfor %}
-      {% endif %}
+      <li class="bigger" style="background: url('/static/img/coronabg.jpg')"></li>
     </ul>
-    <a class="link-cover" href="{{ url_for('mix', mix_type='a', mix_slug=a.slug) }}"></a>
+    <a class="link-cover" href="/summer4ever/"></a>
     <div class="content">
       <div class="post-meta">
-        <h1>{{ a.title }}</h1>
-        <h2 style="z-index: 1;">{{ a.albums }} albums, {{ a.songs }} songs, {{ a.runtime }}</h2>
-        <div class="author-meta">
-          <b>By</b> <a class="author-name" href="#">aljaffe</a>
-        </div>
+        <h1>Corona Presents: Summer 4 Ever</h1>
+        <h2 style="z-index: 1;">A Random Collection of Summer MixXxes</h2>
       </div>
     </div>
   </div>
-  {% endfor %}
 
 </section>
 {% endblock %}
