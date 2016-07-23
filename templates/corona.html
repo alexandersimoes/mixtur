@@ -100,11 +100,105 @@
       width: 100%;
     }
   }
+  
+  .overlay {
+      z-index: 2000;
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+  }
+  .overlay#bg {
+      opacity: 0.8;
+      background-color: #E9E9E9;
+      visibility: visible;
+  }
+  .overlay#view {
+      -webkit-justify-content: center;
+      -moz-justify-content: center;
+      justify-content: center;
+      -ms-flex-pack: center;
+      flex-pack: center;
+      display: -webkit-box;
+      display: -moz-box;
+      display: -ms-flexbox;
+      display: -webkit-flex;
+      display: flex;
+      -webkit-align-items: center;
+      align-items: center;
+      -ms-flex-align: center;
+      flex-align: center;
+      -webkit-justify-content: center;
+      -moz-justify-content: center;
+      justify-content: center;
+      -ms-flex-pack: center;
+      flex-pack: center;
+  }
+  .overlay#view .modal {
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
+      -webkit-box-shadow: 2px 5px 15px rgba(27, 25, 29, 0.1);
+      -moz-box-shadow: 2px 5px 15px rgba(27, 25, 29, 0.1);
+      box-shadow: 2px 5px 15px rgba(27, 25, 29, 0.1);
+      background-color: #F6F6F6;
+      width: 60vw;
+      z-index: 2002;
+      overflow: auto;
+      position: relative;
+  }
+  .overlay#view .close-btn {
+      z-index: 20;
+      position: absolute;
+      display: block;
+      cursor: pointer;
+      overflow: hidden;
+      height: 40px;
+      width: 40px;
+      top: 10px;
+      right: 0;
+      margin: 0;
+      color: #f0e892;
+  }
+
+
+  .overlay#view .modal .header {
+      padding: 13px 20px;
+      background-color: #163b76;
+      margin-bottom: 5px;
+      color: #f0e892;
+  }
+  .overlay#view .modal .header h2 {
+      letter-spacing: 0.1em;
+      font-size: 20px;
+      font-weight: 400;
+      text-transform: uppercase;
+      -webkit-font-smoothing: antialiased;
+      -moz-font-smoothing: antialiased;
+      font-smoothing: antialiased;
+  }
+  .overlay#view .modal .body {
+    text-align: center;
+  }
+  .overlay#view .modal .body img {
+    height: 400px;
+  }
   </style>
   
 {% endblock %}
 
 {% block body %}
+<div class="overlay" id="bg"></div>
+<div class="overlay" id="view">
+  <div class="modal">
+    <div class="close-btn"><i class="fa fa-times fa-2x" aria-hidden="true"></i></div>
+    <div class="header"><h2>A Brief Word From Our Sponsor...</h2></div>
+    <div class="body">
+      <img src="/static/img/coronatall.jpg" />
+    </div>
+  </div>
+</div>
 <div class="corona"></div>
 <div class="anthology">  
   {% set disc = -1 %}
@@ -172,7 +266,25 @@
   <script>
   var mix_type = "m";
       palette = ["#afafaf", "#414141", "#090909"];
-      console.log(palette)
+  
+  function playAd(){
+    var max = 6, min = 1;
+    var whichAd = Math.floor(Math.random() * (max - min + 1)) + min;
+    var adPath = "/static/audio/CORONA"+whichAd+".mp3";
+    
+    var audio = new Audio(adPath);
+    audio.play();
+    audio.addEventListener("ended", function(){
+      d3.selectAll(".overlay").remove();
+    }, false);
+    
+    d3.selectAll(".close-btn").on("click", function(){
+      d3.selectAll(".overlay").remove();
+      audio.pause();
+    });
+  }
+  
+  playAd();
   </script>
   <script src="{{ url_for('static', filename='js/mix.js') }}"></script>
 {% endblock %}
