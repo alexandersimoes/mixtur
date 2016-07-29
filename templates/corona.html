@@ -12,7 +12,6 @@
   <!-- Meta -->        
   <meta name="keywords" content="Music, Mix Tape, Playlist, Soundtrack to your life, muxtape, html5 audio" />
   <meta name="description" content="{{ songs[0].desc }}" />
-  <link rel="image_src" href="http://mixtur.audio{{url_for('uploaded_file', user=songs[0].user, mix=songs[0].mix_slug, filename=songs[0].cover) }}">
 
   <meta property="og:site_name" content="Mixtur" />
   <meta property="og:locale" content="en_US" />
@@ -20,11 +19,13 @@
   <meta property="og:type" content="music.playlist" />
   <meta property="og:url" content="{{ request.url }}" />
   <link rel="canonical" href="{{ request.url }}" />
-  <meta property="og:image" content="http://mixtur.audio{{url_for('uploaded_file', user=songs[0].user, mix=songs[0].mix_slug, filename=songs[0].cover) }}" />
   <meta property="og:description" content="{{ songs[0].desc }}" />
   <meta name="author" content="{{ songs[0].user }}" />
   
   <style>
+  body {
+    position: fixed;
+  }
   header {
     color: #163b76 !important;
   }
@@ -179,7 +180,9 @@
       font-smoothing: antialiased;
   }
   .overlay#view .modal .body {
-    text-align: center;
+    background-image: url('/static/img/coronatall.jpg');
+    height: 300px;
+    background-size: contain;
   }
   .overlay#view .modal .body img {
     height: 400px;
@@ -195,7 +198,6 @@
     <div class="close-btn"><i class="fa fa-times fa-2x" aria-hidden="true"></i></div>
     <div class="header"><h2>A Brief Word From Our Sponsor...</h2></div>
     <div class="body">
-      <img src="/static/img/coronatall.jpg" />
     </div>
   </div>
 </div>
@@ -241,6 +243,8 @@
                   <span class="track-listens"><i class="fa fa-volume-up" aria-hidden="true"></i> {{ s.listens }}</span>
                   {% endif %}
                   <br />
+                  <!-- <a href="{{ url_for('mix', mix_type='m', mix_slug=s.mix_slug) }}"> -->
+                  <span class="track-album">From {{s.user}}'s '{{s.mix_name}}'</span>
                   <audio preload="none" src="{{url_for('uploaded_file', user=s.user, mix=s.mix_slug, filename=s.song_slug) }}"></audio>
                 </p>
                 <p class="track-time"><span></span>{{ s.runtime|dateformat('%-M:%S') }}</p>
@@ -264,27 +268,41 @@
   <script src="{{ url_for('static', filename='js/d3.js') }}" charset="utf-8"></script>
   <script src="{{ url_for('static', filename='js/d3plus.min.js') }}"></script>
   <script>
-  var mix_type = "m";
+  var audioAd,
+      mix_type = "m",
       palette = ["#afafaf", "#414141", "#090909"];
   
-  function playAd(){
+  function stopAd() {
+    d3.selectAll(".overlay").remove();
+    d3.select("body").style("position", "relative");
+    audioAd.pause();
+  }
+
+  function playAd(e) {
     var max = 6, min = 1;
     var whichAd = Math.floor(Math.random() * (max - min + 1)) + min;
     var adPath = "/static/audio/CORONA"+whichAd+".mp3";
-    
-    var audio = new Audio(adPath);
-    audio.play();
-    audio.addEventListener("ended", function(){
-      d3.selectAll(".overlay").remove();
-    }, false);
-    
-    d3.selectAll(".close-btn").on("click", function(){
-      d3.selectAll(".overlay").remove();
-      audio.pause();
-    });
+
+    audioAd = new Audio(adPath);
+    audioAd.currentTime = 0;
+    audioAd.pause();
+    audioAd.load();
+    audioAd.play();
+    removeEventListener('touchstart', playAd, false);
+
+    audioAd.addEventListener("ended", stopAd, false);
   }
   
-  playAd();
+  addEventListener('touchstart', playAd, false);
+  d3.selectAll(".close-btn").on("click", stopAd);
+  d3.select(document).on("keydown", function(){
+    if(d3.event.keyCode == 27){
+      stopAd();
+    }
+  });
+  
+  // playAd();
+  
   </script>
   <script src="{{ url_for('static', filename='js/mix.js') }}"></script>
 {% endblock %}
