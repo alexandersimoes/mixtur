@@ -8,8 +8,8 @@
 
 {% block head %}
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='mix.css') }}">
-  
-  <!-- Meta -->        
+
+  <!-- Meta -->
   <meta name="keywords" content="Music, Mix Tape, Playlist, Soundtrack to your life, muxtape, html5 audio" />
   <meta name="description" content="{{ songs[0].desc }}" />
 
@@ -21,7 +21,7 @@
   <link rel="canonical" href="{{ request.url }}" />
   <meta property="og:description" content="{{ songs[0].desc }}" />
   <meta name="author" content="{{ songs[0].user }}" />
-  
+
   <style>
   body {
     position: fixed;
@@ -34,9 +34,9 @@
     background-image: url('/static/img/coronabg.jpg');
     background-position: center top;
     background-repeat: no-repeat;
-    
+
     color: #163b76 !important;
-    
+
     height: 100vh;
     width: 100vw;
     /* z-index: -1; */
@@ -53,7 +53,7 @@
   }
   .nav {
     color: #163b76 !important;
-    
+
     position: relative;
     width: 800px;
     margin: 0 auto;
@@ -69,7 +69,7 @@
   }
   .tracklisting {
     color: #163b76 !important;
-    
+
     -webkit-box-flex: 1;
     -moz-box-flex: 1;
     -webkit-flex: 1;
@@ -91,7 +91,7 @@
   }
   div.track-cursor{
   }
-  
+
   /* Narrow */
   @media only screen and (max-width: 480px) {
     .anthology {
@@ -101,7 +101,7 @@
       width: 100%;
     }
   }
-  
+
   .overlay {
       z-index: 2000;
       position: fixed;
@@ -188,7 +188,7 @@
     height: 400px;
   }
   </style>
-  
+
 {% endblock %}
 
 {% block body %}
@@ -202,16 +202,16 @@
   </div>
 </div>
 <div class="corona"></div>
-<div class="anthology">  
+<div class="anthology">
   {% set disc = -1 %}
   {% set mix = None %}
   {% set prev_album_cover = None %}
 
   <div class="album" data-bg-col="#f0e892" data-hilite-col="#163b76">
-  
+
     <header class="nav">
       <div class="album-title">
-        <h1>Summer 4 Ever <span><a href="#" class="fa fa-random" title="Shuffle songs"></a> </span></h1>
+        <h1>Corona Presents: Summer 4 Ever <span><a href="#" class="fa fa-random" title="Shuffle songs"></a> </span></h1>
         <span>{{ songs|length }} songs &bull; {% if total_runtime.hours %}{{ total_runtime.hours }} hours{% endif %} {% if total_runtime.minutes %}{{ total_runtime.minutes }} minutes{% endif %} {% if not total_runtime.hours and not total_runtime.minutes %}{{ total_runtime.seconds }} seconds{% endif %}</span>
       </div>
       <div class="album-controls">
@@ -224,7 +224,7 @@
         <div class="track-cursor"></div>
       </div>
     </header>
-  
+
     <div class="tracks">
       <nav class="album-art">
         <img src='/static/img/coronacrew.jpg' />
@@ -271,7 +271,7 @@
   var audioAd,
       mix_type = "m",
       palette = ["#afafaf", "#414141", "#090909"];
-  
+
   function stopAd() {
     d3.selectAll(".overlay").remove();
     d3.select("body").style("position", "relative");
@@ -292,7 +292,7 @@
 
     audioAd.addEventListener("ended", stopAd, false);
   }
-  
+
   addEventListener('touchstart', playAd, false);
   d3.selectAll(".close-btn").on("click", stopAd);
   d3.select(document).on("keydown", function(){
@@ -300,9 +300,9 @@
       stopAd();
     }
   });
-  
-  // playAd();
-  
+
+  playAd();
+
   </script>
   <script src="{{ url_for('static', filename='js/mix.js') }}"></script>
 {% endblock %}
