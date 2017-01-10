@@ -14,27 +14,58 @@ $ sudo apt-get install libtiff5-dev libjpeg8-dev zlib1g-dev \
 ```
 * Initialize database
 ```
-sqlite3 -init mixtur_schema.sql mixtur.db
+$ sqlite3 -init mixtur_schema.sql mixtur.db
 ```
 * Add first user to database
 	1. navigate to /pw/ and copy the generated password
-	2. ```
-	echo 'INSERT INTO user (name, email, password) VALUES("user_name", "john@me.com", "pbkdf2:sha1:XXXXXXXX");' | sqlite3 mixtur.db
-	```
+	2. ```echo 'INSERT INTO user (name, email, password) VALUES("user_name", "john@me.com", "pbkdf2:sha1:XXXXXXXX");' | sqlite3 mixtur.db```
 
-(Don't Forget!) Include following Environmental Variables
----
-> export MIXTUR_SECRET_KEY=""
-> export MIXTUR_UN=""
-> export MIXTUR_PW=""
+### Include the following Environmental Variables
 
+```shell
+$ export MIXTUR_SECRET_KEY=""
+$ export MIXTUR_UN=""
+$ export MIXTUR_PW=""
+```
 
-> Music listening, performance, and composition engage nearly every area 
-> of the brain that we have so far identified, and involve nearly every neural subsystem.
+## Using PyEnv
 
-~ Daniel J. Levitin from *This is Your Brain on Music*
+Find out which is the most recent version of python 2 installed:
+
+```shell
+$ pyenv versions
+```
+
+Init new virtual env using this version
+
+```shell
+$ pyenv virtualenv 2.7.13 mixtur
+```
+
+Activate/deactivate this virtualenv
+
+```shell
+$ pyenv activate mixtur
+$ pyenv deactivate
+```
+
+Set environment vars using autoenv
+
+```shell
+$ nano .env
+
+export MIXTUR_SECRET_KEY=""
+export MIXTUR_UN=""
+export MIXTUR_PW=""
+
+```
 
 License
 ----
 
 MIT
+
+> Music listening, performance, and composition engage nearly every area 
+> of the brain that we have so far identified, and involve nearly every neural subsystem.
+> 
+> ~ Daniel J. Levitin from *This is Your Brain on Music*
