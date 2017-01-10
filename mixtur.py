@@ -613,9 +613,13 @@ def uploadr_file(file_type):
 
         if song_id:
             if song_remove:
+                # delete the song from the filesystem
                 song_file = query_db("SELECT slug FROM song WHERE id=?", (song_id,), one=True)["slug"]
                 os.remove(os.path.join(user_mix_dir, song_file))
+                # delete the record of the song from the song tbl in the db
                 query_db("DELETE FROM song WHERE id=?", [song_id], update=True)
+                # delete the song record from listens table
+                query_db("DELETE FROM listen WHERE song=?", [song_id], update=True)
             else:
                 song = query_db("SELECT * FROM song WHERE id=?", (song_id,), one=True)
                 mix_title, cover = query_db("SELECT name, cover FROM mix WHERE id=?", (mix_id,), one=True)
