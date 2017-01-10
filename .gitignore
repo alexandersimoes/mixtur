@@ -2,3 +2,4 @@
 .DS_Store
 mixtur.db
 mixtur.wsgi
+.env

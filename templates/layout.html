@@ -9,7 +9,6 @@
   {% block head %}{% endblock %}
 </head>
 <body>
-  {% if request.path == "/" %}<div class="notify summer">It's summer time baby! <a href="/summer16">Make your mixXX now &rarr;</a></div>{% endif %}
   {% for category, message in get_flashed_messages(with_categories=true) %}
   <div class="notify {{ category }}">
     {{ message }}
@@ -31,9 +30,9 @@
     {% endif %}
     </nav>
   </header>
-  
+
   {% block body %}{% endblock %}
-  
+
   <script src="/static/js/utils.js"></script>
   <script type="text/javascript">
 
@@ -48,7 +47,7 @@
     })();
 
   </script>
-    
+
   <script type="text/javascript">
     if(document.getElementById("create")) {
       document.getElementById("create").addEventListener("click", function(e) {
@@ -67,6 +66,6 @@
       });
     }
   </script>
-  
+
   {% block js %}{% endblock %}
 </body>
