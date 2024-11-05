@@ -3,3 +3,4 @@
 mixtur.db
 mixtur.wsgi
 .env
+.venv

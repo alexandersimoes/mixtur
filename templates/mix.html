@@ -3,7 +3,6 @@
 {% set header_col = songs[0].palette[1] %}
 {% endif %}
 
-
 {% block head_title %}{% if mix_type == "a" %}{{ songs[0].anthology_name }}{% else %}{{ songs[0].mix_name }}{% endif %}{% endblock %}
 
 {% block head %}
@@ -32,35 +31,12 @@
 
 {% block body %}
 <div class="anthology">
-  {% if mix_type == "a" %}
-  <div class="anthology-title" style="background:{{songs[0].palette[0]}}" {% if songs[0].palette[0] %}data-bg-col="{{songs[0].palette[0]}}"{% endif %}>
-    <header class="nav" style="background:{{songs[0].palette[0]}}">
-      <div class="album-title">
-        <h1 style="color:{{songs[0].palette[1]}}">{{ songs[0].anthology_name }} <span><a href="#" class="fa fa-random fa-inverse" title="Shuffle songs"></a> {% if songs[0].user == g.user %}<a href="update/" class="update fa fa-pencil" title="Edit mix"></a> <a href="delete/" class="delete fa fa-trash-o" title="Delete mix"></a>{% endif %} </span></h1>
-        <span {% if songs[0].palette[2] %}style="color:{{songs[0].palette[2]}}"{% else %}class="no-col"{% endif %}>{{ num_albums }} album{% if num_albums > 1%}s{% endif %}, {{ songs|length }} songs &bull; {% if total_runtime.hours %}{{ total_runtime.hours }} hours{% endif %} {% if total_runtime.minutes %}{{ total_runtime.minutes }} minutes{% endif %}</span>
-      </div>
-      <div class="album-controls" style="color:{{songs[0].palette[1]}}">
-        <i title="Play previous song" class="fa fa-step-backward fa-lg"></i><i title="Play" class="fa fa-play fa-lg"></i><i title="Pause" class="fa fa-pause fa-lg"></i><i title="Play next song" class="fa fa-step-forward fa-lg"></i>
-      </div>
-      <div class="progress">
-        <div class="track-progress-bg" style="background:{{songs[0].palette[1]}}; border-color: {{songs[0].palette[1]}};"></div>
-        <div class="track-progress-loaded" style="background:black"></div>
-        <div {% if songs[0].palette[2] %}class="track-progress" style="background:{{songs[0].palette[2]}}"{% else %}class="track-progress no-col"{% endif %}></div>
-        <div class="track-cursor" style="background:{{songs[0].palette[0]}}"></div>
-      </div>
-    </header>
-  </div>
-  {% endif %}
-  
   {% set disc = -1 %}
   {% set mix = None %}
   {% set prev_album_cover = None %}
+  {% set s = songs[0] %}
   
-  {% for s in songs %}
-  
-  {% if s.mix_slug != mix_slug and loop.first %}
   <div class="album" style="background:{{s.palette[0]}}" {% if s.palette[0] %}data-bg-col="{{s.palette[0]}}"{% endif %} {% if s.palette[1] %}data-hilite-col="{{s.palette[1]}}"{% endif %} {% if s.palette[2] %}data-hilite-col2="{{s.palette[2]}}"{% endif %}>
-    {% if mix_type == "m" %}
     <header class="nav" style="background:{{s.palette[0]}}">
       <div class="album-title">
         <h1 style="color:{{s.palette[1]}}">{{ s.mix_name }} <span><a href="#" class="fa fa-random" title="Shuffle songs"></a> {% if s.user == g.user %}<a href="{{ url_for('create_mix', mix_slug=songs[0].mix_slug) }}" title="Edit mix" class="fa fa-pencil update"></a> <a href="delete/" title="Delete mix" class="fa fa-trash-o delete"></a>{% endif %} <a href="{{ url_for('mix', mix_type='m', mix_slug=s.mix_slug) }}?download" title="Download mix" class="fa fa-download"></a></span></h1>
@@ -75,11 +51,7 @@
         <div {% if s.palette[2] %}class="track-progress" style="background:{{s.palette[2]}}"{% else %}class="track-progress no-col"{% endif %}></div>
         <div class="track-cursor" style="background:{{s.palette[0]}}"></div>
       </div>
-      <!-- <div class="album-artist">
-        <h2>{{ artist }}</h2><span class="year"> &bull; {{ s.date|dateformat('%Y') }}</span>
-      </div> -->
     </header>
-    {% endif %}
     <div class="tracks">
       <nav class="album-art">
         {% if s.desc %}
@@ -94,70 +66,28 @@
         {% endif %}
       </nav>
       <main class="tracklisting">
-  {% elif s.mix_slug != mix_slug %}
-                </ol>
-              </div>
-            </main>
-          </div>
-          <footer></footer>
-        </div>
-  <div class="album" style="background:{{s.palette[0]}}" {% if s.palette[0] %}data-bg-col="{{s.palette[0]}}"{% endif %} {% if s.palette[1] %}data-hilite-col="{{s.palette[1]}}"{% endif %} {% if s.palette[2] %}data-hilite-col2="{{s.palette[2]}}"{% endif %}>
-    <div class="tracks">
-      <nav class="album-art">
-        {% if s.desc %}
-        <div class="album-desc">
-          <h2>{{ s.desc }}</h2>
-        </div>
-        {% endif %}
-        {% if s.cover %}
-        <img src="{{url_for('uploaded_file', user=s.user, mix=s.mix_slug, filename=s.cover) }}" alt="cover image for {{s.mix_name}}" />
-        {% else %}
-        <img src='/static/img/no_cover.jpg' />
-        {% endif %}
-      </nav>
-      <main class="tracklisting">
-  {% endif %}
-        {% if (s.disc != disc and loop.first) or (s.disc != disc or s.mix_slug != mix_slug) %}
-        <div class="disc">
-          {% if s.disc %}<h3>Disc {{ s.disc }}</h3>{% endif %}
-          <ol>
-        {% elif s.disc != disc %}
-          </ol>
-        </div>
-        <div class="disc">
-          {% if s.disc %}<h3>Disc {{ s.disc }}</h3>{% endif %}
-          <ol>
-        {% endif %}
-            <li class="track" title="{{ s.artist }} - {{ s.title }}" data-id="{{ s.song_id }}">
-              <div class="track-info">
-                <p {% if s.palette[2] %}class="track-num" style="color:{{s.palette[2]}}"{% else %}class="track-num no-col"{% endif %}><span>{{ s.position }}</span><i class="fa fa-volume-up"></i></p>
-                <p class="track-title">
-                  <span class="track-name" style="color:{{s.palette[1]}}">{{ s.title }}</span><br />
-                  <span {% if s.palette[2] %}class="track-artist" style="color:{{s.palette[2]}}"{% else %}class="track-artist no-col"{% endif %}>{{ s.artist }}</span>
-                  {% if s.listens %}
-                  <span {% if s.palette[2] %}class="track-listens" style="border-color:{{s.palette[2]}}; color:{{s.palette[2]}}"{% else %}class="track-artist no-col"{% endif %}><i class="fa fa-volume-up" aria-hidden="true"></i> {{ s.listens }}</span>
-                  {% endif %}
-                  <br />
-                  <audio preload="none" src="{{url_for('uploaded_file', user=s.user, mix=s.mix_slug, filename=s.song_slug) }}"></audio>
-                </p>
-                <p {% if s.palette[2] %}class="track-time" style="color:{{s.palette[2]}}"{% else %}class="track-time no-col"{% endif %}><span></span>{{ s.runtime|dateformat('%-M:%S') }}</p>
-              </div>
-            </li>
-        {% set mix = s.mix_name %}
-        {% set mix_slug = s.mix_slug %}
-        {% set cover = s.cover %}
-        {% set disc = s.disc %}
-        
-        {% if loop.last %}
-                </ol>
-              </div>
-            </main>
-          </div>
-          <footer></footer>
-        </div>
-        {% endif %}
-        
-  {% endfor %}
+        <ol>
+          {% for s in songs %}
+          <li class="track" title="{{ s.artist }} - {{ s.title }}" data-id="{{ s.song_id }}">
+            <div class="track-info">
+              <p {% if s.palette[2] %}class="track-num" style="color:{{s.palette[2]}}"{% else %}class="track-num no-col"{% endif %}><span>{{ s.position }}</span><i class="fa fa-volume-up"></i></p>
+              <p class="track-title">
+                <span class="track-name" style="color:{{s.palette[1]}}">{{ s.title }}</span><br />
+                <span {% if s.palette[2] %}class="track-artist" style="color:{{s.palette[2]}}"{% else %}class="track-artist no-col"{% endif %}>{{ s.artist }}</span>
+                {% if s.listens %}
+                <span {% if s.palette[2] %}class="track-listens" style="border-color:{{s.palette[2]}}; color:{{s.palette[2]}}"{% else %}class="track-artist no-col"{% endif %}><i class="fa fa-volume-up" aria-hidden="true"></i> {{ s.listens }}</span>
+                {% endif %}
+                <br />
+                <audio preload="none" src="{{url_for('uploaded_file', user=s.user, mix=s.mix_slug, filename=s.song_slug) }}"></audio>
+              </p>
+              <p {% if s.palette[2] %}class="track-time" style="color:{{s.palette[2]}}"{% else %}class="track-time no-col"{% endif %}><span></span>{{ s.runtime|dateformat('%-M:%S') }}</p>
+            </div>
+          </li>
+          {% endfor %}
+        </ol>
+      </main>
+    </div>
+  </div>
 </div>
 {% endblock %}
 
