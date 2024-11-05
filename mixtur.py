@@ -545,35 +545,6 @@ def logout():
   return redirect(url_for("home"))
 
 
-@app.route("/signup/", methods=["GET", "POST"])
-def signup():
-  form = SignUpForm(csrf_enabled=False)
-  if not form.validate_on_submit():
-    for field, errors in form.errors.items():
-      for error in errors:
-        flash(error, "error")
-    return render_template('signup.html')
-
-  email = form.email.data
-  name = email.split("@")[0]
-
-  if email_exists(email):
-    flash("A user is already associated with this email.", "error")
-    return render_template('signup.html')
-
-#   pw = generate_password_hash(form.pwd.data, salt_length=11)
-  # Update to use pbkdf2:sha256 method
-  pw = generate_password_hash(form.pwd.data, method='pbkdf2:sha256')
-
-  try:
-    insert_db("user", fields=('name', 'email', 'password'), args=(name, email, pw))
-    flash("Successfully signed up. Please sign in.", "success")
-    return redirect(url_for("login"))
-  except Exception as e:
-    flash("Failed to create user. Try again later.", "error")
-    return render_template('signup.html')
-
-
 @app.route("/<mix_type>/<mix_slug>/listen/<int:song_id>/", methods=["POST"])
 def song_listen(mix_type, mix_slug, song_id):
   if request.method == 'POST':
