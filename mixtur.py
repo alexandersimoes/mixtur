@@ -400,6 +400,7 @@ def uploadr_file(file_type):
     b64_img = None
     if no_img:
       input_image_path = os.path.join(app.root_path, 'static/img/no_cover.jpg')
+      print(input_image_path)
       (new_img, tinted_col) = image_tint(input_image_path)
       new_img.save(os.path.join(user_mix_dir, "default_cover.jpg"))
       jpeg_image_buffer = BytesIO()
@@ -407,7 +408,7 @@ def uploadr_file(file_type):
       b64_img = base64.b64encode(jpeg_image_buffer.getvalue()).decode('utf-8')
       query_db("UPDATE mix SET cover=? WHERE id=?", ["default_cover.jpg", mix_id], update=True)
       # create thumbnail of default cover
-      thumb_image = ImageOps.fit(new_img, (500, 500), Image.ANTIALIAS)
+      thumb_image = ImageOps.fit(new_img, (500, 500), Image.Resampling.LANCZOS)
       thumb_file_path = os.path.join(user_mix_dir, "default_cover_thumb.jpg")
       thumb_image.save(thumb_file_path, "JPEG", quality=90)
 
@@ -436,12 +437,12 @@ def uploadr_file(file_type):
             resized_height = MAX_SIZE
             resized_width = int(round((MAX_SIZE/float(image.size[1]))*image.size[0]))
 
-          full_image = image.resize((resized_width, resized_height), Image.ANTIALIAS)
+          full_image = image.resize((resized_width, resized_height), Image.Resampling.LANCZOS)
         else:
           full_image = image
         full_image.save(lg_file_path, image.format, quality=QUALITY)
 
-        thumb_image = ImageOps.fit(image, (500, 500), Image.ANTIALIAS)
+        thumb_image = ImageOps.fit(image, (500, 500), Image.Resampling.LANCZOS)
         thumb_image.save(thumb_file_path, image.format, quality=90)
 
         # was there already a file? if so delete it
@@ -462,7 +463,13 @@ def uploadr_file(file_type):
           audio.albumart(os.path.join(user_mix_dir, filename))
 
       if "audio" in file.mimetype:
-        filename = secure_filename(f"{int(track_num):02d} {artist} - {title}.mp3")
+        try:
+            # Strip any decimal points and convert to integer
+          track_number = int(float(track_num.strip())) if track_num else 1
+          filename = secure_filename(f"{track_number:02d} {artist} - {title}.mp3")
+        except (ValueError, TypeError, AttributeError):
+          # If conversion fails, default to 01
+          filename = secure_filename(f"01 {artist} - {title}.mp3")
         file.save(os.path.join(user_mix_dir, filename))
         mix_title, cover = query_db("SELECT name, cover FROM mix WHERE id=?",
                                     (mix_id,), one=True)

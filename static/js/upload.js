@@ -118,7 +118,6 @@ d3.select("#upload").on("click", function(){
       d3.select(".notify.error").style("display", "none");
     }, 5000);
     return;
-    d3.event.preventDefault();
   }
   d3.xhr("/uploadr/song/",function(error, data) {
       data = JSON.parse(data.response);
@@ -232,8 +231,10 @@ function set_palette(img_data, callback){
 
 function queue_has_songs(){
   has_songs = false;
+  console.log(dz.getQueuedFiles())
   dz.getQueuedFiles().forEach(function(qf){
-    if(qf.type == "audio/mp3"){
+    console.log(qf.type)
+    if(qf.type == "audio/mp3" || qf.type == "audio/mpeg"){
       has_songs = true;
     }
   })
